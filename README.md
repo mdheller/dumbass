@@ -59,6 +59,7 @@ minimal opinionation (everything is just HTML elements and event handlers), leav
 - Server side rendering / client-server symmetry
 - Encourage / macro-ise targeted forms and named iframes ( sooo brutal )
 - Encourage / bundle brutalist CSS sheets
+- Explore using intercooler-like attributes for async/await fetch
 
 ## conclusion
 
