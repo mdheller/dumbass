@@ -148,7 +148,7 @@ Use Brutal to write simple functions that render to HTML right off the bat in al
 
 ------
 
-# benefits
+# Overview
 
 *Note the following section was adapted from / inspired by the README.md of [lit-html](https://github.com/Polymer/lit-html) an unrelated but syntax-similar framework. Lit-html does not support adding event listeners, and Brutal **does** support adding event listeners.*
 
@@ -205,8 +205,9 @@ const BlueDiv = () => R`<div class="${blue}"></div>`;
 
 ```javascript
 const items = [1, 2, 3];
-const Items = () => R`<ul>${items.map(i => `<li>${i}</li>`)}</ul>`;
+const Items = () => R`<ul>${items.map(i => R`<li>${i}</li>`)}</ul>`;
 ```
+*Remember: **always** use `R`*
 
 ### Nested Templates
 
@@ -226,17 +227,17 @@ These features compose so you can render iterables of functions that return arra
 
 Brutal has basically all of the benefits of HTML-in-JS systems like JSX, like:
 
-### Lighter weight
+### Light weight
 
 There's no need to load an expression parser and evaluator.
 
-### Seamless access to data
+### Access to data
 
 Since template literals are evaluated in JavaScript, their expressions have access to every variable in that scope, including globals, module and block scopes, and `this` inside methods.
 
 If the main use of templates is to inject values into HTML, this breaks down a major barrier between templates and values.
 
-### Faster expression evaluation
+### Fast expression eval
 
 They're just JavaScript expressions.
 
