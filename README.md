@@ -4,13 +4,15 @@ A crazy-small framework for building brutal/brutalist web applications
 
 ## small
 
-110 source lines of code. 2 functions: `R` and `render`
+152 source lines of code. 2 functions: `R` and `render`
 
 Basic usage:
 
 ```JavaScript
   render(App(), document.getElementById('root'));
 ```
+
+*Note: you can get a [101 SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/no_xss_protection_r.js) version without any XSS protection.*
 
 ## "React like"
 
