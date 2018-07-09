@@ -95,25 +95,42 @@ If you know HTML and JS, you know brutal.js. Give it a spin, open an issue, make
 
 - [Show HN: Brutal.js – a small framework for building brutalist web applications](https://news.ycombinator.com/item?id=17484253)
 
+--------
+
 ## more information 
 
 ### case-study: differences with lit-html
 
-This is basically the same as [lit-html](https://github.com/Polymer/lit-html) but much smaller (3Kb compared to ~25kb unzipped unminified) and simpler.
+Brutal is somewhat similar to [lit-html](https://github.com/Polymer/lit-html). 
 
-It's also more limited. 
+It's also much smaller (3Kb compared to ~25kb unzipped unminified) and simpler.
 
-Brutal just supports adding event listeners to HTML. 
+And much more limited. 
+
+Brutal just supports adding event listeners to HTML, and templating values.
 
 It does not support Promises, case-sensitive attribute names, or other "framework"-like complexities. 
-If you want fetched data in your HTML output, fetch it outside your HTML template then render.
+If you want fetched data in your HTML output, fetch it before your HTML render, then render.
+
+### why so simple?
 
 With additional features come exponential or gemoetrically more code and bugs and interactions. This is mostly undesirable. 
+
+#### all about development speed (and load speed, and bandwidth cost, and complexity cost...)
+
 Brutal just wants to help you build things in a simple way and quickly. It has all the power of HTML/CSS/JS, just in a convenient JSX like syntax, but without any big files or build steps. Just works in the browser right now.
 
-In this sense, Brutal.js is an anti-framework. But that's not even it's aim. It's aim is to get as close to the raw material (HTML/CSS/JS) as possible and let you decide how to work with it based on your function. It's meant to make it fast and easy for you to build what you want. 
+#### anti-framework framework
+
+In this sense, Brutal.js is an anti-framework. 
+
+But that's not even it's aim.
+
+It's aim is to get as close to the raw material (HTML/CSS/JS) as possible and let you decide how to work with it based on your function. It's meant to make it fast and easy for you to build what you want. 
 
 It doesn't have to be as hard as the frameworks think it does. 
+
+------
 
 # benefits
 
@@ -121,13 +138,26 @@ Note the following section was adapted from / inspired by the README.md of [lit-
 
 ## Event-listeners
 
-Any valid DOM/HTML event:
+Any valid DOM/HTML event can be added. Here's a simple literate and working example to create an editable div in Brutal.j: 
 
 ```JavaScript
-const editContent = dblClick => dblClick.srcElement.setAttribute("contenteditable","");
-const endEdit = blur => blur.srcElement.removeAttribute("contenteditable");
-const EditableDiv = content => R`<div blur=${endEdit} dblclick=${editContent}>${content}</div>`
-render(EditableDiv('hello world'),document.body);
+const EditableDiv = content => R`
+  <div class=edit dblclick=${editContent} blur=${endEdit}>
+    ${content}
+  </div>
+`;
+load = () => render(EditableDiv('hello world'),document.body);
+
+function editContent({dblClick:{srcElement}}) {
+  if( srcElement.matches('.edit') ) {
+    srcElement.setAttribute("contenteditable","")
+  } else {
+    srcElement.closest('.edit').setAttribute("contenteditable","");
+  }
+}
+function endEdit({blur:{srcElement}}) {
+  srcElement.removeAttribute("contenteditable");
+}
 ```
 
 ## Performance
