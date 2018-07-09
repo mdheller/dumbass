@@ -11,12 +11,7 @@
   }
 
   function fc(t, frag = false) {
-    const fragment = parser.parseFromString(
-      `<template>${t}</template>`,
-      "text/html")
-      .head
-      .firstElementChild
-      .content;
+    const fragment = parser.parseFromString(`<template>${t}</template>`,"text/html").head.firstElementChild.content;
     if ( frag ) {
       return fragment;
     }
