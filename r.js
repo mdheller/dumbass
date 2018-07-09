@@ -11,6 +11,8 @@
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/&/g, '&amp;')
+      .replace(/"/g, '&#34;')
+      .replace(/'/g, '&#39;')
   }
 
   function fc( t, frag = false ) {
