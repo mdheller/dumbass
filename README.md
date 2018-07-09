@@ -6,8 +6,6 @@ A crazy-small ~framework~file for building brutal/brutalist web applications
 
 110 source lines of code. 2 functions: `R` and `render`
 
-That's just ~3Kb unzipped uminified. Compared to [~10x to 30x that](https://gist.github.com/Restuta/cda69e50a853aa64912d) gzipped minified for big frameworks. 
-
 Basic usage:
 
 ```JavaScript
@@ -39,22 +37,6 @@ function ButtonWidget({name}) {
   `;
 }
 ```
-
-## just how small is it? 
-
-The above function as an arrow in React/JSX:
-
-```JSX
-const ButtonWidget = ({name}) => (<button onClick={() => showModal(name)}>Show {name} Modal</button>);
-```
-
-That same arrow in R/brutal.js:
-
-```JavaScript
-const ButtonWidget = ({name}) => R`<button click=${() => showModal(name)}>Show ${name} Modal</button>`;
-```
-
-**brutal.js costs you 1 more character, and saves you around 90Kb of framework to get to that point.**
 
 ### Differences to notice
 
@@ -95,6 +77,26 @@ If you know HTML and JS, you know brutal.js. Give it a spin, open an issue, make
 
 ## more information 
 
+### case-study: just how small is it? 
+
+The above function as an arrow in React/JSX:
+
+```JSX
+const ButtonWidget = ({name}) => (<button onClick={() => showModal(name)}>Show {name} Modal</button>);
+```
+
+That same arrow in R/brutal.js:
+
+```JavaScript
+const ButtonWidget = ({name}) => R`<button click=${() => showModal(name)}>Show ${name} Modal</button>`;
+```
+
+**brutal.js costs you 1 more character, and saves you around 90Kb of framework to get to that point.**
+
+### so, wait, actually how small?
+
+Just ~3Kb unzipped uminified. Compared to [~10x to 30x that](https://gist.github.com/Restuta/cda69e50a853aa64912d) gzipped minified for big frameworks. 
+
 ### case-study: differences with lit-html
 
 Brutal is somewhat similar to [lit-html](https://github.com/Polymer/lit-html). 
@@ -107,6 +109,18 @@ Brutal just supports adding event listeners to HTML, and templating values.
 
 It does not support Promises, case-sensitive attribute names, or other "framework"-like complexities. 
 If you want fetched data in your HTML output, fetch it before your HTML render, then render.
+
+----
+
+## philosophy
+
+### A tool. Not a set of rules.
+
+Some "Frameworks" want to restrict what you can do and "allow" and "disallow" you to do certain things, based on the "opinions" of their creators. Who cares what they think? Do what you want! Decide for yourself! Be a real human with a mind of their own and write your own code. 
+
+Maybe frameworks are just psychological emanations of the desire/need to control and be controlled? But that's not all humans can be/ not all how groups can interact. It's time for some "frameworks" that stop telling you what you can and can't do, and help you do what you want to do.
+
+&lt/manifest&gt;
 
 ### why so simple?
 
