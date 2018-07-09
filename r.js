@@ -79,14 +79,16 @@
     return o;
   }
 
-  function render(r, root, {replace:replace = false} = {}) {
+  function render(r, root, {replace:replace = false, frag:frag = false} = {}) {
     if (Array.isArray(r) && r.every(val => !!val.str && !!val.handlers)) {
       r = join(r);
     }
     verify(r,currentKey);
     let {str,handlers} = r;
     if ( replace ) {
-      root.parentElement.replaceChild(fc(str),root);
+      //root.parentElement.replaceChild(fc(str,{frag}),root);
+      root.insertAdjacentHTML('beforeBegin', str);
+      root.remove();
     } else {
       root.innerHTML = '';
       root.insertAdjacentHTML('afterBegin', str);
@@ -109,7 +111,9 @@
     const str = rs.map(({str,handlers,code}) => (
       verify({str,handlers,code},currentKey),Object.assign(H,handlers),str)).join('\n');
     if ( !! str ) {
-      return {str,handlers:H};
+      const o = {str,handlers:H};
+      o.code = sign(o,currentKey);
+      return o;
     }
   }
   
@@ -117,7 +121,7 @@
     return (v+'').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/&/g,'&amp;').replace(/"/g,'&#34;').replace(/'/g,'&#39;');
   }
 
-  function fc(t, frag = false) {
+  function fc(t, {frag:frag = false}={}) {
     const fragment = parser.parseFromString(`<template>${t}</template>`,"text/html").head.firstElementChild.content;
     if ( frag ) {
       return fragment;
