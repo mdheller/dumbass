@@ -156,7 +156,7 @@ Use Brutal to write simple functions that render to HTML right off the bat in al
 
 Any valid DOM/HTML event can be added. Here's a simple literate and working example to create an editable div in Brutal.j: 
 
-```HTML
+```
 
 const EditableDiv = content => R`
   <div class=edit 
@@ -175,9 +175,10 @@ function editContent({ dblClick: { srcElement }}) {
   }
 }
 
-function endEdit({ blur:{ srcElement }}) {
+function endEdit({ blur: { srcElement }}) {
   srcElement.removeAttribute("contenteditable");
 }
+
 ```
 
 ## Performance
