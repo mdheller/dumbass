@@ -4,7 +4,7 @@ A crazy-small framework for building brutal/brutalist web applications
 
 ## small
 
-110 source lines of code. 2 functions: `R` and `render`
+152 source lines of code (101 SLOC without XSS protection). 2 functions: `R` and `render`
 
 Basic usage:
 
