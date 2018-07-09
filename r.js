@@ -6,13 +6,13 @@
 
   Object.assign(self,{R,render,fc});
 
-  function escapeHTML(html) {
-    return html
+  function safe(str) {
+    return (str+'')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/&/g, '&amp;')
       .replace(/"/g, '&#34;')
-      .replace(/'/g, '&#39;')
+      .replace(/'/g, '&#39;');
   }
 
   function fc( t, frag = false ) {
@@ -33,7 +33,7 @@
     const handlers = {};
     vals = vals.map( v => {
       if ( Array.isArray(v) && v.every(item => !!item.handlers && !!item.str) ) {
-        return join(v,handlers);
+        return join(v) || '';
       } else if ( typeof v == "object" && !!v && !(v.str && v.handlers) ) {
         throw { error: `Object properties not allowed`, value: v };
       } else return (v == null || v == undefined) ? '' : v;
@@ -54,8 +54,7 @@
       if ( typeof val == "function" ) {
         let attrName;
         if ( attrNameMatches && attrNameMatches.length > 1) {
-          attrName = attrNameMatches[1];
-          attrName = attrName.replace(/^on/,'').toLowerCase();
+          attrName = attrNameMatches[1].replace(/^on/,'').toLowerCase();
         }
         const newPart = part.replace(attrNameMatches[0], '');
         if ( attrName ) {
@@ -78,29 +77,32 @@
         if ( attrNameMatches ) {
           val = `"${val}"`;
         }
-        str += escapeHTML(val);
+        str += val;
       } else {
         str += part;
         if ( attrNameMatches ) {
-          val = `"${val}"`;
+          val = `"${safe(val)}"`;
+        } else {
+          val = safe(val);
         }
-        str += escapeHTML(val);
+        str += val;
       }
     }
     str += parts.shift();
     return {str,handlers};
   }
 
-  function join(rs,allHandlers) {
-    return rs
-      .map(
-        ({str,handlers}) => (Object.assign(allHandlers,handlers),str)
-      ).join('\n');
+  function join(rs) {
+    const H = {};
+    const str = rs.map(({str,handlers}) => (Object.assign(H,handlers),str)).join('\n');
+    if ( !! str ) {
+      return {str,handlers:H};
+    }
   }
 
   function render(r, root, {replace:replace = false} = {}) {
-    if ( Array.isArray(r) && r.every( val => !!val.str && !!val.handlers ) ) {
-      r = join(r,handlers);
+    if (Array.isArray(r) && r.every(val => !!val.str && !!val.handlers)) {
+      r = join(r);
     }
     let {str,handlers} = r;
     if ( replace ) {
