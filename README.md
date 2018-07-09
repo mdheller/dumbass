@@ -8,9 +8,9 @@ A crazy-small framework for building brutal/brutalist web applications
 
 That's just ~3Kb unzipped uminified. Compared to [~10x to 30x that](https://gist.github.com/Restuta/cda69e50a853aa64912d) for gzipped minified scripts of conventional big frameworks. 
 
-## Make Web Lierate Again
+## Make Web Literate Again
 
-Write simple functions that render to HTML right of the bat in all modern browsers, without the burden of massive amounts of code, opinionated conceptual models, learning curves and technical-debt/lock in.
+Write simple functions that render to HTML right off the bat in all modern browsers, without the burden of massive amounts of code, opinionated conceptual models, learning curves and technical-debt/lock in.
 
 The simple way the web was meant to be.
 
@@ -94,3 +94,121 @@ If you know HTML and JS, you know brutal.js. Give it a spin, open an issue, make
 ### show hn
 
 - [Show HN: Brutal.js – a small framework for building brutalist web applications](https://news.ycombinator.com/item?id=17484253)
+
+## more information 
+
+### case-study: differences with lit-html
+
+This is basically the same as [lit-html](https://github.com/Polymer/lit-html) but much smaller (3Kb compared to ~25kb unzipped unminified) and simpler.
+
+It's also more limited. 
+
+Brutal just supports adding event listeners to HTML. 
+
+It does not support Promises, case-sensitive attribute names, or other "framework"-like complexities. 
+If you want fetched data in your HTML output, fetch it outside your HTML template then render.
+
+With additional features come exponential or gemoetrically more code and bugs and interactions. This is mostly undesirable. 
+Brutal just wants to help you build things in a simple way and quickly. It has all the power of HTML/CSS/JS, just in a convenient JSX like syntax, but without any big files or build steps. Just works in the browser right now.
+
+In this sense, Brutal.js is an anti-framework. But that's not even it's aim. It's aim is to get as close to the raw material (HTML/CSS/JS) as possible and let you decide how to work with it based on your function. It's meant to make it fast and easy for you to build what you want. 
+
+It doesn't have to be as hard as the frameworks think it does. 
+
+# benefits
+
+Note the following section was adapted from / inspired by the README.md of [lit-html](https://github.com/Polymer/lit-html) an unrelated but syntax-similar framework. Lit-html does not support adding event listeners, and Brutal does support adding event listeners. 
+
+## Event-listeners
+
+Any valid DOM/HTML event:
+
+```JavaScript
+const editContent = dblClick => dblClick.srcElement.setAttribute("contenteditable","");
+const endEdit = blur => blur.srcElement.removeAttribute("contenteditable");
+const EditableDiv = content => R`<div blur=${endEdit} dblclick=${editContent}>${content}</div>`
+render(EditableDiv('hello world'),document.body);
+```
+
+## Performance
+
+Brutal is designed to be lightweight and fast. It utilizes the built-in JS and HTML parsers - it doesn't include any expression or markup parser of its own.
+
+## Features
+
+### Simple expressions and literals
+
+Anything coercible to strings are supported:
+
+```javascript
+const Foo = () => R`foo is ${foo}`;
+```
+
+### Attribute-value Expressions
+
+```javascript
+const BlueDiv = () => R`<div class="${blue}"></div>`;
+```
+
+### Arrays/Iterables
+
+```javascript
+const items = [1, 2, 3];
+const Items = () => R`<ul>${items.map(i => `<li>${i}</li>`)}</ul>`;
+```
+
+### Nested Templates
+
+```javascript
+const Header = title => R`<h1>${title}</h1>`;
+const App = () => R`
+  ${Header('The head')}
+  <p>And the body</p>
+`;
+```
+
+### Composability
+
+These features compose so you can render iterables of functions that return arrays of nested templates, etc...
+
+## Benefits over HTML templates
+
+Brutal has basically all of the benefits of HTML-in-JS systems like JSX, like:
+
+### Lighter weight
+
+There's no need to load an expression parser and evaluator.
+
+### Seamless access to data
+
+Since template literals are evaluated in JavaScript, their expressions have access to every variable in that scope, including globals, module and block scopes, and `this` inside methods.
+
+If the main use of templates is to inject values into HTML, this breaks down a major barrier between templates and values.
+
+### Faster expression evaluation
+
+They're just JavaScript expressions.
+
+### IDE support by default
+
+In a type-checking environment like TypeScript, expressions are checked because they are just regular script. Hover-over docs and code-completion just work as well.
+
+## Benefits over JSX
+
+### Native syntax
+
+No tooling required. Understood by all JS editors and tools.
+
+### CSS-compatible syntax
+
+Because template literals use `${}` as the expression delimiter, CSS's use of `{}` isn't interpreted as an expression. You can include style tags in your templates as you would expect:
+
+```javascript
+R`
+  <style>
+    :host {
+      background: burlywood;
+    }
+  </style>
+`
+```
