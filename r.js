@@ -6,18 +6,6 @@
 
   Object.assign(self,{R,render,fc});
 
-  function safe(v) {
-    return (v+'').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/&/g,'&amp;').replace(/"/g,'&#34;').replace(/'/g,'&#39;');
-  }
-
-  function fc(t, frag = false) {
-    const fragment = parser.parseFromString(`<template>${t}</template>`,"text/html").head.firstElementChild.content;
-    if ( frag ) {
-      return fragment;
-    }
-    return fragment.firstElementChild;
-  }
-
   function R(parts, ...vals) {
     parts = Array.from(parts);
     const handlers = {};
@@ -82,14 +70,6 @@
     return {str,handlers};
   }
 
-  function join(rs) {
-    const H = {};
-    const str = rs.map(({str,handlers}) => (Object.assign(H,handlers),str)).join('\n');
-    if ( !! str ) {
-      return {str,handlers:H};
-    }
-  }
-
   function render(r, root, {replace:replace = false} = {}) {
     if (Array.isArray(r) && r.every(val => !!val.str && !!val.handlers)) {
       r = join(r);
@@ -112,5 +92,25 @@
         throw {error: `Node or handlers could not be found for ${hid}`, hid};
       }
     });
+  }
+  
+  function join(rs) {
+    const H = {};
+    const str = rs.map(({str,handlers}) => (Object.assign(H,handlers),str)).join('\n');
+    if ( !! str ) {
+      return {str,handlers:H};
+    }
+  }
+  
+  function safe(v) {
+    return (v+'').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/&/g,'&amp;').replace(/"/g,'&#34;').replace(/'/g,'&#39;');
+  }
+
+  function fc(t, frag = false) {
+    const fragment = parser.parseFromString(`<template>${t}</template>`,"text/html").head.firstElementChild.content;
+    if ( frag ) {
+      return fragment;
+    }
+    return fragment.firstElementChild;
   }
 }
