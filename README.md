@@ -12,6 +12,17 @@ Basic usage:
   render(App(), document.getElementById('root'));
 ```
 
+## Get it
+
+```shell
+npm i --save brutalist-web
+```
+
+## Use it
+
+```HTML
+<script src=node_modules/brutalist-web/r.js></script>
+```
 
 ## "React like"
 
@@ -96,9 +107,9 @@ const ButtonWidget = ({name}) => R`<button click=${() => showModal(name)}>Show $
 
 ### so, wait, actually how small?
 
-Just ~3Kb unzipped uminified. Compared to [~10x to 30x that](https://gist.github.com/Restuta/cda69e50a853aa64912d) gzipped minified for big frameworks. 
+Just ~5Kb unzipped uminified. Compared to [~10x to 30x that](https://gist.github.com/Restuta/cda69e50a853aa64912d) gzipped minified for big frameworks. 
 
-*Note: you can get a [101 SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/no_xss_protection_r.js) version without any XSS protection.*
+*Note: you can get a [101 SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/no_xss_protection_r.js) ~3Kb version without any XSS protection.*
 
 
 ### case-study: differences with lit-html
