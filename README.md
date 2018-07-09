@@ -120,7 +120,7 @@ Some "Frameworks" want to restrict what you can do and "allow" and "disallow" yo
 
 Maybe frameworks are just psychological emanations of the desire/need to control and be controlled? But that's not all humans can be/ not all how groups can interact. It's time for some "frameworks" that stop telling you what you can and can't do, and help you do what you want to do.
 
-&lt/manifest&gt;
+&lt;/manifesto&gt;
 
 ### why so simple?
 
@@ -156,22 +156,26 @@ Use Brutal to write simple functions that render to HTML right off the bat in al
 
 Any valid DOM/HTML event can be added. Here's a simple literate and working example to create an editable div in Brutal.j: 
 
-```JavaScript
-const EditableDiv = content => R`
-  <div class=edit dblclick=${editContent} blur=${endEdit}>
-    ${content}
-  </div>
-`;
-load = () => render(EditableDiv('hello world'),document.body);
+```HTML
 
-function editContent({dblClick:{srcElement}}) {
-  if( srcElement.matches('.edit') ) {
-    srcElement.setAttribute("contenteditable","")
+const EditableDiv = content => R`
+  <div class=edit 
+       dblclick=${ editContent } 
+       blur=${ endEdit }
+  >${content}</div>
+`;
+
+load = () => render( EditableDiv('hello world'), document.body );
+
+function editContent({ dblClick: { srcElement }}) {
+  if (srcElement.matches('.edit')) {
+    srcElement.setAttribute('contenteditable','');
   } else {
-    srcElement.closest('.edit').setAttribute("contenteditable","");
+    srcElement.closest('.edit').setAttribute('contenteditable','');
   }
 }
-function endEdit({blur:{srcElement}}) {
+
+function endEdit({ blur:{ srcElement }}) {
   srcElement.removeAttribute("contenteditable");
 }
 ```
