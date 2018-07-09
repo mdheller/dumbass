@@ -1,18 +1,18 @@
 # brutal.js
 
-A crazy-small framework for building brutal/brutalist web applications
+A crazy-small ~framework~file for building brutal/brutalist web applications
 
 ## small
 
 110 source lines of code. 2 functions: `R` and `render`
 
-That's just ~3Kb unzipped uminified. Compared to [~10x to 30x that](https://gist.github.com/Restuta/cda69e50a853aa64912d) for gzipped minified scripts of conventional big frameworks. 
+That's just ~3Kb unzipped uminified. Compared to [~10x to 30x that](https://gist.github.com/Restuta/cda69e50a853aa64912d) gzipped minified for big frameworks. 
 
-## Make Web Literate Again
+Basic usage:
 
-Write simple functions that render to HTML right off the bat in all modern browsers, without the burden of massive amounts of code, opinionated conceptual models, learning curves and technical-debt/lock in.
-
-The simple way the web was meant to be.
+```JavaScript
+  render(App(), document.getElementById('root'));
+```
 
 ## "React like"
 
@@ -40,25 +40,21 @@ function ButtonWidget({name}) {
 }
 ```
 
-Or as a one-liner in React/JSX:
+## just how small is it? 
+
+The above function as an arrow in React/JSX:
 
 ```JSX
 const ButtonWidget = ({name}) => (<button onClick={() => showModal(name)}>Show {name} Modal</button>);
 ```
 
-That same one-liner in R/brutal.js:
+That same arrow in R/brutal.js:
 
 ```JavaScript
 const ButtonWidget = ({name}) => R`<button click=${() => showModal(name)}>Show ${name} Modal</button>`;
 ```
 
 **brutal.js costs you 1 more character, and saves you around 90Kb of framework to get to that point.**
-
-Basic usage:
-
-```JavaScript
-  render(App(), document.getElementById('root'));
-```
 
 ### Differences to notice
 
@@ -130,11 +126,17 @@ It's aim is to get as close to the raw material (HTML/CSS/JS) as possible and le
 
 It doesn't have to be as hard as the frameworks think it does. 
 
+## Make Web Literate Again
+
+Use Brutal to write simple functions that render to HTML right off the bat in all modern browsers, without the burden of massive amounts of code, opinionated conceptual models, learning curves and technical-debt/lock in.
+
+**The simple way the web was meant to be.**
+
 ------
 
 # benefits
 
-Note the following section was adapted from / inspired by the README.md of [lit-html](https://github.com/Polymer/lit-html) an unrelated but syntax-similar framework. Lit-html does not support adding event listeners, and Brutal does support adding event listeners. 
+*Note the following section was adapted from / inspired by the README.md of [lit-html](https://github.com/Polymer/lit-html) an unrelated but syntax-similar framework. Lit-html does not support adding event listeners, and Brutal **does** support adding event listeners.*
 
 ## Event-listeners
 
