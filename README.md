@@ -38,7 +38,7 @@ function ButtonWidget({name}) {
 }
 ```
 
-### Differences to notice
+### differences to notice
 
 - Event listeners are named by event names directly. No `on-` prefix. So use `click` not `onclick`
 - There is never any need to quote an attribute, brutal does it for you, so 
@@ -46,7 +46,7 @@ function ButtonWidget({name}) {
 - every bit of HTML is tagged with an R and written with backticks. Technically, this is an ES6 template literal and template tag function.
 - Every replaced value is enclosed in `${...}` instead of `{...}`
 
-## Why brutalist?
+## why brutalist?
 
 To me, brutalist means as close to the basic raw HTML/ JavaScript as possible. 
 There's more to do on the roadmap, but for many projects, these simple functions are enough. 
@@ -54,13 +54,13 @@ For example, take a look at [a working TodoMVC example](https://dosyago-coder-0.
 Everything in brutal is "as close to the metal" ( the JS / HTML ) as possible. This is ensured by their being minimal JS code,
 minimal opinionation (everything is just HTML elements and event handlers), leaving you free to structure things however you like. 
 
-## Get it
+## get it
 
 ```shell
 npm i --save brutalist-web
 ```
 
-## Use it
+## use it
 
 ```HTML
 <script src=node_modules/brutalist-web/r.js></script>
@@ -169,17 +169,18 @@ Use Brutal to write simple functions that render to HTML right off the bat in al
 
 ## Event-listeners
 
-Any valid DOM/HTML event can be added. Here's a simple, **literate** and working example to create an editable div in Brutal.j: 
+Any valid DOM/HTML event can be added. Here's a simple, **literate** and working example to create an editable div in Brutal.js: 
 
 ```JavaScript
 
 const EditableDiv = content =>
   R`<div class=edit 
        dblclick=${ editContent } 
-       blur=${ endEdit }>${content}</div>
-`;
+       blur=${ endEdit }>${content}</div>`;
 
-load = () => render( EditableDiv('hello world'), document.body );
+
+load = () => render(EditableDiv('hello world'), document.body);
+
 
 function editContent({ dblClick: { srcElement: el }}) {
   if (el.matches('.edit')) {
@@ -277,3 +278,4 @@ R`<style>
   </style>
 `;
 ```
+-----
