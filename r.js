@@ -6,6 +6,15 @@
 
   Object.assign(self,{R,render,fc});
 
+  function escapeHTML(html) {
+    return html
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&#34;')
+      .replace(/'/g, '&#39;')
+  }
+
   function fc( t, frag = false ) {
     const fragment = parser.parseFromString(
       `<template>${t}</template>`,
@@ -13,7 +22,7 @@
       .head
       .firstElementChild
       .content;
-    if ( frag ) { 
+    if ( frag ) {
       return fragment;
     }
     return fragment.firstElementChild;
@@ -45,7 +54,7 @@
       if ( typeof val == "function" ) {
         let attrName;
         if ( attrNameMatches && attrNameMatches.length > 1) {
-          attrName = attrNameMatches[1]; 
+          attrName = attrNameMatches[1];
           attrName = attrName.replace(/^on/,'').toLowerCase();
         }
         const newPart = part.replace(attrNameMatches[0], '');
@@ -65,17 +74,17 @@
       } else if ( !! val && val.handlers && val.str ) {
         Object.assign(handlers,val.handlers);
         str += part;
-        val = val.str; 
+        val = val.str;
         if ( attrNameMatches ) {
           val = `"${val}"`;
         }
-        str += val;
+        str += escapeHTML(val);
       } else {
         str += part;
         if ( attrNameMatches ) {
           val = `"${val}"`;
         }
-        str += val;
+        str += escapeHTML(val);
       }
     }
     str += parts.shift();
@@ -91,7 +100,7 @@
 
   function render(r, root, {replace:replace = false} = {}) {
     if ( Array.isArray(r) && r.every( val => !!val.str && !!val.handlers ) ) {
-      r = join(r,handlers); 
+      r = join(r,handlers);
     }
     let {str,handlers} = r;
     if ( replace ) {
