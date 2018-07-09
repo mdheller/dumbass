@@ -12,7 +12,9 @@ Basic usage:
   render(App(), document.getElementById('root'));
 ```
 
+
 *Note: you can get a [101 SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/no_xss_protection_r.js) version without any XSS protection.*
+
 
 ## "React like"
 
