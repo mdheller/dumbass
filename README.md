@@ -71,7 +71,7 @@ If you know HTML and JS, you know brutal.js. Give it a spin, open an issue, make
 
 ### show hn
 
-- [Show HN: Brutal.js – a small framework for building brutalist web applications](https://news.ycombinator.com/item?id=17484253)
+- July 8 2018 [Show HN: Brutal.js – a small framework for building brutalist web applications](https://news.ycombinator.com/item?id=17484253)
 
 --------
 
