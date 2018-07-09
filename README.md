@@ -6,6 +6,14 @@ A crazy-small framework for building brutal/brutalist web applications
 
 110 source lines of code. 2 functions: `R` and `render`
 
+That's just ~3Kb unzipped uminified. Compared to [~10x to 30x that](https://gist.github.com/Restuta/cda69e50a853aa64912d) for gzipped minified scripts of conventional big frameworks. 
+
+## Make Web Lierate Again
+
+Write simple functions that render to HTML right of the bat in all modern browsers, without the burden of massive amounts of code, opinionated conceptual models, learning curves and technical-debt/lock in.
+
+The simple way the web was meant to be.
+
 ## "React like"
 
 This is React/JSX:
@@ -31,6 +39,20 @@ function ButtonWidget({name}) {
   `;
 }
 ```
+
+Or as a one-liner in React/JSX:
+
+```JSX
+const ButtonWidget = ({name}) => (<button onClick={() => showModal(name)}>Show {name} Modal</button>);
+```
+
+That same one-liner in R/brutal.js:
+
+```JavaScript
+const ButtonWidget = ({name}) => R`<button click=${() => showModal(name)}>Show ${name} Modal</button>`;
+```
+
+**brutal.js costs you 1 more character, and saves you around 90Kb of framework to get to that point.**
 
 Basic usage:
 
