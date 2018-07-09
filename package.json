@@ -1,5 +1,5 @@
 {
-  "name": "brutal",
+  "name": "brutal.js",
   "version": "1.0.2",
   "description": "3kb framework for building brutalist web apps",
   "main": "r.js",
