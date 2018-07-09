@@ -6,6 +6,13 @@
 
   Object.assign(self,{R,render,fc});
 
+  function escapeHTML(html) {
+    return html
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/&/g, '&amp;')
+  }
+
   function fc( t, frag = false ) {
     const fragment = parser.parseFromString(
       `<template>${t}</template>`,
@@ -69,13 +76,13 @@
         if ( attrNameMatches ) {
           val = `"${val}"`;
         }
-        str += val;
+        str += escapeHTML(val);
       } else {
         str += part;
         if ( attrNameMatches ) {
           val = `"${val}"`;
         }
-        str += val;
+        str += escapeHTML(val);
       }
     }
     str += parts.shift();
