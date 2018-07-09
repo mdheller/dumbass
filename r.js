@@ -1,5 +1,6 @@
 "use strict";
 {
+  // changes related to xss prevention
   const XSS = `Possible XSS attack warning. Possible object forgery attempt detected. Codes do not match.`;
   const OBJ = `Object properties don't work here.`;
   const LAST_ATTR_NAME = /\s+([\w-]+)\s*=\s*"?\s*$/;
