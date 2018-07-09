@@ -13,9 +13,6 @@ Basic usage:
 ```
 
 
-*Note: you can get a [101 SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/no_xss_protection_r.js) version without any XSS protection.*
-
-
 ## "React like"
 
 This is React/JSX:
@@ -100,6 +97,9 @@ const ButtonWidget = ({name}) => R`<button click=${() => showModal(name)}>Show $
 ### so, wait, actually how small?
 
 Just ~3Kb unzipped uminified. Compared to [~10x to 30x that](https://gist.github.com/Restuta/cda69e50a853aa64912d) gzipped minified for big frameworks. 
+
+*Note: you can get a [101 SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/no_xss_protection_r.js) version without any XSS protection.*
+
 
 ### case-study: differences with lit-html
 
