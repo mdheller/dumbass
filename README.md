@@ -1,6 +1,6 @@
 # brutal.js
 
-A crazy-small ~framework~file for building brutal/brutalist web applications
+A crazy-small framework for building brutal/brutalist web applications
 
 ## small
 
@@ -154,29 +154,28 @@ Use Brutal to write simple functions that render to HTML right off the bat in al
 
 ## Event-listeners
 
-Any valid DOM/HTML event can be added. Here's a simple literate and working example to create an editable div in Brutal.j: 
+Any valid DOM/HTML event can be added. Here's a simple, **literate** and working example to create an editable div in Brutal.j: 
 
 ```
 
-const EditableDiv = content => R`
-  <div class=edit 
+const EditableDiv = content =>
+  R`<div class=edit 
        dblclick=${ editContent } 
-       blur=${ endEdit }
-  >${content}</div>
+       blur=${ endEdit }>${content}</div>
 `;
 
 load = () => render( EditableDiv('hello world'), document.body );
 
-function editContent({ dblClick: { srcElement }}) {
-  if (srcElement.matches('.edit')) {
-    srcElement.setAttribute('contenteditable','');
+function editContent({ dblClick: { srcElement: el }}) {
+  if (el.matches('.edit')) {
+    el.setAttribute('contenteditable','');
   } else {
-    srcElement.closest('.edit').setAttribute('contenteditable','');
+    el.closest('.edit').setAttribute('contenteditable','');
   }
 }
 
-function endEdit({ blur: { srcElement }}) {
-  srcElement.removeAttribute("contenteditable");
+function endEdit({ blur: { srcElement: el }}) {
+  el.removeAttribute('contenteditable');
 }
 
 ```
@@ -256,11 +255,10 @@ No tooling required. Understood by all JS editors and tools.
 Because template literals use `${}` as the expression delimiter, CSS's use of `{}` isn't interpreted as an expression. You can include style tags in your templates as you would expect:
 
 ```javascript
-R`
-  <style>
+R`<style>
     :host {
       background: burlywood;
     }
   </style>
-`
+`;
 ```
