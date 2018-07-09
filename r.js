@@ -6,16 +6,11 @@
 
   Object.assign(self,{R,render,fc});
 
-  function safe(str) {
-    return (str+'')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/&/g, '&amp;')
-      .replace(/"/g, '&#34;')
-      .replace(/'/g, '&#39;');
+  function safe(v) {
+    return (v+'').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/&/g,'&amp;').replace(/"/g,'&#34;').replace(/'/g,'&#39;');
   }
 
-  function fc( t, frag = false ) {
+  function fc(t, frag = false) {
     const fragment = parser.parseFromString(
       `<template>${t}</template>`,
       "text/html")
