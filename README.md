@@ -6,8 +6,6 @@ A crazy-small framework for building brutal/brutalist web applications
 
 126 source lines of code. 2 functions: `R` and `render`
 
-1.52Kb minified and gzipped.
-
 Basic usage:
 
 ```JavaScript
