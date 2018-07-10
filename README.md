@@ -262,6 +262,13 @@ They're just JavaScript expressions.
 
 In a type-checking environment like TypeScript, expressions are checked because they are just regular script. Hover-over docs and code-completion just work as well.
 
+## Advantages over React
+
+### Not bloatware
+
+Only ~1.5Kb minified gzipped compared to ~100kb for other frameworks. 
+If you have 1 million requests per day this will save you 3 terabytes of data a month.
+
 ## Benefits over JSX
 
 ### Native syntax
