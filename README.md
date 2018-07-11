@@ -68,10 +68,11 @@ npm i --save brutalist-web
 
 ## roadmap
 
-- Server side rendering / client-server symmetry
-- Encourage / macro-ise targeted forms and named iframes ( sooo brutal )
-- Encourage / bundle brutalist CSS sheets
-- Explore using intercooler-like attributes for async/await fetch
+There isn't one!
+
+Brutal is already perfect. 
+
+Except for some bugs. If you find those, [open an issue.](https://github.com/dosyago-coder-0/brutal.js/issues)
 
 ## conclusion
 
