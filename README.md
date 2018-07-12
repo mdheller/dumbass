@@ -2,6 +2,15 @@
 
 A crazy-small framework for building brutal/brutalist web applications
 
+## news ~ removing ESlint
+
+[ESlint compromised](https://github.com/eslint/eslint-scope/issues/39) in an attempt to steal credentials.
+
+This is terrible. And it is the ESlint that comes with Babel. Another **great** reason to not use 
+enormous/bloated toolchains/transpilation and things like JSX/Babel/React. Just use small code you can read.
+
+Brutal.js! FTW :smile:
+
 ## small
 
 126 source lines of code. 2 functions: `R` and `render`
