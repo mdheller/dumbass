@@ -70,9 +70,21 @@ npm i --save brutalist-web
 
 There isn't one!
 
-Brutal is already perfect. 
+Brutal is already perfect!
 
-Except for some bugs. If you find those, [open an issue.](https://github.com/dosyago-coder-0/brutal.js/issues)
+## perfection
+
+Perfection, in this field, I think &mdash; is complete with regard to its specified purpose.
+
+No design is perfect, there's always tradeoffs. But with regard to implementing it's purpose, it is perfect.
+But with regard to *how* it implements it, it's not perfect, and no design is. There's always trade-offs,
+and from one perspective, things can be improved, which from another perspective, makes things worse. 
+
+But functionally, brutal.js is perfect. It just does the minimum of what you want it to do. How it does that, can be improved, no doubt! 
+
+If you have an idea, [create a PR!](https://github.com/dosyago-coder-0/brutal.js/pulls)
+
+So it is perfect, except for some bugs. If you find those, [open an issue!](https://github.com/dosyago-coder-0/brutal.js/issues)
 
 ## conclusion
 
