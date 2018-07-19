@@ -1,10 +1,28 @@
-'use strict';
 {
   const XSS = 'Possible XSS attack warning. Possible object forgery attempt detected. Codes do not match.',
     OBJ = 'Object properties don\'t work here.',
     LAST_ATTR_NAME = /\s+([\w-]+)\s*=\s*"?\s*$/,
-    NEW_TAG = /<[\w]+/,
-    currentKey = Math.random()+'';
+    NEW_TAG = /<\w+/g,
+    currentKey = Math.random()+'',
+    VOID_ELEMENTS = new Set([
+      "area",
+      "base",
+      "br",
+      "col",
+      "command",
+      "embed",
+      "hr",
+      "img",
+      "input",
+      "keygen",
+      "link",
+      "menuitem",
+      "meta",
+      "param",
+      "source",
+      "track",
+      "wbr"
+    ]);
 
   Object.assign(self,{R,render});
 
@@ -18,19 +36,31 @@
         if (!!v.str && !!v.handlers) {
           return verify(v,currentKey) && v;
         }
-        throw {'error': OBJ, 'value': v};
+        throw {error: OBJ, value: v};
       } else return v === null || v === undefined ? '' : v;
     });
     let hid,
-      hidSaved = false,
+      lastNewTagIndex,
+      lastTagName,
       str = '';
     while (parts.length > 1) {
-      const part = parts.shift(),
-        attrNameMatches = part.match(LAST_ATTR_NAME);
+      let part = parts.shift(),
+        attrNameMatches = part.match(LAST_ATTR_NAME),
+        newTagMatches = part.match(NEW_TAG)
       let val = vals.shift();
-      if (part.match(NEW_TAG)) {
-        hid = `hid_${Math.random()}`;
-        hidSaved = false;
+      if (newTagMatches) {
+        if ( handlers[hid] ) {
+          const before = str.slice(0,lastNewTagIndex);
+          const after = str.slice(lastNewTagIndex);
+          str = before + 
+            `<${lastTagName} id=${hid}>` + 
+            (isVoid(lastTagName) ? '' : `</${lastTagName}>`) + 
+            after;
+        }
+        hid = `hid_${Math.random()}`.replace('.','');
+        const lastTag = newTagMatches[newTagMatches.length-1];
+        lastNewTagIndex = part.indexOf(lastTag) + str.length;
+        lastTagName = lastTag.slice(1);
       }
       if (typeof val === 'function') {
         const attrName = attrNameMatches && attrNameMatches.length > 1
@@ -38,12 +68,10 @@
             : false,
           newPart = part.replace(attrNameMatches[0], '');
         str += attrName ? newPart : part;
-        if (!hidSaved) {
+        if ( !Array.isArray(handlers[hid]) ) {
           handlers[hid] = [];
-          hidSaved = true;
-          str += ` data-hid="${hid}"`;
         }
-        handlers[hid].push({'eventName': attrName, 'handler': val});
+        handlers[hid].push({eventName: attrName, handler: val});
       } else if (!!val && !!val.handlers && !!val.str) {
         Object.assign(handlers,val.handlers);
         str += part;
@@ -61,10 +89,11 @@
     return o;
   }
 
-  function render (r, root, {'replace': replace = false} = {}) {
+  function render (r, root, {replace: replace = false} = {}) {
     if (Array.isArray(r) && r.every(val => !!val.str && !!val.handlers)) r = join(r);
     verify(r,currentKey);
     const {str,handlers} = r;
+    const newPinNodes = [];
     if (replace) {
       root.insertAdjacentHTML('beforeBegin', str);
       root.remove();
@@ -72,14 +101,21 @@
       root.innerHTML = '';
       root.insertAdjacentHTML('afterBegin', str);
     }
+    const remove = [];
     Object.keys(handlers).forEach(hid => {
-      const node = document.querySelector(`[data-hid="${hid}"]`),
+      const hidNode = document.getElementById(hid),
+        node = hidNode.nextElementSibling,
         nodeHandlers = handlers[hid];
 
+      remove.push(hidNode);
+
       if (!!node && !!nodeHandlers) {
-        nodeHandlers.forEach(({eventName,handler}) => node.addEventListener(eventName,handler));
-      } else throw {'error': `Node or handlers could not be found for ${hid}`, hid};
+        nodeHandlers.forEach(({eventName,handler}) => {
+          node.addEventListener(eventName,handler);
+        });
+      } else throw {error: `Node or handlers could not be found for ${hid}`, hid};
     });
+    remove.forEach(n => n.remove());
   }
 
   function join (rs) {
@@ -88,7 +124,7 @@
         verify({str,handlers,code},currentKey),Object.assign(H,handlers),str)).join('\n');
 
     if (str) {
-      const o = {str,'handlers': H};
+      const o = {str,handlers:H};
       o.code = sign(o,currentKey);
       return o;
     }
@@ -105,7 +141,7 @@
 
   function verify ({str,handlers,code},key) {
     if (sign({str,handlers},key) === code) return true;
-    throw {'error': XSS};
+    throw {error: XSS};
   }
 
   function hash (key = '', str) {
@@ -127,14 +163,22 @@
     a[2] *= Math.PI+a[3];
     a[3] *= Math.E+a[2];
 
-    return new Uint8Array(a.buffer).reduce((s,b) => s+b.toString(16).padStart(2,'0'));
+    return new Uint8Array(a.buffer).map(b => b.toString(16).padStart(2,'0')).join('');
   }
 
   function symbytes (sym) {
-    return unescape(encodeURIComponent(sym)).split('').map(c => c.codePointAt(0));
+    return [...unescape(encodeURIComponent(sym))].map(c => c.codePointAt(0));
   }
 
   function bytes (str) {
-    return Array.from(str).reduce((b,s) => (b.push(...symbytes(s)), b),[]);
+    const bs = [];
+    for( const s of str ) {
+      bs.push(...symbytes(s)); 
+    }
+    return bs;
+  }
+
+  function isVoid(tag) {
+    return VOID_ELEMENTS.has(tag.toLowerCase().trim());
   }
 }
