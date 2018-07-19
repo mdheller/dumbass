@@ -4,27 +4,6 @@ A crazy-small framework for building brutal/brutalist web applications
 
 Pure components / state-less components only. :heart_eyes: :gem: :ocean:
 
-## news ~ performance enhancements & pure only
-
-In [this commit](https://github.com/dosyago-coder-0/brutal.js/commit/027436398e74518d51d67eefdb96271513a1cc6c) I've made some tweaks that gave a 2x speedup in rendering performance in tests with 10s of thousands of nodes. Some basics were replacing inefficient to array methods (.split, Array.from) with more performant variants ([...i]), and replacing unnecessary .reduces with .maps or loops.
-
-Also, I've decided against the introduction of pinned/stateful components (explored in #7) because I see that pure components are sufficient. 
-
-Also this is 1.2 minor release.
-
-### work to do 
-
-- Clean up code. It just looks a bit messy. I think it can be improved with better names, explanatory comments, better indentation. I'm unworried about increasing the size as if people want minified they can always do that themselves.
-- Consider if there is a faster and still secure way to do the hashing / verification. Currently we call that multiple times, over the same string sequences, as they are embedded/included in templates higher up in the render/component hierarchy. Basically verify/hash/sign is called for every template, this means that the leaf node values have been hashed/verified multiple times. I'm not sure right now of a way to reduce this work and still keep it secure, but maybe there is. It is worth thinking about as after the performance enhancements hashing/symbytes is now the main performance blocker. 
-
-## news ~ removing ESlint
-
-[ESlint compromised](https://github.com/eslint/eslint-scope/issues/39) in an attempt to steal credentials.
-
-This is terrible. And it is the ESlint that comes with Babel. Another **great** reason to not use 
-enormous/bloated toolchains/transpilation and things like JSX/Babel/React. Just use small code you can read.
-
-Brutal.js! FTW :smile:
 
 ## small
 
@@ -323,3 +302,25 @@ R`<style>
 `;
 ```
 -----
+
+## news ~ performance enhancements & pure only
+
+In [this commit](https://github.com/dosyago-coder-0/brutal.js/commit/027436398e74518d51d67eefdb96271513a1cc6c) I've made some tweaks that gave a 2x speedup in rendering performance in tests with 10s of thousands of nodes. Some basics were replacing inefficient to array methods (.split, Array.from) with more performant variants ([...i]), and replacing unnecessary .reduces with .maps or loops.
+
+Also, I've decided against the introduction of pinned/stateful components (explored in #7) because I see that pure components are sufficient. 
+
+Also this is 1.2 minor release.
+
+### work to do 
+
+- Clean up code. It just looks a bit messy. I think it can be improved with better names, explanatory comments, better indentation. I'm unworried about increasing the size as if people want minified they can always do that themselves.
+- Consider if there is a faster and still secure way to do the hashing / verification. Currently we call that multiple times, over the same string sequences, as they are embedded/included in templates higher up in the render/component hierarchy. Basically verify/hash/sign is called for every template, this means that the leaf node values have been hashed/verified multiple times. I'm not sure right now of a way to reduce this work and still keep it secure, but maybe there is. It is worth thinking about as after the performance enhancements hashing/symbytes is now the main performance blocker. 
+
+## news ~ removing ESlint
+
+[ESlint compromised](https://github.com/eslint/eslint-scope/issues/39) in an attempt to steal credentials.
+
+This is terrible. And it is the ESlint that comes with Babel. Another **great** reason to not use 
+enormous/bloated toolchains/transpilation and things like JSX/Babel/React. Just use small code you can read.
+
+Brutal.js! FTW :smile:
