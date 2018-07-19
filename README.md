@@ -7,7 +7,7 @@ Pure components / state-less components only. :heart_eyes: :gem: :ocean:
 
 ## small
 
-126 source lines of code. 2 functions: `R` and `render`
+168 source lines of code. 2 functions: `R` and `render`
 
 Basic usage:
 
