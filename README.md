@@ -7,7 +7,7 @@ Pure components / state-less components only. :heart_eyes: :gem: :ocean:
 
 ## small
 
-153 SLOC [*or a 99 SLOC version without XSS blocking*](https://github.com/dosyago-coder-0/brutal.js/blob/master/no_xss_protection_r.js). 2 functions: `R` and `render`
+153 SLOC ([*or a 99 SLOC version without XSS blocking*](https://github.com/dosyago-coder-0/brutal.js/blob/master/no_xss_protection_r.js)). 2 functions: `R` and `render`
 
 Basic usage:
 
