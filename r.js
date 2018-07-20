@@ -4,31 +4,18 @@
     LAST_ATTR_NAME = /\s+([\w-]+)\s*=\s*"?\s*$/,
     NEW_TAG = /<\w+/g,
     currentKey = Math.random()+'',
-    VOID_ELEMENTS = new Set([
-      "area",
-      "base",
-      "br",
-      "col",
-      "command",
-      "embed",
-      "hr",
-      "img",
-      "input",
-      "keygen",
-      "link",
-      "menuitem",
-      "meta",
-      "param",
-      "source",
-      "track",
-      "wbr"
-    ]);
+    VOID_ELEMENTS = new Set(["area","base","br","col","command","embed","hr","img","input","keygen","link","menuitem","meta","param","source","track","wbr"]);
 
   Object.assign(self,{R,render});
 
   function R (parts, ...vals) {
     parts = [...parts];
     const handlers = {};
+    let hid,
+      lastNewTagIndex,
+      lastTagName,
+      str = '';
+
     vals = vals.map(v => {
       if (Array.isArray(v) && v.every(item => !!item.handlers && !!item.str)) {
         return join(v) || '';
@@ -39,24 +26,14 @@
         throw {error: OBJ, value: v};
       } else return v === null || v === undefined ? '' : v;
     });
-    let hid,
-      lastNewTagIndex,
-      lastTagName,
-      str = '';
+
     while (parts.length > 1) {
       let part = parts.shift(),
         attrNameMatches = part.match(LAST_ATTR_NAME),
         newTagMatches = part.match(NEW_TAG)
       let val = vals.shift();
       if (newTagMatches) {
-        if ( handlers[hid] ) {
-          const before = str.slice(0,lastNewTagIndex);
-          const after = str.slice(lastNewTagIndex);
-          str = before + 
-            `<${lastTagName} id=${hid}>` + 
-            (isVoid(lastTagName) ? '' : `</${lastTagName}>`) + 
-            after;
-        }
+        if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
         hid = `hid_${Math.random()}`.replace('.','');
         const lastTag = newTagMatches[newTagMatches.length-1];
         lastNewTagIndex = part.indexOf(lastTag) + str.length;
@@ -83,25 +60,29 @@
         str += attrNameMatches ? `"${safe(val)}"` : safe(val);
       }
     }
-    if ( handlers[hid] ) {
-      const before = str.slice(0,lastNewTagIndex);
-      const after = str.slice(lastNewTagIndex);
-      str = before + 
-        `<${lastTagName} id=${hid}>` + 
-        (isVoid(lastTagName) ? '' : `</${lastTagName}>`) + 
-        after;
-    }
+    if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
     str += parts.shift();
     const o = {str,handlers};
     o.code = sign(o,currentKey);
     return o;
   }
 
+  function markInsertionPoint({str,lastNewTagIndex,lastTagName,hid}) {
+    const before = str.slice(0,lastNewTagIndex);
+    const after = str.slice(lastNewTagIndex);
+    return before + 
+      `<${lastTagName} id=${hid}>` + 
+      (isVoid(lastTagName) ? '' : `</${lastTagName}>`) + 
+      after;
+  }
+
   function render (r, root, {replace: replace = false} = {}) {
     if (Array.isArray(r) && r.every(val => !!val.str && !!val.handlers)) r = join(r);
     verify(r,currentKey);
-    const {str,handlers} = r;
-    const newPinNodes = [];
+    const {str,handlers} = r,
+      newPinNodes = [],
+      remove = [];
+
     if (replace) {
       root.insertAdjacentHTML('beforeBegin', str);
       root.remove();
@@ -109,7 +90,7 @@
       root.innerHTML = '';
       root.insertAdjacentHTML('afterBegin', str);
     }
-    const remove = [];
+
     Object.keys(handlers).forEach(hid => {
       const hidNode = document.getElementById(hid),
         node = hidNode.nextElementSibling,
