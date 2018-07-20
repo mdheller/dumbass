@@ -1,4 +1,5 @@
-(function(){
+"use strict";
+{
   const XSS = "Possible XSS attack warning. Possible object forgery attempt detected. Codes do not match.";
   const OBJ = "Object properties don't work here.";
   const MARKER = hid => {detail: `Insertion point market not found for ${hid}`, hid};
@@ -9,7 +10,6 @@
   const VOID_ELEMENTS = new Set(["area","base","br","col","command","embed","hr","img","input","keygen",
     "link","menuitem","meta","param","source","track","wbr"]);
 
-  Object.assign(R,{XSS,OBJ,MARKER,HID,LAST_ATTR_NAME,NEW_TAG,VOID_ELEMENTS});
   Object.assign(self,{R,render});
 
   function R (parts, ...vals) {
@@ -176,4 +176,4 @@
   function isVoid(tag) {
     return R.VOID_ELEMENTS.has(tag.toLowerCase().trim());
   }
-}())
+}
