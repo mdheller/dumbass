@@ -4,6 +4,7 @@ A crazy-small framework for building brutal/brutalist web applications
 
 Pure components / state-less components only. :heart_eyes: :gem: :ocean:
 
+Release: 1.2.1 *Speed improvements edition + bug fixes*
 
 ## small
 
