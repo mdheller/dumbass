@@ -83,6 +83,14 @@
         str += attrNameMatches ? `"${safe(val)}"` : safe(val);
       }
     }
+    if ( handlers[hid] ) {
+      const before = str.slice(0,lastNewTagIndex);
+      const after = str.slice(lastNewTagIndex);
+      str = before + 
+        `<${lastTagName} id=${hid}>` + 
+        (isVoid(lastTagName) ? '' : `</${lastTagName}>`) + 
+        after;
+    }
     str += parts.shift();
     const o = {str,handlers};
     o.code = sign(o,currentKey);
