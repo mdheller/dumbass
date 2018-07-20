@@ -216,6 +216,15 @@ function endEdit({ blur: { srcElement: el }}) {
 
 Brutal is designed to be lightweight and fast. It utilizes the built-in JS and HTML parsers - it doesn't include any expression or markup parser of its own.
 
+The `no_xss_proection_r.js` version is a lot faster than the regular `r.js` version where we sign and verify everything.
+
+I think there are 2 ways to speed up the regular version:
+
+- Have a think about how to call sign/verify as few times as possible. Right now, I am sure work is being redone, and I think that is unnecessary.
+- Replace signing and verifying with another faster XSS mitigation strategy. 
+
+In addition I think I need to really analyse if signing and verifying works as intended. Is it really the right solution? I am unahppy with the performance overhead it adds to the no_xss_protection version when doing tens of thousands of nodes. Perhaps this is an unrealistic benchmark, but I think a valid performance issue is highlighted. 
+
 ## Features
 
 ### Simple expressions and literals
