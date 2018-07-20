@@ -67,8 +67,7 @@
       root.insertAdjacentHTML('afterBegin', str);
     }
 
-    Object.entries(handlers).forEach(([hid,nodeHandlers]) 
-      => addHandlersToMarkedInsertionPoint({hid,nodeHandlers}));
+    Object.entries(handlers).forEach(([hid,nodeHandlers]) => addHandlersToMarkedInsertionPoint({hid,nodeHandlers}));
   }
 
   function join (rs) {
