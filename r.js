@@ -9,6 +9,7 @@
   const VOID_ELEMENTS = new Set(["area","base","br","col","command","embed","hr","img","input","keygen",
     "link","menuitem","meta","param","source","track","wbr"]);
 
+  Object.assign(R,{XSS,OBJ,MARKER,HID,LAST_ATTR_NAME,NEW_TAG,VOID_ELEMENTS});
   Object.assign(self,{R,render});
 
   function R (parts, ...vals) {
@@ -20,8 +21,8 @@
 
     while (parts.length > 1) {
       let part = parts.shift();
-      let attrNameMatches = part.match(LAST_ATTR_NAME);
-      let newTagMatches = part.match(NEW_TAG);
+      let attrNameMatches = part.match(R.LAST_ATTR_NAME);
+      let newTagMatches = part.match(R.NEW_TAG);
       let val = vals.shift();
       if (newTagMatches) {
         if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
@@ -91,7 +92,7 @@
       if (!!v.str && !!v.handlers) {
         return verify(v,currentKey) && v;
       }
-      throw {error: OBJ, value: v};
+      throw {error: R.OBJ, value: v};
     } else return v === null || v === undefined ? '' : v;
   }
 
@@ -117,11 +118,11 @@
     if (!!hidNode) {
       node = hidNode.nextElementSibling;
       hidNode.remove();
-    } else throw {error: MARKER(hid)}
+    } else throw {error: R.MARKER(hid)}
 
     if (!!node && !!nodeHandlers) {
       nodeHandlers.forEach(({eventName,handler}) => node.addEventListener(eventName,handler));
-    } else throw {error: HID(hid)} 
+    } else throw {error: R.HID(hid)} 
   }
 
   function safe (v) {
@@ -135,7 +136,7 @@
 
   function verify ({str,handlers,code},key) {
     if (sign({str,handlers},key) === code) return true;
-    throw {error: XSS};
+    throw {error: R.XSS};
   }
 
   function hash (key = '', str) {
@@ -173,6 +174,6 @@
   }
 
   function isVoid(tag) {
-    return VOID_ELEMENTS.has(tag.toLowerCase().trim());
+    return R.VOID_ELEMENTS.has(tag.toLowerCase().trim());
   }
 }
