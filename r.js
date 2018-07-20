@@ -1,6 +1,8 @@
 {
-  const XSS = 'Possible XSS attack warning. Possible object forgery attempt detected. Codes do not match.',
-    OBJ = 'Object properties don\'t work here.',
+  const XSS = "Possible XSS attack warning. Possible object forgery attempt detected. Codes do not match.",
+    OBJ = "Object properties don't work here.",
+    MARKER = hid => {detail: `Insertion point market not found for ${hid}`, hid};
+    HID = hid => {detail: `Node or handlers not found for recorded hid ${hid}`, hid};
     LAST_ATTR_NAME = /\s+([\w-]+)\s*=\s*"?\s*$/,
     NEW_TAG = /<\w+/g,
     currentKey = Math.random()+'',
@@ -9,23 +11,11 @@
   Object.assign(self,{R,render});
 
   function R (parts, ...vals) {
-    parts = [...parts];
     const handlers = {};
-    let hid,
-      lastNewTagIndex,
-      lastTagName,
-      str = '';
+    let hid, lastNewTagIndex, lastTagName, str = '';
 
-    vals = vals.map(v => {
-      if (Array.isArray(v) && v.every(item => !!item.handlers && !!item.str)) {
-        return join(v) || '';
-      } else if (typeof v === 'object' && !!v) {
-        if (!!v.str && !!v.handlers) {
-          return verify(v,currentKey) && v;
-        }
-        throw {error: OBJ, value: v};
-      } else return v === null || v === undefined ? '' : v;
-    });
+    parts = [...parts];
+    vals = vals.map(parseValue);
 
     while (parts.length > 1) {
       let part = parts.shift(),
@@ -45,9 +35,7 @@
             : false,
           newPart = part.replace(attrNameMatches[0], '');
         str += attrName ? newPart : part;
-        if ( !Array.isArray(handlers[hid]) ) {
-          handlers[hid] = [];
-        }
+        if ( !Array.isArray(handlers[hid]) ) handlers[hid] = [];
         handlers[hid].push({eventName: attrName, handler: val});
       } else if (!!val && !!val.handlers && !!val.str) {
         Object.assign(handlers,val.handlers);
@@ -67,21 +55,9 @@
     return o;
   }
 
-  function markInsertionPoint({str,lastNewTagIndex,lastTagName,hid}) {
-    const before = str.slice(0,lastNewTagIndex);
-    const after = str.slice(lastNewTagIndex);
-    return before + 
-      `<${lastTagName} id=${hid}>` + 
-      (isVoid(lastTagName) ? '' : `</${lastTagName}>`) + 
-      after;
-  }
-
   function render (r, root, {replace: replace = false} = {}) {
-    if (Array.isArray(r) && r.every(val => !!val.str && !!val.handlers)) r = join(r);
-    verify(r,currentKey);
-    const {str,handlers} = r,
-      newPinNodes = [],
-      remove = [];
+    r = parseR(r);
+    const {str,handlers} = r;
 
     if (replace) {
       root.insertAdjacentHTML('beforeBegin', str);
@@ -91,20 +67,7 @@
       root.insertAdjacentHTML('afterBegin', str);
     }
 
-    Object.keys(handlers).forEach(hid => {
-      const hidNode = document.getElementById(hid),
-        node = hidNode.nextElementSibling,
-        nodeHandlers = handlers[hid];
-
-      remove.push(hidNode);
-
-      if (!!node && !!nodeHandlers) {
-        nodeHandlers.forEach(({eventName,handler}) => {
-          node.addEventListener(eventName,handler);
-        });
-      } else throw {error: `Node or handlers could not be found for ${hid}`, hid};
-    });
-    remove.forEach(n => n.remove());
+    addAllHandlers(handlers);
   }
 
   function join (rs) {
@@ -117,6 +80,52 @@
       o.code = sign(o,currentKey);
       return o;
     }
+  }
+
+  function parseValue(v) {
+    if (Array.isArray(v) && v.every(item => !!item.handlers && !!item.str)) {
+      return join(v) || '';
+    } else if (typeof v === 'object' && !!v) {
+      if (!!v.str && !!v.handlers) {
+        return verify(v,currentKey) && v;
+      }
+      throw {error: OBJ, value: v};
+    } else return v === null || v === undefined ? '' : v;
+  }
+
+  function parseR(r) {
+    if (Array.isArray(r) && r.every(val => !!val.str && !!val.handlers)) r = join(r);
+    verify(r,currentKey);
+    return r;
+  }
+
+  function markInsertionPoint({str,lastNewTagIndex,lastTagName,hid}) {
+    const before = str.slice(0,lastNewTagIndex);
+    const after = str.slice(lastNewTagIndex);
+    return before + 
+      `<${lastTagName} id=${hid}>` + 
+      (isVoid(lastTagName) ? '' : `</${lastTagName}>`) + 
+      after;
+  }
+
+  function addAllHandlers(handlers) {
+    Object.entries(handlers).forEach(
+      ([hid,nodeHandlers]) => addHandlersToMarkedInsertionPoint({hid,nodeHandlers})
+    );
+  }
+
+  function addHandlersToMarkedInsertionPoint({hid,nodeHandlers}) {
+    const hidNode = document.getElementById(hid);
+    let node;
+
+    if (!!hidNode) {
+      node = hidNode.nextElementSibling;
+      hidNode.remove();
+    } else throw {error: MARKER(hid)}
+
+    if (!!node && !!nodeHandlers) {
+      nodeHandlers.forEach(({eventName,handler}) => node.addEventListener(eventName,handler));
+    } else throw {error: HID(hid)} 
   }
 
   function safe (v) {
