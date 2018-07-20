@@ -1,9 +1,9 @@
 {
-  const XSS = "Possible XSS attack warning. Possible object forgery attempt detected. Codes do not match.",
-    OBJ = "Object properties don't work here.",
-    MARKER = hid => {detail: `Insertion point market not found for ${hid}`, hid},
-    HID = hid => {detail: `Node or handlers not found for recorded hid ${hid}`, hid},
-    LAST_ATTR_NAME = /\s+([\w-]+)\s*=\s*"?\s*$/,
+  const XSS = "Possible XSS attack warning. Possible object forgery attempt detected. Codes do not match.";
+  const OBJ = "Object properties don't work here.";
+  const MARKER = hid => {detail: `Insertion point market not found for ${hid}`, hid};
+  const HID = hid => {detail: `Node or handlers not found for recorded hid ${hid}`, hid};
+  const LAST_ATTR_NAME = /\s+([\w-]+)\s*=\s*"?\s*$/,
     NEW_TAG = /<\w+/g,
     currentKey = Math.random()+'',
     VOID_ELEMENTS = new Set(["area","base","br","col","command","embed","hr","img","input","keygen","link","menuitem","meta","param","source","track","wbr"]);
