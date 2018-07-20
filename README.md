@@ -54,7 +54,7 @@ function ButtonWidget({name}) {
 To me, brutalist means as close to the basic raw HTML/ JavaScript as possible. 
 There's more to do on the roadmap, but for many projects, these simple functions are enough. 
 For example, take a look at [a working TodoMVC example](https://dosyago-coder-0.github.io/rvanillatodo/) made with brutal.js.
-Everything in brutal is "as close to the metal" ( the JS / HTML ) as possible. This is ensured by their being minimal JS code,
+Everything in brutal is "as close to the metal" ( the JS / HTML ) as possible. This is ensured by there being minimal JS code,
 minimal opinionation (everything is just HTML elements and event handlers), leaving you free to structure things however you like. 
 
 ## get it
