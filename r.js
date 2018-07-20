@@ -1,8 +1,8 @@
 {
   const XSS = "Possible XSS attack warning. Possible object forgery attempt detected. Codes do not match.",
     OBJ = "Object properties don't work here.",
-    MARKER = hid => {detail: `Insertion point market not found for ${hid}`, hid};
-    HID = hid => {detail: `Node or handlers not found for recorded hid ${hid}`, hid};
+    MARKER = hid => {detail: `Insertion point market not found for ${hid}`, hid},
+    HID = hid => {detail: `Node or handlers not found for recorded hid ${hid}`, hid},
     LAST_ATTR_NAME = /\s+([\w-]+)\s*=\s*"?\s*$/,
     NEW_TAG = /<\w+/g,
     currentKey = Math.random()+'',
@@ -67,7 +67,8 @@
       root.insertAdjacentHTML('afterBegin', str);
     }
 
-    Object.entries(handlers).forEach(([hid,nodeHandlers]) => addHandlersToMarkedInsertionPoint({hid,nodeHandlers}));
+    Object.entries(handlers).forEach(
+      ([hid,nodeHandlers]) => addHandlersToMarkedInsertionPoint({hid,nodeHandlers}));
   }
 
   function join (rs) {
