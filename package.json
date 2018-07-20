@@ -4,7 +4,6 @@
   "description": "3kb framework for building brutalist web apps",
   "main": "r.js",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint r.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
