@@ -3,8 +3,6 @@
   const OBJ = `Object properties don't work here.`;
   const LAST_ATTR_NAME = /\s+([\w-]+)\s*=\s*"?\s*$/;
   const NEW_TAG = /<[\w\-]+/;
-  const parser = new DOMParser;
-  let currentKey = Math.random()+'';
 
   Object.assign(self,{R,render});
 
@@ -97,7 +95,7 @@
   
   function join(rs) {
     const H = {};
-    const str = rs.map(({str,handlers,code}) => (Object.assign(H,handlers),str)).join('\n');
+    const str = rs.map(({str,handlers}) => (Object.assign(H,handlers),str)).join('\n');
     if ( !! str ) {
       return {str,handlers:H};
     }

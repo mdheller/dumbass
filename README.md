@@ -307,7 +307,7 @@ R`<style>
 
 In [this commit](https://github.com/dosyago-coder-0/brutal.js/commit/027436398e74518d51d67eefdb96271513a1cc6c) I've made some tweaks that gave a 2x speedup in rendering performance in tests with 10s of thousands of nodes. Some basics were replacing inefficient to array methods (.split, Array.from) with more performant variants ([...i]), and replacing unnecessary .reduces with .maps or loops.
 
-Also, I've decided against the introduction of pinned/stateful components (explored in #7) because I see that pure components are sufficient. 
+Also, I've decided against the introduction of pinned/stateful components (explored in [#7](https://github.com/dosyago-coder-0/brutal.js/pull/7) because I see that pure components are sufficient. 
 
 Also this is 1.2 minor release.
 
