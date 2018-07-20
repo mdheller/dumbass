@@ -3,10 +3,11 @@
   const OBJ = "Object properties don't work here.";
   const MARKER = hid => {detail: `Insertion point market not found for ${hid}`, hid};
   const HID = hid => {detail: `Node or handlers not found for recorded hid ${hid}`, hid};
-  const LAST_ATTR_NAME = /\s+([\w-]+)\s*=\s*"?\s*$/,
-    NEW_TAG = /<\w+/g,
-    currentKey = Math.random()+'',
-    VOID_ELEMENTS = new Set(["area","base","br","col","command","embed","hr","img","input","keygen","link","menuitem","meta","param","source","track","wbr"]);
+  const LAST_ATTR_NAME = /\s+([\w-]+)\s*=\s*"?\s*$/;
+  const NEW_TAG = /<\w+/g;
+  const currentKey = Math.random()+'';
+  const VOID_ELEMENTS = new Set(["area","base","br","col","command","embed","hr","img","input","keygen",
+    "link","menuitem","meta","param","source","track","wbr"]);
 
   Object.assign(self,{R,render});
 
@@ -18,9 +19,9 @@
     vals = vals.map(parseValue);
 
     while (parts.length > 1) {
-      let part = parts.shift(),
-        attrNameMatches = part.match(LAST_ATTR_NAME),
-        newTagMatches = part.match(NEW_TAG)
+      let part = parts.shift();
+      let attrNameMatches = part.match(LAST_ATTR_NAME);
+      let newTagMatches = part.match(NEW_TAG);
       let val = vals.shift();
       if (newTagMatches) {
         if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
@@ -138,9 +139,9 @@
   }
 
   function hash (key = '', str) {
-    const s = str.length,
-      m = bytes(key+str),
-      a=new Float64Array(4);
+    const s = str.length;
+    const m = bytes(key+str);
+    const a=new Float64Array(4);
 
     a[0] = 1;
     a[2] = s ? Math.pow(s+1/s, 1/2) : 3;
