@@ -8,7 +8,7 @@ Release: 1.2.1 *Speed improvements edition + bug fixes*
 
 ## small
 
-153 SLOC ([*or a 99 SLOC version without XSS blocking*](https://github.com/dosyago-coder-0/brutal.js/blob/master/no_xss_protection_r.js)). 2 functions: `R` and `render`
+153 SLOC ([*or a faster 106 SLOC version without XSS blocking*](https://github.com/dosyago-coder-0/brutal.js/blob/master/no_xss_protection_r.js)). 2 functions: `R` and `render`
 
 Basic usage:
 
@@ -217,15 +217,6 @@ function endEdit({ blur: { srcElement: el }}) {
 
 Brutal is designed to be lightweight and fast. It utilizes the built-in JS and HTML parsers - it doesn't include any expression or markup parser of its own.
 
-The `no_xss_proection_r.js` version is a lot faster than the regular `r.js` version where we sign and verify everything.
-
-I think there are 2 ways to speed up the regular version:
-
-- Have a think about how to call sign/verify as few times as possible. Right now, I am sure work is being redone, and I think that is unnecessary.
-- Replace signing and verifying with another faster XSS mitigation strategy. 
-
-In addition I think I need to really analyse if signing and verifying works as intended. Is it really the right solution? I am unahppy with the performance overhead it adds to the no_xss_protection version when doing tens of thousands of nodes. Perhaps this is an unrealistic benchmark, but I think a valid performance issue is highlighted. 
-
 ## Features
 
 ### Simple expressions and literals
@@ -323,8 +314,18 @@ Also this is 1.2 minor release.
 
 ### work to do 
 
-- Clean up code. It just looks a bit messy. I think it can be improved with better names, explanatory comments, better indentation. I'm unworried about increasing the size as if people want minified they can always do that themselves.
+#### Hashing and Security. 
+
 - Consider if there is a faster and still secure way to do the hashing / verification. Currently we call that multiple times, over the same string sequences, as they are embedded/included in templates higher up in the render/component hierarchy. Basically verify/hash/sign is called for every template, this means that the leaf node values have been hashed/verified multiple times. I'm not sure right now of a way to reduce this work and still keep it secure, but maybe there is. It is worth thinking about as after the performance enhancements hashing/symbytes is now the main performance blocker. 
+
+- Performance and security. The `no_xss_proection_r.js` version is a lot faster than the regular `r.js` version where we sign and verify everything.
+
+  I think there are 2 ways to speed up the regular version:
+
+  - Have a think about how to call sign/verify as few times as possible. Right now, I am sure work is being redone, and I think that is unnecessary.
+  - Replace signing and verifying with another faster XSS mitigation strategy. 
+
+  In addition I think I need to really analyse if signing and verifying works as intended. Is it really the right solution? I am unahppy with the performance overhead it adds to the no_xss_protection version when doing tens of thousands of nodes. Perhaps this is an unrealistic benchmark, but I think a valid performance issue is highlighted. 
 
 ## news ~ removing ESlint
 
