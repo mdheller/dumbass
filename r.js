@@ -1,4 +1,4 @@
-{
+(function(){
   const XSS = "Possible XSS attack warning. Possible object forgery attempt detected. Codes do not match.";
   const OBJ = "Object properties don't work here.";
   const MARKER = hid => {detail: `Insertion point market not found for ${hid}`, hid};
@@ -176,4 +176,4 @@
   function isVoid(tag) {
     return R.VOID_ELEMENTS.has(tag.toLowerCase().trim());
   }
-}
+}())
