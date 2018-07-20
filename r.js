@@ -67,7 +67,8 @@
       root.insertAdjacentHTML('afterBegin', str);
     }
 
-    addAllHandlers(handlers);
+    Object.entries(handlers).forEach(([hid,nodeHandlers]) 
+      => addHandlersToMarkedInsertionPoint({hid,nodeHandlers}));
   }
 
   function join (rs) {
@@ -106,12 +107,6 @@
       `<${lastTagName} id=${hid}>` + 
       (isVoid(lastTagName) ? '' : `</${lastTagName}>`) + 
       after;
-  }
-
-  function addAllHandlers(handlers) {
-    Object.entries(handlers).forEach(
-      ([hid,nodeHandlers]) => addHandlersToMarkedInsertionPoint({hid,nodeHandlers})
-    );
   }
 
   function addHandlersToMarkedInsertionPoint({hid,nodeHandlers}) {
