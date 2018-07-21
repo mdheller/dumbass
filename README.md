@@ -50,7 +50,7 @@ Basic usage of R:
  function App(what){
     return R`
     <main
-      mousemove=${alert}>
+      mousemove=${e => alert(what)}>
       <h1>My ${what} App</h1>
     </main>`
   }
