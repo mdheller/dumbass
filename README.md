@@ -12,12 +12,20 @@ Release 1.3 &mdash; *3 tiers of XSS protection edition* being:
 
 ## small
 
-153 SLOC ([*or a faster 106 SLOC version without XSS blocking*](https://github.com/dosyago-coder-0/brutal.js/blob/master/no_xss_protection_r.js)). 2 functions: `R` and `render`
+[125 SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/r.js) 
+
+[*or a faster 106 SLOC version without XSS blocking*](https://github.com/dosyago-coder-0/brutal.js/blob/master/no_xss_protection_r.js), or [*a slower 153 SLOC version with advanced XSS blocking*](https://github.com/dosyago-coder-0/brutal.js/blob/master/slow_xss_protection_r.js). 
+
+2 functions: `R` and `render`
 
 Basic usage:
 
 ```JavaScript
-  render(App(), document.getElementById('root'));
+  const App = what => R`
+    <main mousemove=${() => alert(what)}>
+      <h1>My ${what} App</h1>
+    </main>`;
+  render(App('good'), document.body);
 ```
 
 ## "React like"
