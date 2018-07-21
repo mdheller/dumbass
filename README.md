@@ -87,9 +87,7 @@ npm i --save brutalist-web
 <script src=node_modules/brutalist-web/r.js></script>
 ```
 
-## roadmap
-
-There isn't one!
+## roadmap ~ there isn't one :smiley_cat:
 
 Brutal is already perfect!
 
