@@ -207,7 +207,6 @@ It's aim is to get as close to the raw material (HTML/CSS/JS) as possible and le
 
 It doesn't have to be as hard as the frameworks think it does. 
 
-
 ## Make Web Literate Again :heart_eyes: :gem: :ocean:
 
 Use Brutal to write simple functions that render to HTML right off the bat in all modern browsers, without the burden of massive amounts of code, opinionated conceptual models, learning curves and technical-debt/lock in.
@@ -225,15 +224,12 @@ Use Brutal to write simple functions that render to HTML right off the bat in al
 Any valid DOM/HTML event can be added. Here's a simple, **literate** and working example to create an editable div in Brutal.js: 
 
 ```JavaScript
-
 const EditableDiv = content =>
   R`<div class=edit 
        dblclick=${ editContent } 
        blur=${ endEdit }>${content}</div>`;
 
-
 load = () => render(EditableDiv('hello world'), document.body);
-
 
 function editContent({ dblClick: { srcElement: el }}) {
   if (el.matches('.edit')) {
@@ -246,7 +242,6 @@ function editContent({ dblClick: { srcElement: el }}) {
 function endEdit({ blur: { srcElement: el }}) {
   el.removeAttribute('contenteditable');
 }
-
 ```
 
 ## Performance
