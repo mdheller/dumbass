@@ -2,21 +2,9 @@
 
 A crazy-small framework for building brutal/brutalist web applications
 
-Pure components / state-less components only. :heart_eyes: :gem: :ocean:
-
-Release 1.3 &mdash; *3 tiers of XSS protection edition* being:
-
-- none (very fast, but no XSS protection) as `no_xss_protection_r.js`,
-- normal (almost as fast, basic value escaping and basic template anti-forgery) as `r.js`,
-- slow (quite slow (for many nodes), value escaping and robust anti-forgery) as `slow_xss_protection_r.js`.
-
 ## small
 
-[125 SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/r.js) 
-
-[*or a faster 106 SLOC version without XSS blocking*](https://github.com/dosyago-coder-0/brutal.js/blob/master/no_xss_protection_r.js), or [*a slower 153 SLOC version with advanced XSS blocking*](https://github.com/dosyago-coder-0/brutal.js/blob/master/slow_xss_protection_r.js). 
-
-2 functions: `R` and `render`
+[125 SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/r.js). 2 functions: `R` and `render`, or
 
 Basic usage:
 
@@ -138,8 +126,19 @@ const ButtonWidget = ({name}) => R`<button click=${() => showModal(name)}>Show $
 
 Just ~4Kb unzipped uminified. Compared to [~10x to 30x that](https://gist.github.com/Restuta/cda69e50a853aa64912d) gzipped minified for big frameworks. 
 
-*Note: you can get a [101 SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/no_xss_protection_r.js) ~3Kb version without any XSS protection.*
+In detail:
 
+- [125 SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/r.js). 2 functions: `R` and `render`, or
+- [*a faster 106 SLOC version without XSS blocking*](https://github.com/dosyago-coder-0/brutal.js/blob/master/no_xss_protection_r.js), or 
+- [*a slower 153 SLOC version with advanced XSS blocking*](https://github.com/dosyago-coder-0/brutal.js/blob/master/slow_xss_protection_r.js). 
+
+### current release: 1.3
+
+Release 1.3 &mdash; *3 tiers of XSS protection edition* being:
+
+- none (very fast, but no XSS protection) as `no_xss_protection_r.js`,
+- normal (almost as fast, basic value escaping and basic template anti-forgery) as `r.js`,
+- slow (quite slow (for many nodes), value escaping and robust anti-forgery) as `slow_xss_protection_r.js`.
 
 ### case-study: differences with lit-html
 
@@ -183,6 +182,11 @@ But that's not even it's aim.
 It's aim is to get as close to the raw material (HTML/CSS/JS) as possible and let you decide how to work with it based on your function. It's meant to make it fast and easy for you to build what you want. 
 
 It doesn't have to be as hard as the frameworks think it does. 
+
+For example: everyone thinks you need stateful components. You can write that in Brutal if you really want to, 
+but I believe you can do everything you need to do, in a more simple way, with pure stateless components.
+
+:heart_eyes: :gem: :ocean:
 
 ## Make Web Literate Again
 
