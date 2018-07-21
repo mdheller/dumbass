@@ -8,22 +8,6 @@ A crazy-small framework for building brutal/brutalist web applications
 
 2 functions: `R` and `render`.
 
-Basic usage:
-
-```JSX
-
-  onload = () => render(App('good'), document.body);
-  
-  function App(what){
-    return R`
-    <main
-      mousemove=${$=>alert(what)}>
-      <h1>My ${what} App</h1>
-    </main>`;
-  }
-  
-```
-
 ## "React like"
 
 This is React/JSX:
@@ -57,6 +41,25 @@ function ButtonWidget({name}) {
   `title=${title}` never `title="${title}"`
 - every bit of HTML is tagged with an R and written with backticks. Technically, this is an ES6 template literal and template tag function.
 - Every replaced value is enclosed in `${...}` instead of `{...}`
+
+### basic usage
+
+Basic usage of R:
+
+```JSX
+ function App(what){
+    return R`
+    <main
+      mousemove=${alert}>
+      <h1>My ${what} App</h1>
+    </main>`
+  }
+```
+
+Basic usage of render:
+```JSX
+  onload = () => render(App('good'), document.body) 
+```
 
 ## why brutalist?
 
