@@ -26,7 +26,7 @@ This is R/brutal.js:
 
 ```JSX
 function ButtonWidget({name}) {
-  return R`;
+  return R`
     <button click=${() => showModal(name)}>
       Show ${name} Modal
     </button>
