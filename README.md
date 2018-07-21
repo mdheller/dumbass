@@ -107,6 +107,15 @@ If you have an idea, [create a PR!](https://github.com/dosyago-coder-0/brutal.js
 
 So it is perfect, except for some bugs. If you find those, [open an issue!](https://github.com/dosyago-coder-0/brutal.js/issues)
 
+### An example: everyone thinks you need stateful components. 
+
+You *could* write that in Brutal if you really want to.
+
+But I believe you can do everything you they can do, more simply, 
+with pure, stateless R functions,
+and event handler and helper functions
+for your business logic.
+
 ## conclusion
 
 If you know HTML and JS, you know brutal.js. Give it a spin, open an issue, make a PR, and let me know how you're using it, and where you think it should go.
@@ -200,12 +209,8 @@ It's aim is to get as close to the raw material (HTML/CSS/JS) as possible and le
 
 It doesn't have to be as hard as the frameworks think it does. 
 
-For example: everyone thinks you need stateful components. You can write that in Brutal if you really want to, 
-but I believe you can do everything you need to do, in a more simple way, with pure stateless components.
 
-:heart_eyes: :gem: :ocean:
-
-## Make Web Literate Again
+## Make Web Literate Again :heart_eyes: :gem: :ocean:
 
 Use Brutal to write simple functions that render to HTML right off the bat in all modern browsers, without the burden of massive amounts of code, opinionated conceptual models, learning curves and technical-debt/lock in.
 
@@ -337,7 +342,9 @@ R`<style>
 ```
 -----
 
-## news ~ performance enhancements & pure only
+## news ~ 
+
+### performance enhancements & pure only
 
 In [this commit](https://github.com/dosyago-coder-0/brutal.js/commit/027436398e74518d51d67eefdb96271513a1cc6c) I've made some tweaks that gave a 2x speedup in rendering performance in tests with 10s of thousands of nodes. Some basics were replacing inefficient to array methods (.split, Array.from) with more performant variants ([...i]), and replacing unnecessary .reduces with .maps or loops.
 
@@ -345,22 +352,16 @@ Also, I've decided against the introduction of pinned/stateful components (explo
 
 Also this is 1.2 minor release.
 
-### work to do 
+#### work to do ~ hashing and security. 
 
-#### Hashing and Security. 
-
-- Consider if there is a faster and still secure way to do the hashing / verification. Currently we call that multiple times, over the same string sequences, as they are embedded/included in templates higher up in the render/component hierarchy. Basically verify/hash/sign is called for every template, this means that the leaf node values have been hashed/verified multiple times. I'm not sure right now of a way to reduce this work and still keep it secure, but maybe there is. It is worth thinking about as after the performance enhancements hashing/symbytes is now the main performance blocker. 
-
-- Performance and security. The `no_xss_proection_r.js` version is a lot faster than the regular `r.js` version where we sign and verify everything.
-
-  I think there are 2 ways to speed up the regular version:
+  I think there are 2 ways to speed up the slow, advanced XSS blocking version:
 
   - Have a think about how to call sign/verify as few times as possible. Right now, I am sure work is being redone, and I think that is unnecessary.
   - Replace signing and verifying with another faster XSS mitigation strategy. 
 
-  In addition I think I need to really analyse if signing and verifying works as intended. Is it really the right solution? I am unahppy with the performance overhead it adds to the no_xss_protection version when doing tens of thousands of nodes. Perhaps this is an unrealistic benchmark, but I think a valid performance issue is highlighted. 
+  In addition I think I need to really analyse if signing and verifying works as intended. Is it really the right solution? I am unahppy with the performance overhead it adds to the no_xss_protection, and regular versions when doing tens of thousands of nodes. Perhaps this is an unrealistic benchmark, but I think a valid performance issue is highlighted. 
 
-## news ~ removing ESlint
+## removing ESlint
 
 [ESlint compromised](https://github.com/eslint/eslint-scope/issues/39) in an attempt to steal credentials.
 
