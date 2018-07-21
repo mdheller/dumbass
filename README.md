@@ -8,6 +8,12 @@ A crazy-small framework for building brutal/brutalist web applications
 
 2 functions: `R` and `render`.
 
+Basic usage:
+
+```JavaScript
+  render(App(), document.getElementById('root'));
+```
+
 ## "React like"
 
 This is React/JSX:
