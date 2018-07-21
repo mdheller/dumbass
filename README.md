@@ -11,11 +11,17 @@ A crazy-small framework for building brutal/brutalist web applications
 Basic usage:
 
 ```JSX
-  const App = what => R`
-    <main mousemove=${() => alert(what)}>
+
+  onload = () => render(App('good'), document.body);
+  
+  function App(what){
+    return R`
+    <main
+      mousemove=${$=>alert(what)}>
       <h1>My ${what} App</h1>
     </main>`;
-  render(App('good'), document.body);
+  }
+  
 ```
 
 ## "React like"
