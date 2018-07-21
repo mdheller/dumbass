@@ -4,7 +4,11 @@ A crazy-small framework for building brutal/brutalist web applications
 
 Pure components / state-less components only. :heart_eyes: :gem: :ocean:
 
-Release: 1.2.1 *Speed improvements edition + bug fixes*
+Release 1.3 &mdash; *3 tiers of XSS protection edition* being:
+
+- none (very fast, but no XSS protection) as `no_xss_protection_r.js`,
+- normal (almost as fast, basic value escaping and basic template anti-forgery) as `r.js`,
+- slow (quite slow (for many nodes), value escaping and robust anti-forgery) as `slow_xss_protection_r.js`.
 
 ## small
 
