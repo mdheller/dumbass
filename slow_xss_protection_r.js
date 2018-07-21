@@ -130,12 +130,47 @@
   }
 
   function sign ({str,handlers},key) {
-    return key;
+    const val = `${str}:${JSON.stringify(handlers,(k,v) => typeof v === 'function' ? `${v}` : v)}`;
+    return hash(key,val);
   }
 
   function verify ({str,handlers,code},key) {
     if (sign({str,handlers},key) === code) return true;
     throw {error: XSS};
+  }
+
+  function hash (key = '', str) {
+    const s = str.length;
+    const m = bytes(key+str);
+    const a=new Float64Array(4);
+
+    a[0] = 1;
+    a[2] = s ? Math.pow(s+1/s, 1/2) : 3;
+    a[3] = s ? Math.pow(s+1/s, 1/5) : 7;
+    m.forEach((x,i) => {
+      a[1] = (x+i+1)/a[3];
+      a[2] += a[0]/a[1];
+      a[2] = 1/a[2];
+      a[3] += x;
+      a[3] = a[0]/a[3];
+      a[0] = a[1]+1;
+    });
+    a[2] *= Math.PI+a[3];
+    a[3] *= Math.E+a[2];
+
+    return new Uint8Array(a.buffer).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  function symbytes (sym) {
+    return [...unescape(encodeURIComponent(sym))].map(c => c.codePointAt(0));
+  }
+
+  function bytes (str) {
+    const bs = [];
+    for( const s of str ) {
+      bs.push(...symbytes(s)); 
+    }
+    return bs;
   }
 
   function isVoid(tag) {
