@@ -20,7 +20,7 @@ Release 1.3 &mdash; *3 tiers of XSS protection edition* being:
 
 Basic usage:
 
-```JavaScript
+```JSX
   const App = what => R`
     <main mousemove=${() => alert(what)}>
       <h1>My ${what} App</h1>
@@ -44,9 +44,9 @@ This is React/JSX:
 
 This is R/brutal.js:
 
-```JavaScript
+```JSX
 function ButtonWidget({name}) {
-  return R`
+  return R`;
     <button click=${() => showModal(name)}>
       Show ${name} Modal
     </button>
