@@ -352,16 +352,7 @@ Also, I've decided against the introduction of pinned/stateful components (explo
 
 Also this is 1.2 minor release.
 
-#### work to do ~ hashing and security. 
-
-  I think there are 2 ways to speed up the slow, advanced XSS blocking version:
-
-  - Have a think about how to call sign/verify as few times as possible. Right now, I am sure work is being redone, and I think that is unnecessary.
-  - Replace signing and verifying with another faster XSS mitigation strategy. 
-
-  In addition I think I need to really analyse if signing and verifying works as intended. Is it really the right solution? I am unahppy with the performance overhead it adds to the no_xss_protection, and regular versions when doing tens of thousands of nodes. Perhaps this is an unrealistic benchmark, but I think a valid performance issue is highlighted. 
-
-## removing ESlint
+### removing ESlint
 
 [ESlint compromised](https://github.com/eslint/eslint-scope/issues/39) in an attempt to steal credentials.
 
@@ -369,3 +360,12 @@ This is terrible. And it is the ESlint that comes with Babel. Another **great** 
 enormous/bloated toolchains/transpilation and things like JSX/Babel/React. Just use small code you can read.
 
 Brutal.js! FTW :smile:
+
+## work to do ~ hashing and security. 
+
+  I think there are 2 ways to speed up the slow, advanced XSS blocking version:
+  
+  - Have a think about how to call sign/verify as few times as possible. Right now, I am sure work is being redone, and I think that is unnecessary.
+  - Replace signing and verifying with another faster XSS mitigation strategy. 
+
+  In addition I think I need to really analyse if signing and verifying works as intended. Is it really the right solution? I am unahppy with the performance overhead it adds to the no_xss_protection, and regular versions when doing tens of thousands of nodes. Perhaps this is an unrealistic benchmark, but I think a valid performance issue is highlighted. 
