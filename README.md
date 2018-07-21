@@ -4,7 +4,9 @@ A crazy-small framework for building brutal/brutalist web applications
 
 ## small
 
-[125 SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/r.js). 2 functions: `R` and `render`, or
+[125 SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/r.js). 
+
+2 functions: `R` and `render`.
 
 Basic usage:
 
