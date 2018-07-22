@@ -78,7 +78,7 @@ minimal opinionation (everything is just HTML elements and event handlers), leav
 ## get it
 
 ```shell
-npm i --save brutalist-web
+$ npm i --save brutalist-web
 ```
 
 ## use it
