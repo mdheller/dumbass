@@ -10,7 +10,13 @@
   const VOID_ELEMENTS = new Set(["area","base","br","col","command","embed","hr","img","input","keygen",
     "link","menuitem","meta","param","source","track","wbr"]);
 
+  Object.assign(R,{skip});
   Object.assign(self,{R,render});
+
+  function skip(str) {
+    /* allow the thing to pass without replacement */
+    return { str, handlers: [], code: currentKey };
+  }
 
   function R (parts, ...vals) {
     const handlers = {};
