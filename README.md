@@ -337,6 +337,36 @@ R`<style>
 
 ## news ~ 
 
+### bug fixes and `skip`
+
+What if you want to introduce some "already cleaned" HTML / entities into your templates?
+
+If you put it in a normal R function:
+
+```JavaScript
+
+const show = data => R`<span>${data}</span>`;
+show("<i>This should be safe</i>");
+// &lt;i&gt;This should ...
+```
+
+it will come out mangled. 
+
+This is why we introduced `skip`. Use like this:
+
+```JavaScript
+const show = data => R`<span>${R.skip(data)}</span>`;
+show("<i>This should be safe</i>");
+// <i>This should ... 
+```
+
+`skip` is available on R and currently only in `r.js` (not the other XSS variants).
+
+Also, in the course of introducing skip, noticed some bugs with how we were checking object properties, 
+and fixed them.
+
+This will be 1.2.8 patch release.
+
 ### performance enhancements & pure only
 
 In [this commit](https://github.com/dosyago-coder-0/brutal.js/commit/027436398e74518d51d67eefdb96271513a1cc6c) I've made some tweaks that gave a 2x speedup in rendering performance in tests with 10s of thousands of nodes. Some basics were replacing inefficient to array methods (.split, Array.from) with more performant variants ([...i]), and replacing unnecessary .reduces with .maps or loops.
