@@ -87,6 +87,19 @@ $ npm i --save brutalist-web
 <script src=node_modules/brutalist-web/r.js></script>
 ```
 
+**or**
+
+```shell
+$ cp node_modules/brutalist-web/r.js .
+```
+
+and
+
+```HTML
+<script src=r.js></script>
+```
+
+
 ## roadmap ~ there isn't one :smiley_cat:
 
 Brutal is already perfect!
