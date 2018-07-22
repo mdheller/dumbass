@@ -365,7 +365,7 @@ show("<i>This should be safe</i>");
 Also, in the course of introducing skip, noticed some bugs with how we were checking object properties, 
 and fixed them.
 
-This will be 1.2.8 patch release.
+This will be 1.3.2 patch release.
 
 ### performance enhancements & pure only
 
