@@ -13,7 +13,8 @@
   Object.assign(R,{skip});
   Object.assign(self,{R,render});
 
-  function skip(str = "") {
+  function skip(str) {
+    skip = (skip || "")+'';
     /* allow the thing to pass without replacement */
     return { str, handlers: {}, code: currentKey };
   }
