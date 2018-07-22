@@ -45,7 +45,7 @@
         str += attrName ? newPart : part;
         if ( !Array.isArray(handlers[hid]) ) handlers[hid] = [];
         handlers[hid].push({eventName: attrName, handler: val});
-      } else if (!!val && !!val.handlers && !!val.str) {
+      } else if (!!val && !!val.handlers && typeof val.str == "string") {
         Object.assign(handlers,val.handlers);
         str += part;
         val = val.str;
