@@ -13,9 +13,10 @@
   Object.assign(R,{skip});
   Object.assign(self,{R,render});
 
-  function skip(str) {
+  function skip(str = "") {
+    console.log(str);
     /* allow the thing to pass without replacement */
-    return { str, handlers: [], code: currentKey };
+    return { str, handlers: {}, code: currentKey };
   }
 
   function R (parts, ...vals) {
@@ -92,10 +93,10 @@
   }
 
   function parseValue(v) {
-    if (Array.isArray(v) && v.every(item => !!item.handlers && !!item.str)) {
+    if (Array.isArray(v) && v.every(item => !!item.handlers && typeof item.str == "string")) {
       return join(v) || '';
     } else if (typeof v === 'object' && !!v) {
-      if (!!v.str && !!v.handlers) {
+      if (typeof v.str == "string" && !!v.handlers) {
         return verify(v,currentKey) && v;
       }
       throw {error: OBJ, value: v};
