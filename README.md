@@ -350,6 +350,28 @@ R`<style>
 
 ## news ~ 
 
+### bug fixes and "bond event"
+
+Bond is sort of like React's componentDidMount
+
+Using:
+```
+  R`
+    <button bond=${btnEl => setAbsolutePositionedSparkels(btnEl)}>Amazing Sparkle Button</button>
+  `
+```
+
+Then when button is rendered into the DOM, it's "bond" event will be called with the button passed in as argument.
+It's good for doing set up code that can't be done before render. 
+
+One example is code that depends on the screen position of rendered elements, and things like, getComputedStyle, or getBoundingClientRect. Code that requires accessing those properties obviously cannot work until the element lives in the DOM. 
+
+That's what bond is for.
+
+#### Why 'bond'?
+
+Becuase it's a short word that has meaning like "mount", "insert", "connect". But I dislike the overt sexualized language of "mount", I think the words / frameworks we use influence how we think about the world. And if we have elements and components mounting each other all the time, I think maybe that's not creating the best condition for people to interact usefully. Not that anything is wrong with these notions, but it's about the right notion for the right time and place, and it seems code can do without that.
+
 ### bug fixes and `skip`
 
 What if you want to introduce some "already cleaned" HTML / entities into your templates?
