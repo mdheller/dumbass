@@ -78,7 +78,7 @@ minimal opinionation (everything is just HTML elements and event handlers), leav
 ## get it
 
 ```shell
-npm i --save brutalist-web
+$ npm i --save brutalist-web
 ```
 
 ## use it
@@ -86,6 +86,19 @@ npm i --save brutalist-web
 ```HTML
 <script src=node_modules/brutalist-web/r.js></script>
 ```
+
+**or**
+
+```shell
+$ cp node_modules/brutalist-web/r.js .
+```
+
+and
+
+```HTML
+<script src=r.js></script>
+```
+
 
 ## roadmap ~ there isn't one :smiley_cat:
 
@@ -336,6 +349,36 @@ R`<style>
 -----
 
 ## news ~ 
+
+### bug fixes and `skip`
+
+What if you want to introduce some "already cleaned" HTML / entities into your templates?
+
+If you put it in a normal R function:
+
+```JavaScript
+
+const show = data => R`<span>${data}</span>`;
+show("<i>This should be safe</i>");
+// &lt;i&gt;This should ...
+```
+
+it will come out mangled. 
+
+This is why we introduced `skip`. Use like this:
+
+```JavaScript
+const show = data => R`<span>${R.skip(data)}</span>`;
+show("<i>This should be safe</i>");
+// <i>This should ... 
+```
+
+`skip` is available on R and currently only in `r.js` (not the other XSS variants).
+
+Also, in the course of introducing skip, noticed some bugs with how we were checking object properties, 
+and fixed them.
+
+This will be 1.3.2 patch release.
 
 ### performance enhancements & pure only
 
