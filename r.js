@@ -13,12 +13,6 @@
   Object.assign(R,{skip});
   Object.assign(self,{R,render});
 
-  function skip(str) {
-    skip = (skip || "")+'';
-    /* allow the thing to pass without replacement */
-    return { str, handlers: {}, code: currentKey };
-  }
-
   function R (parts, ...vals) {
     const handlers = {};
     let hid, lastNewTagIndex, lastTagName, str = '';
@@ -35,7 +29,7 @@
         if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
         hid = `hid_${Math.random()}`.replace('.','');
         const lastTag = newTagMatches[newTagMatches.length-1];
-        lastNewTagIndex = part.indexOf(lastTag) + str.length;
+        lastNewTagIndex = part.lastIndexOf(lastTag) + str.length;
         lastTagName = lastTag.slice(1);
       }
       if (typeof val === 'function') {
@@ -77,7 +71,7 @@
     }
 
     Object.entries(handlers).forEach(
-      ([hid,nodeHandlers]) => addHandlersToMarkedInsertionPoint({hid,nodeHandlers}));
+      ([hid,nodeHandlers]) => activateNode({hid,nodeHandlers}));
   }
 
   function join (rs) {
@@ -90,6 +84,12 @@
       o.code = sign(o,currentKey);
       return o;
     }
+  }
+
+  function skip(str) {
+    skip = (skip || "")+'';
+    /* allow the thing to pass without replacement */
+    return { str, handlers: {}, code: currentKey };
   }
 
   function parseValue(v) {
@@ -118,7 +118,7 @@
       after;
   }
 
-  function addHandlersToMarkedInsertionPoint({hid,nodeHandlers}) {
+  function activateNode({hid,nodeHandlers}) {
     const hidNode = document.getElementById(hid);
     let node;
 
@@ -127,9 +127,17 @@
       hidNode.remove();
     } else throw {error: MARKER(hid)}
 
+    const bondHandlers = [];
+
     if (!!node && !!nodeHandlers) {
-      nodeHandlers.forEach(({eventName,handler}) => node.addEventListener(eventName,handler));
+      nodeHandlers.forEach(({eventName,handler}) => {
+        if ( eventName == 'bond' ) {
+          bondHandlers.push(()  => handler(node));
+        } else node.addEventListener(eventName,handler);
+      });
     } else throw {error: HID(hid)} 
+
+    bondHandlers.forEach(f => f());
   }
 
   function safe (v) {
