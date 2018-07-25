@@ -1,5 +1,5 @@
 "use strict";
-{
+import diff from './diff.js';
   const XSS = "Possible XSS attack warning. Possible object forgery attempt detected. Codes do not match.";
   const OBJ = "Object properties don't work here.";
   const MARKER = hid => {detail: `Insertion point market not found for ${hid}`, hid};
@@ -18,56 +18,80 @@
     let hid, lastNewTagIndex, lastTagName, str = '';
 
     parts = [...parts];
+
+    const keyObj = vals.find( v => v.key !== undefined ) || {};
+    const {key:key='singleton'} = keyObj;
+
     vals = vals.map(parseValue);
 
-    while (parts.length > 1) {
-      let part = parts.shift();
-      let attrNameMatches = part.match(LAST_ATTR_NAME);
-      let newTagMatches = part.match(NEW_TAG);
-      let val = vals.shift();
-      if (newTagMatches) {
-        if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
-        hid = `hid_${Math.random()}`.replace('.','');
-        const lastTag = newTagMatches[newTagMatches.length-1];
-        lastNewTagIndex = part.lastIndexOf(lastTag) + str.length;
-        lastTagName = lastTag.slice(1);
+    const {firstCall,bond} = diff.makeBond(parts,vals,key);
+    const keyedBond = bond.instances[key];
+
+    void (firstCall && bond.instanceCount == 1 ? console.log(bond) : 0);
+    
+    if (firstCall) {
+      while (parts.length > 1) {
+        let part = parts.shift();
+        let attrNameMatches = part.match(LAST_ATTR_NAME);
+        let newTagMatches = part.match(NEW_TAG);
+        let val = vals.shift();
+        if (newTagMatches) {
+          if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
+          hid = `hid_${Math.random()}`.replace('.','');
+          const lastTag = newTagMatches[newTagMatches.length-1];
+          lastNewTagIndex = part.lastIndexOf(lastTag) + str.length;
+          lastTagName = lastTag.slice(1);
+        }
+        if (typeof val === 'function') {
+          const attrName = attrNameMatches && attrNameMatches.length > 1
+              ? attrNameMatches[1].replace(/^on/,'').toLowerCase()
+              : false,
+            newPart = part.replace(attrNameMatches[0], '');
+          str += attrName ? newPart : part;
+          if ( !Array.isArray(handlers[hid]) ) handlers[hid] = [];
+          handlers[hid].push({eventName: attrName, handler: val});
+        } else if (!!val && !!val.handlers && typeof val.str == "string") {
+          Object.assign(handlers,val.handlers);
+          str += part;
+          val = val.str;
+          if (attrNameMatches) val = `"${val}"`;
+          str += val;
+        } else {
+          str += part;
+          str += attrNameMatches ? `"${safe(val)}"` : safe(val);
+        }
       }
-      if (typeof val === 'function') {
-        const attrName = attrNameMatches && attrNameMatches.length > 1
-            ? attrNameMatches[1].replace(/^on/,'').toLowerCase()
-            : false,
-          newPart = part.replace(attrNameMatches[0], '');
-        str += attrName ? newPart : part;
-        if ( !Array.isArray(handlers[hid]) ) handlers[hid] = [];
-        handlers[hid].push({eventName: attrName, handler: val});
-      } else if (!!val && !!val.handlers && typeof val.str == "string") {
-        Object.assign(handlers,val.handlers);
-        str += part;
-        val = val.str;
-        if (attrNameMatches) val = `"${val}"`;
-        str += val;
-      } else {
-        str += part;
-        str += attrNameMatches ? `"${safe(val)}"` : safe(val);
-      }
+      if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
+      str += parts.shift();
+      keyedBond.nodes = [...diff.df(str).childNodes];
     }
-    if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
-    str += parts.shift();
-    const o = {str,handlers};
+
+    keyedBond.funcs.forEach((state,index) => {
+      const value = vals[index];
+      state.forEach(({setValue}) => setValue(value));
+    });
+
+    const o = {str,handlers,keyedBond,
+      get frag() {
+        const f = document.createDocumentFragment();
+        keyedBond.nodes.forEach(node => f.appendChild(node));
+        return f;
+      }
+    };
     o.code = sign(o,currentKey);
     return o;
   }
 
   function render (r, root, {replace: replace = false} = {}) {
     r = parseR(r);
-    const {str,handlers} = r;
+    const {str,handlers,frag} = r;
 
     if (replace) {
-      root.insertAdjacentHTML('beforeBegin', str);
+      root.parentNode.insertBefore(frag, root);
       root.remove();
     } else {
       root.innerHTML = '';
-      root.insertAdjacentHTML('afterBegin', str);
+      root.appendChild(frag);
     }
 
     Object.entries(handlers).forEach(
@@ -92,19 +116,24 @@
     return { str, handlers: {}, code: currentKey };
   }
 
+  function itemIsOk(item) {
+    return !!item.handlers && typeof item.str == "string";
+  }
+
   function parseValue(v) {
-    if (Array.isArray(v) && v.every(item => !!item.handlers && typeof item.str == "string")) {
+    if (Array.isArray(v) && v.every(itemIsOk)) {
       return join(v) || '';
     } else if (typeof v === 'object' && !!v) {
       if (typeof v.str == "string" && !!v.handlers) {
         return verify(v,currentKey) && v;
-      }
-      throw {error: OBJ, value: v};
+      } else if ( v.key !== undefined) {
+        return '';
+      } else throw {error: OBJ, value: v};
     } else return v === null || v === undefined ? '' : v;
   }
 
   function parseR(r) {
-    if (Array.isArray(r) && r.every(val => !!val.str && !!val.handlers)) r = join(r);
+    if (Array.isArray(r) && r.every(itemIsOk)) r = join(r);
     verify(r,currentKey);
     return r;
   }
@@ -156,4 +185,4 @@
   function isVoid(tag) {
     return VOID_ELEMENTS.has(tag.toLowerCase().trim());
   }
-}
+export default {R,render}
