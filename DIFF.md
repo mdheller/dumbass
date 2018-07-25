@@ -53,3 +53,22 @@ A2(A2State);
 ```
 
 You can watch the progress of these changes in the [diff branch](https://github.com/dosyago-coder-0/brutal.js/tree/diff)
+
+To summarise, `render` is going, and `R` is becoming more powerful.
+
+**Final note of importance**
+
+```JavaScript
+
+A2(A2State);
+
+// which updates the nodes
+// is actually equivalent to, calling
+//
+
+Instance2(A2State);
+// a second time. 
+```
+
+In both cases the information about where the nodes associated with that template and that instance are, and how to update them, should a value in their state change, is cached behind the scenes. And the appropriate update functions are called when that template, with that instance's key are called again. 
+
