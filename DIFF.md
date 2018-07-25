@@ -30,7 +30,7 @@ Now, for instance:
 
 ```JavaScript
 const A1 = Instance(A1State);
-const A2 = Instance(A2State);
+const A2 = Instance2(A2State);
 
 A1.to('main#app p', {replace:true});
 A2.to('main#app p', {afterEnd:true}); // beforeBegin, afterBegin, beforeEnd, afterEnd, replace are all valid and exclusive.
@@ -51,3 +51,5 @@ A2(A2State);
 // but it is all handled *automagically*.
 
 ```
+
+You can watch the progress of these changes in the [diff branch](https://github.com/dosyago-coder-0/brutal.js/tree/diff)
