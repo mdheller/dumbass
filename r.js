@@ -2,8 +2,8 @@
 import diff from './diff.js';
   const XSS = "Possible XSS attack warning. Possible object forgery attempt detected. Codes do not match.";
   const OBJ = "Object properties don't work here.";
-  const MARKER = hid => {detail: `Insertion point market not found for ${hid}`, hid};
-  const HID = hid => {detail: `Node or handlers not found for recorded hid ${hid}`, hid};
+  const MARKER = hid => ({detail: `Insertion point market not found for ${hid}`, hid});
+  const HID = hid => ({detail: `Node or handlers not found for recorded hid ${hid}`, hid});
   const LAST_ATTR_NAME = /\s+([\w-]+)\s*=\s*"?\s*$/;
   const NEW_TAG = /<\w+/g;
   const currentKey = Math.random()+'';
@@ -27,75 +27,64 @@ import diff from './diff.js';
     const {firstCall,bond} = diff.makeBond(parts,vals,key);
     const keyedBond = bond.instances[key];
 
-    void (firstCall && bond.instanceCount == 1 ? console.log(bond) : 0);
-    
-    if (firstCall) {
-      while (parts.length > 1) {
-        let part = parts.shift();
-        let attrNameMatches = part.match(LAST_ATTR_NAME);
-        let newTagMatches = part.match(NEW_TAG);
-        let val = vals.shift();
-        if (newTagMatches) {
-          if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
-          hid = `hid_${Math.random()}`.replace('.','');
-          const lastTag = newTagMatches[newTagMatches.length-1];
-          lastNewTagIndex = part.lastIndexOf(lastTag) + str.length;
-          lastTagName = lastTag.slice(1);
-        }
-        if (typeof val === 'function') {
-          const attrName = attrNameMatches && attrNameMatches.length > 1
-              ? attrNameMatches[1].replace(/^on/,'').toLowerCase()
-              : false,
-            newPart = part.replace(attrNameMatches[0], '');
-          str += attrName ? newPart : part;
-          if ( !Array.isArray(handlers[hid]) ) handlers[hid] = [];
-          handlers[hid].push({eventName: attrName, handler: val});
-        } else if (!!val && !!val.handlers && typeof val.str == "string") {
-          Object.assign(handlers,val.handlers);
-          str += part;
-          val = val.str;
-          if (attrNameMatches) val = `"${val}"`;
-          str += val;
-        } else {
-          str += part;
-          str += attrNameMatches ? `"${safe(val)}"` : safe(val);
-        }
+    while (parts.length > 1) {
+      let part = parts.shift();
+      let attrNameMatches = part.match(LAST_ATTR_NAME);
+      let newTagMatches = part.match(NEW_TAG);
+      let val = vals.shift();
+      if (newTagMatches) {
+        if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
+        hid = `hid_${Math.random()}`.replace('.','');
+        const lastTag = newTagMatches[newTagMatches.length-1];
+        lastNewTagIndex = part.lastIndexOf(lastTag) + str.length;
+        lastTagName = lastTag.slice(1);
       }
-      if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
-      str += parts.shift();
-      keyedBond.nodes = [...diff.df(str).childNodes];
+      if (typeof val === 'function') {
+        const attrName = attrNameMatches && attrNameMatches.length > 1
+            ? attrNameMatches[1].replace(/^on/,'').toLowerCase()
+            : false,
+          newPart = part.replace(attrNameMatches[0], '');
+        str += attrName ? newPart : part;
+        if ( !Array.isArray(handlers[hid]) ) handlers[hid] = [];
+        handlers[hid].push({eventName: attrName, handler: val});
+      } else if (!!val && !!val.handlers && typeof val.str == "string") {
+        Object.assign(handlers,val.handlers);
+        str += part;
+        val = val.str;
+        if (attrNameMatches) val = `"${val}"`;
+        str += val;
+      } else {
+        str += part;
+        str += attrNameMatches ? `"${safe(val)}"` : safe(val);
+      }
     }
+    if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
+    str += parts.shift();
+    keyedBond.nodes = [...diff.df(str).childNodes];
 
-    keyedBond.funcs.forEach((state,index) => {
-      const value = vals[index];
-      state.forEach(({setValue}) => setValue(value));
-    });
-
-    const o = {str,handlers,keyedBond,
-      get frag() {
-        const f = document.createDocumentFragment();
-        keyedBond.nodes.forEach(node => f.appendChild(node));
-        return f;
-      }
-    };
+    const o = {str,handlers,keyedBond};
     o.code = sign(o,currentKey);
     return o;
   }
 
   function render (r, root, {replace: replace = false} = {}) {
     r = parseR(r);
-    const {str,handlers,frag} = r;
+    const {str,handlers,keyedBond} = r;
+
+    const parent = root.parentNode;
 
     if (replace) {
-      root.parentNode.insertBefore(frag, root);
+      root.parentNode.insertBefore(keyedBond.frag, root);
       root.remove();
     } else {
       root.innerHTML = '';
-      root.appendChild(frag);
+      root.appendChild(keyedBond.frag);
     }
 
+    const hids = getHids(parent);
+
     Object.entries(handlers).forEach(
-      ([hid,nodeHandlers]) => activateNode({hid,nodeHandlers}));
+      ([hid,nodeHandlers]) => activateNode(hids,{hid,nodeHandlers}));
   }
 
   function join (rs) {
@@ -141,20 +130,29 @@ import diff from './diff.js';
   function markInsertionPoint({str,lastNewTagIndex,lastTagName,hid}) {
     const before = str.slice(0,lastNewTagIndex);
     const after = str.slice(lastNewTagIndex);
-    return before + 
-      `<${lastTagName} id=${hid}>` + 
-      (isVoid(lastTagName) ? '' : `</${lastTagName}>`) + 
-      after;
+    return before + `<!--${hid}-->` + after;
   }
 
-  function activateNode({hid,nodeHandlers}) {
-    const hidNode = document.getElementById(hid);
+  function getHids(parent) {
+    const walker = document.createTreeWalker(parent,NodeFilter.SHOW_COMMENT,{acceptNode: node => node.nodeType == Node.COMMENT_NODE && node.nodeValue.startsWith('hid_')});
+    const hids = {};
+    do{
+      const node = walker.currentNode;
+      if ( node.nodeType == Node.COMMENT_NODE && node.nodeValue.startsWith("hid_") ) {
+        hids[node.data] = node;
+      }
+    } while(walker.nextNode());
+    return hids;
+  }
+
+  function activateNode(hids,{hid,nodeHandlers}) {
+    const hidNode = hids[hid];
     let node;
 
     if (!!hidNode) {
       node = hidNode.nextElementSibling;
       hidNode.remove();
-    } else throw {error: MARKER(hid)}
+    } else throw {error:MARKER(hid)}
 
     const bondHandlers = [];
 

@@ -12,6 +12,7 @@ export default diff;
     let firstCall;
     const bondKey = parts.join('<link rel=join>');
     let bond = bondCache[bondKey];
+    let keyedBond;
     if ( ! bond ) {
       firstCall = true;
       const templateId = templateCount;
@@ -22,32 +23,29 @@ export default diff;
       bond = bondCache[bondKey] = {templateId,instances,instanceCount};
       initializeBond(bond,instanceKey);
       templateCount += 1;
+      keyedBond = instances[instanceKey];
     } else {
       const instances = bond.instances;
-      let keyedInstance = instances[instanceKey];
-      if ( ! keyedInstance ) {
+      keyedBond = instances[instanceKey];
+      if ( ! keyedBond ) {
         firstCall = true;
         bond.instanceCount += 1;
-        instances[instanceKey] = {parts:[...parts],vals:[...vals],funcs:[],instanceKey};
+        instances[instanceKey] = keyedBond = {parts:[...parts],vals:[...vals],funcs:[],instanceKey};
       } else {
         firstCall = false;
       }
     }
+    if ( !keyedBond.frag ) {
+      Object.defineProperty(keyedBond,'frag',{
+        get() {
+          const f = document.createDocumentFragment();
+          this.nodes.forEach(node => f.appendChild(node));
+          return f;
+        }
+      });
+    }
+    //console.log(keyedBond);
     return {bond,firstCall};
-  }
-
-  function createValReplacements(bond,key) {
-    const instance = bond.instances[key];
-    let {parts,vals} = instance;
-    const tempKey = Math.random()+'';
-    const replacer = instance.replacer = id => `rep-${tempKey}-${id}`;
-    const valMap = instance.valMap = {};
-    vals = vals.map((val,index) => {
-      const valReplacer = replacer(index);
-      valMap[valReplacer] = {index,val};
-      return valReplacer;
-    });
-    return vals;
   }
 
   function initializeBond(bond,key) {
@@ -67,6 +65,20 @@ export default diff;
     allNodes.forEach(node => generateBondFunctions(node,instance));
     const nodes = [...frag.childNodes];
     instance.nodes = nodes;
+  }
+
+  function createValReplacements(bond,key) {
+    const instance = bond.instances[key];
+    let {parts,vals} = instance;
+    const tempKey = Math.random()+'';
+    const replacer = instance.replacer = id => `rep-${tempKey}-${id}`;
+    const valMap = instance.valMap = {};
+    vals = vals.map((val,index) => {
+      const valReplacer = replacer(index);
+      valMap[valReplacer] = {index,val};
+      return valReplacer;
+    });
+    return vals;
   }
 
   function generateBondFunctions(node,instance) {
