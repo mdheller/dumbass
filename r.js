@@ -156,11 +156,8 @@
     return CODE === v.code;
   }
 
-
   function die(msg,err) {
     if (DEBUG && err) console.warn(err);
     msg.stack = ((DEBUG && err) || new Error()).stack.split(/\s*\n\s*/g);
     throw JSON.stringify(msg,null,2);
   }
-
-
