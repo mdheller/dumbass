@@ -1,186 +1,166 @@
+// Note: 
+  // now is not the time for optimization. 
+  // That comes later.
 "use strict";
-import diff from './diff.js';
-  const XSS = "Possible XSS attack warning. Possible object forgery attempt detected. Codes do not match.";
-  const OBJ = "Object properties don't work here.";
-  const MARKER = hid => ({detail: `Insertion point market not found for ${hid}`, hid});
-  const HID = hid => ({detail: `Node or handlers not found for recorded hid ${hid}`, hid});
-  const LAST_ATTR_NAME = /\s+([\w-]+)\s*=\s*"?\s*$/;
-  const NEW_TAG = /<\w+/g;
-  const currentKey = Math.random()+'';
-  const VOID_ELEMENTS = new Set(["area","base","br","col","command","embed","hr","img","input","keygen",
-    "link","menuitem","meta","param","source","track","wbr"]);
+  const DEBUG             = false;
+  const KEYMATCH          = / ?(key\d+) ?/gm;
+  const OURPROPS          = 'code,frag,nodes,to,update,v';
+  const CODE              = ''+Math.random();
+  const XSS               = () => `Possible XSS / object forgery attack detected. ` +
+                            `Object value could not be verified.`;
+  const OBJ               = () => `Object values not allowed here.`;
+  const UNSET             = () => `Unset values not allowed here.`;
+  const MOVE              = new class {
+                              beforeEnd   (frag,elem) { elem.appendChild(frag) }
+                              beforeBegin (frag,elem) { elem.parentNode.insertBefore(frag,elem) }
+                              afterEnd    (frag,elem) { elem.parentNode.insertBefore(frag,elem.nextSibling) }
+                              replace     (frag,elem) { elem.parentNode.replaceChild(frag,elem) }
+                              afterBegin  (frag,elem) { elem.insertBefore(frag,elem.firstChild) }
+                              innerHTML   (frag,elem) { elem.innerHTML = ''; elem.appendChild(frag) }
+                            };
+  const INSERT            = () => `Error inserting template into DOM. ` +
+                            `Position must be one of: ` +
+                            `replace, beforeBegin, afterBegin, beforeEnd, innerHTML, afterEnd`;
+  const cache = {};
 
-  Object.assign(R,{skip});
-  Object.assign(self,{R,render});
+  export {R};
 
-  function R (parts, ...vals) {
-    const handlers = {};
-    let hid, lastNewTagIndex, lastTagName, str = '';
-
-    parts = [...parts];
-
-    const keyObj = vals.find( v => v.key !== undefined ) || {};
-    const {key:key='singleton'} = keyObj;
-
-    vals = vals.map(parseValue);
-
-    const {firstCall,bond} = diff.makeBond(parts,vals,key);
-    const keyedBond = bond.instances[key];
-
-    while (parts.length > 1) {
-      let part = parts.shift();
-      let attrNameMatches = part.match(LAST_ATTR_NAME);
-      let newTagMatches = part.match(NEW_TAG);
-      let val = vals.shift();
-      if (newTagMatches) {
-        if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
-        hid = `hid_${Math.random()}`.replace('.','');
-        const lastTag = newTagMatches[newTagMatches.length-1];
-        lastNewTagIndex = part.lastIndexOf(lastTag) + str.length;
-        lastTagName = lastTag.slice(1);
-      }
-      if (typeof val === 'function') {
-        const attrName = attrNameMatches && attrNameMatches.length > 1
-            ? attrNameMatches[1].replace(/^on/,'').toLowerCase()
-            : false,
-          newPart = part.replace(attrNameMatches[0], '');
-        str += attrName ? newPart : part;
-        if ( !Array.isArray(handlers[hid]) ) handlers[hid] = [];
-        handlers[hid].push({eventName: attrName, handler: val});
-      } else if (!!val && !!val.handlers && typeof val.str == "string") {
-        Object.assign(handlers,val.handlers);
-        str += part;
-        val = val.str;
-        if (attrNameMatches) val = `"${val}"`;
-        str += val;
-      } else {
-        str += part;
-        str += attrNameMatches ? `"${safe(val)}"` : safe(val);
-      }
-    }
-    if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
-    str += parts.shift();
-    keyedBond.nodes = [...diff.df(str).childNodes];
-
-    const o = {str,handlers,keyedBond};
-    o.code = sign(o,currentKey);
-    return o;
-  }
-
-  function render (r, root, {replace: replace = false} = {}) {
-    r = parseR(r);
-    const {str,handlers,keyedBond} = r;
-
-    const parent = root.parentNode;
-
-    if (replace) {
-      root.parentNode.insertBefore(keyedBond.frag, root);
-      root.remove();
+  function R(p,...v) {
+    p = [...p]; v = [...v];
+    v = v.map(parseVal);
+    const cacheKey = p.join('<link rel=join>');
+    let cached = cache[cacheKey];
+    if ( cached == undefined ) {
+      cached = cache[cacheKey] = {};
     } else {
-      root.innerHTML = '';
-      root.appendChild(keyedBond.frag);
+      cached.update(v);
+      return cached;
     }
-
-    const hids = getHids(parent);
-
-    Object.entries(handlers).forEach(
-      ([hid,nodeHandlers]) => activateNode(hids,{hid,nodeHandlers}));
-  }
-
-  function join (rs) {
-    const H = {},
-      str = rs.map(({str,handlers,code}) => (
-        verify({str,handlers,code},currentKey),Object.assign(H,handlers),str)).join('\n');
-
-    if (str) {
-      const o = {str,handlers:H};
-      o.code = sign(o,currentKey);
-      return o;
+    const vmap = {};
+    const V = v.map((val,vi) => {
+      const k = (' key'+Math.random()+' ').replace('.','');
+      vmap[k.trim()] = {vi,val,replacers:[]};
+      return k;
+    });
+    let str = '';
+    while( p.length > 1 ) {
+      str += p.shift();
+      str += V.shift();
     }
-  }
-
-  function skip(str) {
-    skip = (skip || "")+'';
-    /* allow the thing to pass without replacement */
-    return { str, handlers: {}, code: currentKey };
-  }
-
-  function itemIsOk(item) {
-    return !!item.handlers && typeof item.str == "string";
-  }
-
-  function parseValue(v) {
-    if (Array.isArray(v) && v.every(itemIsOk)) {
-      return join(v) || '';
-    } else if (typeof v === 'object' && !!v) {
-      if (typeof v.str == "string" && !!v.handlers) {
-        return verify(v,currentKey) && v;
-      } else if ( v.key !== undefined) {
-        return '';
-      } else throw {error: OBJ, value: v};
-    } else return v === null || v === undefined ? '' : v;
-  }
-
-  function parseR(r) {
-    if (Array.isArray(r) && r.every(itemIsOk)) r = join(r);
-    verify(r,currentKey);
-    return r;
-  }
-
-  function markInsertionPoint({str,lastNewTagIndex,lastTagName,hid}) {
-    const before = str.slice(0,lastNewTagIndex);
-    const after = str.slice(lastNewTagIndex);
-    return before + `<!--${hid}-->` + after;
-  }
-
-  function getHids(parent) {
-    const walker = document.createTreeWalker(parent,NodeFilter.SHOW_COMMENT,{acceptNode: node => node.nodeType == Node.COMMENT_NODE && node.nodeValue.startsWith('hid_')});
-    const hids = {};
-    do{
-      const node = walker.currentNode;
-      if ( node.nodeType == Node.COMMENT_NODE && node.nodeValue.startsWith("hid_") ) {
-        hids[node.data] = node;
+    str += p.shift();
+    const frag = (new DOMParser).parseFromString(
+      `<template>${str}</template>`,"text/html").head.firstElementChild.content;
+    frag.normalize();
+    const nodes = [...frag.childNodes];
+    const walker = document.createTreeWalker(frag, NodeFilter.SHOW_ALL);
+    do {
+      let node = walker.currentNode;
+      switch( node.nodeType ) {
+        case Node.ELEMENT_NODE:
+          const attrs = [...node.attributes]; 
+          attrs.forEach(({name,value}) => {
+            let result;
+            while( result = KEYMATCH.exec(value) ) {
+              const {index} = result;
+              const key = result[1];
+              const val = vmap[key];
+              const replacer = (newVal) => {
+                const oldVal = node.getAttribute(name);
+                if ( oldVal !== newVal ) {
+                  node.setAttribute(name,newVal);
+                }
+              }
+              replacer(val.val);
+              val.replacers.push( replacer );
+            }
+          });
+        break;
+        case Node.TEXT_NODE:
+          const text = node.wholeText; 
+          let result;
+          while( result = KEYMATCH.exec(text) ) {
+            const {index} = result;
+            const key = result[1];
+            const val = vmap[key];
+            let oldNodes = [node];
+            const replacer = (newVal) => {
+              switch(typeof newVal) {
+                case "object":
+                  if ( sameNodes(oldNodes,newVal.nodes) ) return;
+                  const anchorNode = oldNodes[0];
+                  newVal.nodes.forEach(n => anchorNode.parentNode.insertBefore(n,anchorNode.nextSibling));
+                  oldNodes.forEach(n => n.remove());
+                  oldNodes = newVal.nodes;
+                  break;
+                default:
+                  node.nodeValue = newVal;
+                  break;
+              }
+            }
+            replacer(val.val);
+            val.replacers.push( replacer );
+          }
+        break;
       }
-    } while(walker.nextNode());
-    return hids;
+    } while( walker.nextNode() );
+    const retVal = cache[cacheKey] = {frag,v:Object.values(vmap),to,update,code:CODE,nodes};
+    return retVal;
   }
 
-  function activateNode(hids,{hid,nodeHandlers}) {
-    const hidNode = hids[hid];
-    let node;
+  function parseVal(v) {
+    const isUnset         = v == null         ||    v == undefined;
+    const isObject        = !isUnset          &&    typeof v === "object";
+    const isGoodArray     = Array.isArray(v)  &&    v.every(itemIsFine);
+    const isVerified      = isObject          &&    verify(v);
+    const isForgery       = onlyOurProps(v)   &&    !isVerified; 
 
-    if (!!hidNode) {
-      node = hidNode.nextElementSibling;
-      hidNode.remove();
-    } else throw {error:MARKER(hid)}
+    if ( isVerified )     return v;
+    if ( isGoodArray )    return join(v); 
+    if ( isUnset )        die({error: UNSET()});
+    if ( isForgery )      die({error: XSS()});
+    if ( isObject )       die({error: OBJ()});
 
-    const bondHandlers = [];
-
-    if (!!node && !!nodeHandlers) {
-      nodeHandlers.forEach(({eventName,handler}) => {
-        if ( eventName == 'bond' ) {
-          bondHandlers.push(()  => handler(node));
-        } else node.addEventListener(eventName,handler);
-      });
-    } else throw {error: HID(hid)} 
-
-    bondHandlers.forEach(f => f());
+    return v+'';
   }
 
-  function safe (v) {
-    return String(v).replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/&/g,'&amp;').replace(/"/g,'&#34;').replace(/'/g,'&#39;');
+  function join(os) {
+    const bigFrag = document.createDocumentFragment();
+    os.forEach(o => bigFrag.appendChild(frag))
+    return {v:[],code:CODE,nodes:[...bigFrag.childNodes],frag:bigFrag,to,update};
   }
 
-  function sign ({str,handlers},key) {
-    return key;
+  function to(selector, position = 'replace') {
+    const frag = document.createDocumentFragment();
+    this.nodes.forEach(n => frag.appendChild(n));
+    const elem = document.querySelector(selector);
+    try {
+      MOVE[position](frag,elem);
+    } catch(e) {
+      die({error: INSERT()},e);
+    }
   }
 
-  function verify ({str,handlers,code},key) {
-    if (sign({str,handlers},key) === code) return true;
-    throw {error: XSS};
+  function sameNodes(a,b) {
+    return a.every((node,index) => node === b[index])
   }
 
-  function isVoid(tag) {
-    return VOID_ELEMENTS.has(tag.toLowerCase().trim());
+  function update(newVals) {
+    this.v.forEach(({vi,replacers}) => replacers.forEach(f => f(newVals[vi])));
   }
-export default {R,render}
+
+  function onlyOurProps(v) {
+    return OURPROPS === Object.keys(v||{}).sort().join(',');
+  }
+
+  function verify(v) {
+    return CODE === v.code;
+  }
+
+
+  function die(msg,err) {
+    if (DEBUG && err) console.warn(err);
+    msg.stack = ((DEBUG && err) || new Error()).stack.split(/\s*\n\s*/g);
+    throw JSON.stringify(msg,null,2);
+  }
+
+
