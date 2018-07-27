@@ -26,85 +26,116 @@
   export {R};
 
   function R(p,...v) {
-    p = [...p]; v = [...v];
     v = v.map(parseVal);
+
     const cacheKey = p.join('<link rel=join>');
+    const {cached,firstCall} = isCached(cacheKey,v);
+   
+    if ( ! firstCall ) return cached;
+
+    p = [...p]; 
+    const vmap = {};
+    const V = v.map(replaceVal(vmap));
+    let str = '';
+
+    while( p.length > 1 ) str += p.shift() + V.shift();
+    str += p.shift();
+
+    const frag = toDOM(str);
+    const walker = document.createTreeWalker(frag, NodeFilter.SHOW_ALL);
+
+    do makeUpdaters({walker,vmap}); while(walker.nextNode())
+
+    const retVal = cache[cacheKey] = {frag,v:Object.values(vmap),to,update,code:CODE,nodes:[...frag.childNodes]};
+    return retVal;
+  }
+
+  function makeUpdaters({walker,vmap}) {
+    let node = walker.currentNode;
+    switch( node.nodeType ) {
+      case Node.ELEMENT_NODE:
+        handleElementNode({node,vmap});
+      break;
+      case Node.TEXT_NODE:
+        handleTextNode({node,vmap});
+      break;
+    }
+  }
+
+  function isCached(cacheKey,v) {
+    let firstCall;
     let cached = cache[cacheKey];
     if ( cached == undefined ) {
       cached = cache[cacheKey] = {};
+      firstCall = true;
     } else {
       cached.update(v);
-      return cached;
+      firstCall = false;
     }
-    const vmap = {};
-    const V = v.map((val,vi) => {
+    return {cached,firstCall};
+  }
+
+  function replaceVal(vmap) {
+    return (val,vi) => {
       const k = (' key'+Math.random()+' ').replace('.','');
       vmap[k.trim()] = {vi,val,replacers:[]};
       return k;
-    });
-    let str = '';
-    while( p.length > 1 ) {
-      str += p.shift();
-      str += V.shift();
-    }
-    str += p.shift();
-    const frag = (new DOMParser).parseFromString(
+    };
+  }
+
+  function toDOM(str) {
+    const f = (new DOMParser).parseFromString(
       `<template>${str}</template>`,"text/html").head.firstElementChild.content;
-    frag.normalize();
-    const nodes = [...frag.childNodes];
-    const walker = document.createTreeWalker(frag, NodeFilter.SHOW_ALL);
-    do {
-      let node = walker.currentNode;
-      switch( node.nodeType ) {
-        case Node.ELEMENT_NODE:
-          const attrs = [...node.attributes]; 
-          attrs.forEach(({name,value}) => {
-            let result;
-            while( result = KEYMATCH.exec(value) ) {
-              const {index} = result;
-              const key = result[1];
-              const val = vmap[key];
-              const replacer = (newVal) => {
-                const oldVal = node.getAttribute(name);
-                if ( oldVal !== newVal ) {
-                  node.setAttribute(name,newVal);
-                }
-              }
-              replacer(val.val);
-              val.replacers.push( replacer );
-            }
-          });
-        break;
-        case Node.TEXT_NODE:
-          const text = node.wholeText; 
-          let result;
-          while( result = KEYMATCH.exec(text) ) {
-            const {index} = result;
-            const key = result[1];
-            const val = vmap[key];
-            let oldNodes = [node];
-            const replacer = (newVal) => {
-              switch(typeof newVal) {
-                case "object":
-                  if ( sameNodes(oldNodes,newVal.nodes) ) return;
-                  const anchorNode = oldNodes[0];
-                  newVal.nodes.forEach(n => anchorNode.parentNode.insertBefore(n,anchorNode.nextSibling));
-                  oldNodes.forEach(n => n.remove());
-                  oldNodes = newVal.nodes;
-                  break;
-                default:
-                  node.nodeValue = newVal;
-                  break;
-              }
-            }
-            replacer(val.val);
-            val.replacers.push( replacer );
-          }
-        break;
+    f.normalize();
+    return f;
+  }
+
+
+  function handleTextNode({node,vmap}) {
+    const text = node.wholeText; 
+    let result;
+    while( result = KEYMATCH.exec(text) ) {
+      const {index} = result;
+      const key = result[1];
+      const val = vmap[key];
+      let oldNodes = [node];
+      const replacer = (newVal) => {
+        switch(typeof newVal) {
+          case "object":
+            if ( sameNodes(oldNodes,newVal.nodes) ) return;
+            const anchorNode = oldNodes[0];
+            newVal.nodes.forEach(n => anchorNode.parentNode.insertBefore(n,anchorNode.nextSibling));
+            oldNodes.forEach(n => n.remove());
+            oldNodes = newVal.nodes;
+            break;
+          default:
+            node.nodeValue = newVal;
+            break;
+        }
       }
-    } while( walker.nextNode() );
-    const retVal = cache[cacheKey] = {frag,v:Object.values(vmap),to,update,code:CODE,nodes};
-    return retVal;
+      replacer(val.val);
+      val.replacers.push( replacer );
+    }
+  }
+
+  function handleElementNode({node,vmap}) {
+    const attrs = [...node.attributes]; 
+    attrs.forEach(({name,value}) => {
+      let result;
+      while( result = KEYMATCH.exec(value) ) {
+        const {index} = result;
+        const key = result[1];
+        const val = vmap[key];
+        const replacer = (newVal) => {
+          const oldVal = node.getAttribute(name);
+          if ( oldVal !== newVal ) {
+            node.setAttribute(name,newVal);
+          }
+        }
+        replacer(val.val);
+        val.replacers.push( replacer );
+      }
+    });
   }
 
   function parseVal(v) {
