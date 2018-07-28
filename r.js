@@ -4,6 +4,7 @@
 "use strict";
   const DEBUG             = false;
   const KEYMATCH          = / ?(key\d+) ?/gm;
+  const KEYLEN            = 20;
   const OURPROPS          = 'code,externals,frag,nodes,to,update,v';
   const CODE              = ''+Math.random();
   const XSS               = () => `Possible XSS / object forgery attack detected. ` +
@@ -65,19 +66,20 @@
   }
 
   function handleTextNode({node,vmap}) {
+    const lengths = [];
     const text = node.wholeText; 
     let result;
     while( result = KEYMATCH.exec(text) ) {
       const {index} = result;
       const key = result[1];
       const val = vmap[key];
-      const replacer = makeTextNodeUpdater({node});
+      const replacer = makeTextNodeUpdater({node,index,lengths,valIndex:val.vi});
       replacer(val.val);
       val.replacers.push( replacer );
     }
   }
 
-  function makeTextNodeUpdater({node}) {
+  function makeTextNodeUpdater({node,index,lengths,valIndex}) {
     let oldNodes = [node];
     return (newVal) => {
       switch(typeof newVal) {
@@ -89,13 +91,18 @@
           oldNodes = newVal.nodes;
           break;
         default:
+          const lengthBefore = lengths.reduce((sum,x) => sum + (x || 0), 0);
           node.nodeValue = newVal;
+          lengths[valIndex] = newVal.length;
+            console.log(JSON.stringify({index,lengthBefore,lengths}));
           break;
       }
     };
   }
 
   function handleElementNode({node,vmap,externals}) {
+    const lengths = [];
+    const oldLengths = [];
     const attrs = [...node.attributes]; 
     attrs.forEach(({name,value}) => {
       let result;
@@ -103,15 +110,16 @@
         const {index} = result;
         const key = result[1];
         const val = vmap[key];
-        const replacer = makeAttributeUpdater({node,name,externals});
+        const replacer = makeAttributeUpdater({node,index,name,externals,lengths,oldLengths,valIndex:val.vi});
         replacer(val.val);
         val.replacers.push( replacer );
       }
     });
   }
 
-  function makeAttributeUpdater({node,name,externals}) {
-    let oldVal;
+  function makeAttributeUpdater({node,index,name,externals,lengths,oldLengths,valIndex}) {
+    let oldVal = {length: KEYLEN};
+    let originalLengthBefore = Math.max(0,valIndex-1)*KEYLEN;
     return (newVal) => {
       switch(typeof newVal) {
         case "function":
@@ -132,8 +140,18 @@
           oldVal = newVal;
         break;
         default:
-          if ( node.getAttribute(name) !== newVal ) {
-            node.setAttribute(name,newVal);
+          const attr = node.getAttribute(name);
+          if ( attr !== newVal ) {
+            const lengthBefore = lengths.reduce((sum,x,i) => i < valIndex ? sum + x : sum, 0) || 0;
+            lengths[valIndex] = newVal.length;
+
+            const correction = lengthBefore-originalLengthBefore;
+            const before = attr.slice(0,index+lengthBefore-originalLengthBefore);
+            const after = attr.slice(index+(lengthBefore-originalLengthBefore)+oldVal.length);
+
+            node.setAttribute(name,before + newVal + after);
+
+            oldVal = newVal;
           }
       }
     };
@@ -154,7 +172,7 @@
 
   function replaceVal(vmap) {
     return (val,vi) => {
-      const k = (' key'+Math.random()+' ').replace('.','');
+      const k = (' key'+Math.random()+' ').replace('.','').padEnd(KEYLEN,'0').slice(0,KEYLEN);
       vmap[k.trim()] = {vi,val,replacers:[]};
       return k;
     };
