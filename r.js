@@ -4,7 +4,7 @@
 "use strict";
   const DEBUG             = false;
   const KEYMATCH          = / ?(key\d+) ?/gm;
-  const OURPROPS          = 'code,frag,nodes,to,update,v';
+  const OURPROPS          = 'code,externals,frag,nodes,to,update,v';
   const CODE              = ''+Math.random();
   const XSS               = () => `Possible XSS / object forgery attack detected. ` +
                             `Object value could not be verified.`;
@@ -36,6 +36,7 @@
     p = [...p]; 
     const vmap = {};
     const V = v.map(replaceVal(vmap));
+    const externals = [];
     let str = '';
 
     while( p.length > 1 ) str += p.shift() + V.shift();
@@ -44,22 +45,98 @@
     const frag = toDOM(str);
     const walker = document.createTreeWalker(frag, NodeFilter.SHOW_ALL);
 
-    do makeUpdaters({walker,vmap}); while(walker.nextNode())
+    do makeUpdaters({walker,vmap,externals}); while(walker.nextNode())
 
-    const retVal = cache[cacheKey] = {frag,v:Object.values(vmap),to,update,code:CODE,nodes:[...frag.childNodes]};
+    const retVal = cache[cacheKey] = {externals,frag,v:Object.values(vmap),to,
+      update,code:CODE,nodes:[...frag.childNodes]};
     return retVal;
   }
 
-  function makeUpdaters({walker,vmap}) {
+  function makeUpdaters({walker,vmap,externals}) {
     let node = walker.currentNode;
     switch( node.nodeType ) {
       case Node.ELEMENT_NODE:
-        handleElementNode({node,vmap});
+        handleElementNode({node,vmap,externals});
       break;
       case Node.TEXT_NODE:
         handleTextNode({node,vmap});
       break;
     }
+  }
+
+  function handleTextNode({node,vmap}) {
+    const text = node.wholeText; 
+    let result;
+    while( result = KEYMATCH.exec(text) ) {
+      const {index} = result;
+      const key = result[1];
+      const val = vmap[key];
+      const replacer = makeTextNodeUpdater({node});
+      replacer(val.val);
+      val.replacers.push( replacer );
+    }
+  }
+
+  function makeTextNodeUpdater({node}) {
+    let oldNodes = [node];
+    return (newVal) => {
+      switch(typeof newVal) {
+        case "object":
+          if ( sameNodes(oldNodes,newVal.nodes) ) return;
+          const anchorNode = oldNodes[0];
+          newVal.nodes.forEach(n => anchorNode.parentNode.insertBefore(n,anchorNode.nextSibling));
+          oldNodes.forEach(n => n.remove());
+          oldNodes = newVal.nodes;
+          break;
+        default:
+          node.nodeValue = newVal;
+          break;
+      }
+    };
+  }
+
+  function handleElementNode({node,vmap,externals}) {
+    const attrs = [...node.attributes]; 
+    attrs.forEach(({name,value}) => {
+      let result;
+      while( result = KEYMATCH.exec(value) ) {
+        const {index} = result;
+        const key = result[1];
+        const val = vmap[key];
+        const replacer = makeAttributeUpdater({node,name,externals});
+        replacer(val.val);
+        val.replacers.push( replacer );
+      }
+    });
+  }
+
+  function makeAttributeUpdater({node,name,externals}) {
+    let oldVal;
+    return (newVal) => {
+      switch(typeof newVal) {
+        case "function":
+          if ( name !== 'bond' ) {
+            if ( !! oldVal ) {
+              node.removeEventListener(name, oldVal);
+            }
+            node.addEventListener(name, newVal); 
+          } else {
+            if ( !! oldVal ) {
+              const index = externals.indexOf(oldVal);
+              if ( index >= 0 ) {
+                externals.splice(index,1);
+              }
+            }
+            externals.push(() => newVal(node)); 
+          }
+          oldVal = newVal;
+        break;
+        default:
+          if ( node.getAttribute(name) !== newVal ) {
+            node.setAttribute(name,newVal);
+          }
+      }
+    };
   }
 
   function isCached(cacheKey,v) {
@@ -90,61 +167,15 @@
     return f;
   }
 
-
-  function handleTextNode({node,vmap}) {
-    const text = node.wholeText; 
-    let result;
-    while( result = KEYMATCH.exec(text) ) {
-      const {index} = result;
-      const key = result[1];
-      const val = vmap[key];
-      let oldNodes = [node];
-      const replacer = (newVal) => {
-        switch(typeof newVal) {
-          case "object":
-            if ( sameNodes(oldNodes,newVal.nodes) ) return;
-            const anchorNode = oldNodes[0];
-            newVal.nodes.forEach(n => anchorNode.parentNode.insertBefore(n,anchorNode.nextSibling));
-            oldNodes.forEach(n => n.remove());
-            oldNodes = newVal.nodes;
-            break;
-          default:
-            node.nodeValue = newVal;
-            break;
-        }
-      }
-      replacer(val.val);
-      val.replacers.push( replacer );
-    }
-  }
-
-  function handleElementNode({node,vmap}) {
-    const attrs = [...node.attributes]; 
-    attrs.forEach(({name,value}) => {
-      let result;
-      while( result = KEYMATCH.exec(value) ) {
-        const {index} = result;
-        const key = result[1];
-        const val = vmap[key];
-        const replacer = (newVal) => {
-          const oldVal = node.getAttribute(name);
-          if ( oldVal !== newVal ) {
-            node.setAttribute(name,newVal);
-          }
-        }
-        replacer(val.val);
-        val.replacers.push( replacer );
-      }
-    });
-  }
-
   function parseVal(v) {
+    const isFunc          = typeof v == "function";
     const isUnset         = v == null         ||    v == undefined;
     const isObject        = !isUnset          &&    typeof v === "object";
     const isGoodArray     = Array.isArray(v)  &&    v.every(itemIsFine);
     const isVerified      = isObject          &&    verify(v);
     const isForgery       = onlyOurProps(v)   &&    !isVerified; 
 
+    if ( isFunc )        return v;
     if ( isVerified )     return v;
     if ( isGoodArray )    return join(v); 
     if ( isUnset )        die({error: UNSET()});
@@ -169,6 +200,7 @@
     } catch(e) {
       die({error: INSERT()},e);
     }
+    this.externals.forEach(f => f());
   }
 
   function sameNodes(a,b) {
