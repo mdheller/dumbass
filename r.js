@@ -87,7 +87,7 @@
   }
 
   function skip(str) {
-    skip = (skip || "")+'';
+    str = (str || "")+'';
     /* allow the thing to pass without replacement */
     return { str, handlers: {}, code: currentKey };
   }
