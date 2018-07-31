@@ -93,25 +93,40 @@
   function makeTextNodeUpdater({node,index,lengths,valIndex,val}) {
     let oldNodes = [node];
     let lastAnchor = node;
+    s({initial:{lastAnchor}});
     return (newVal) => {
+      //s({entering:true});
       val.val = newVal;
       switch(typeof newVal) {
         case "object":
+          s({textNodeUpdater:{object:{nodes:newVal.nodes}}});
           if ( !! newVal.nodes.length ) {
+            s({someNodes:{lastAnchorIs:lastAnchor}});
             newVal.nodes.forEach(n => lastAnchor.parentNode.insertBefore(n,lastAnchor.nextSibling));
-            const dn = diffNodes(oldNodes,newVal.nodes);
-            if ( dn.size ) {
-              const f = document.createDocumentFragment();
-              dn.forEach(n => f.appendChild(n));
-            }
             lastAnchor = newVal.nodes[0];
-            oldNodes = newVal.nodes;
+            s({update:{lastAnchor}});
+          } else {
+            s({noNodes:{lastAnchor}});
+            const placeholderNode = toDOM(`<meta name=placeholder>`).firstElementChild;
+            lastAnchor.parentNode.insertBefore(placeholderNode,lastAnchor.nextSibling);
+            lastAnchor = placeholderNode;
+            s({update:{lastAnchor}});
           }
+          const dn = diffNodes(oldNodes,newVal.nodes);
+          if ( dn.size ) {
+            const f = document.createDocumentFragment();
+            dn.forEach(n => f.appendChild(n));
+          }
+          void ( typeof newVal !== "string" && s({removing:{dn}}));
+          oldNodes = newVal.nodes || [lastAnchor];
+          void ( typeof newVal !== "string" && s({updating:{oldNodes}}));
+          //s({exiting:true});
           while ( newVal.externals.length ) {
             newVal.externals.shift()(); 
           } 
           break;
         default:
+          //s({textNodeUpdater:{text:{newVal}}});
           const lengthBefore = lengths.slice(0,valIndex).reduce((sum,x) => sum + x, 0);
           node.nodeValue = newVal;
           lengths[valIndex] = newVal.length;
@@ -158,9 +173,13 @@
             if ( attr !== newVal ) {
               if ( !! attr ) {
                 node.removeAttribute(oldName);
+                // FIXME: IDL
+                node[oldName] = undefined;
               }
               if ( !! newVal ) {
                 node.setAttribute(newVal,''); 
+                // FIXME: IDL
+                node[newVal] = true;
               }
               oldName = newVal;
             }
@@ -199,7 +218,10 @@
               const after = attr.slice(index+correction+oldVal.length);
 
               //console.log(JSON.stringify({name,originalLengthBefore,lengthBefore,correction,index,attr,before,after,newVal,lengths,valIndex},null,2));
-              node.setAttribute(name,before + newVal + after);
+              const newAttrValue = before + newVal + after;
+              node.setAttribute(name, newAttrValue);
+              //FIXME: IDL (this is required for some attributes, we need a map of attr name to IDL)
+              node[name] = newAttrValue;
 
               oldVal = newVal;
             }
@@ -293,7 +315,7 @@
   function to(selector, position = 'replace') {
     const frag = document.createDocumentFragment();
     this.nodes.forEach(n => frag.appendChild(n));
-    const elem = selector instanceof HTMLElement ? selector : document.querySelector(selector);
+    const elem = selector instanceof Node ? selector : document.querySelector(selector);
     try {
       MOVE[position](frag,elem);
     } catch(e) {
@@ -326,4 +348,23 @@
     if (DEBUG && err) console.warn(err);
     msg.stack = ((DEBUG && err) || new Error()).stack.split(/\s*\n\s*/g);
     throw JSON.stringify(msg,null,2);
+  }
+
+  function s(msg) {
+    if ( DEBUG ) {
+      console.log(JSON.stringify(msg,showNodes,2));
+      console.info('.');
+    }
+  }
+
+  function showNodes(k,v) {
+    let out = v;
+    if ( v instanceof Node ) {
+      out = `<${v.nodeName.toLowerCase()} ${
+        !v.attributes ? '' : [...v.attributes].map(({name,value}) => `${name}='${value}'`).join(' ')}>${
+        v.nodeValue || ''}`;
+    } else if ( typeof v === "function" ) {
+      return `${v.name || 'anon'}() { ... }`
+    }
+    return out;
   }
