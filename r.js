@@ -25,6 +25,7 @@
   const isKey             = v => typeof v === "object" &&  typeof v.key == "string";
   const cache = {};
 
+  Object.assign(R,{s});
   export {R};
 
   function R(p,...v) {
@@ -93,33 +94,33 @@
   function makeTextNodeUpdater({node,index,lengths,valIndex,val}) {
     let oldNodes = [node];
     let lastAnchor = node;
-    s({initial:{lastAnchor}});
+    //s({initial:{lastAnchor}});
     return (newVal) => {
       //s({entering:true});
       val.val = newVal;
       switch(typeof newVal) {
         case "object":
-          s({textNodeUpdater:{object:{nodes:newVal.nodes}}});
+          //s({textNodeUpdater:{object:{nodes:newVal.nodes}}});
           if ( !! newVal.nodes.length ) {
-            s({someNodes:{lastAnchorIs:lastAnchor}});
+            //s({someNodes:{lastAnchorIs:lastAnchor}});
             newVal.nodes.forEach(n => lastAnchor.parentNode.insertBefore(n,lastAnchor.nextSibling));
             lastAnchor = newVal.nodes[0];
-            s({update:{lastAnchor}});
+            //s({update:{lastAnchor}});
           } else {
-            s({noNodes:{lastAnchor}});
+            //s({noNodes:{lastAnchor}});
             const placeholderNode = toDOM(`<meta name=placeholder>`).firstElementChild;
             lastAnchor.parentNode.insertBefore(placeholderNode,lastAnchor.nextSibling);
             lastAnchor = placeholderNode;
-            s({update:{lastAnchor}});
+            //s({update:{lastAnchor}});
           }
           const dn = diffNodes(oldNodes,newVal.nodes);
           if ( dn.size ) {
             const f = document.createDocumentFragment();
             dn.forEach(n => f.appendChild(n));
           }
-          void ( typeof newVal !== "string" && s({removing:{dn}}));
+          //void ( typeof newVal !== "string" && s({removing:{dn}}));
           oldNodes = newVal.nodes || [lastAnchor];
-          void ( typeof newVal !== "string" && s({updating:{oldNodes}}));
+          //void ( typeof newVal !== "string" && s({updating:{oldNodes}}));
           //s({exiting:true});
           while ( newVal.externals.length ) {
             newVal.externals.shift()(); 
