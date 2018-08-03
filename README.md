@@ -2,6 +2,10 @@
 
 A crazy-small framework for building brutal/brutalist web applications
 
+## Roadmap
+
+Next task - Server Side Rendering and rehydration.
+
 ## news 1.4 release breaking changes - keyed diffing
 
 Things are different now. After experimenting with stateful components, and deciding against that, I've implemented keyed templates, which means that if your template / R function includes the metavalue `{key:<some key>}` your functions is cached on first call, and on subsequent calls, the DOM associated to that key is updated minimally. So you get all the benefits of diffing, without a virtual DOM.
