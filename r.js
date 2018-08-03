@@ -209,6 +209,7 @@
                 node[oldName] = undefined;
               }
               if ( !! newVal ) {
+                console.log(node);
                 node.setAttribute(newVal.trim(),''); 
                 // FIXME: IDL
                 node[newVal] = true;
@@ -300,7 +301,7 @@
       if ( !! val.key ) {
         return '';
       }
-      const key = (' key'+Math.random()).replace('.','').padEnd(KEYLEN,'0').slice(0,KEYLEN);
+      const key = ('key'+Math.random()).replace('.','').padEnd(KEYLEN,'0').slice(0,KEYLEN);
       let k = key;
       if ( onlyOurProps(val) && verify(val) ) {
         k = (`<!--${k}-->`);
