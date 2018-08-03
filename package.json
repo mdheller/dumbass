@@ -1,6 +1,6 @@
 {
   "name": "brutalist-web",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "3kb framework for building brutalist web apps",
   "main": "r.js",
   "scripts": {
