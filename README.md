@@ -2,68 +2,23 @@
 
 A crazy-small framework for building brutal/brutalist web applications
 
-## Roadmap
+## features
 
-Next task - Server Side Rendering and rehydration.
+- small size
+- keyed DOM create/updating with `R` (model / view sync without vdom and **with** minimal change set)
+- uncached DOM creation with `X`
 
-## news 1.4 release breaking changes - keyed diffing
-
-Things are different now. After experimenting with stateful components, and deciding against that, I've implemented keyed templates, which means that if your template / R function includes the metavalue `{key:<some key>}` your functions is cached on first call, and on subsequent calls, the DOM associated to that key is updated minimally. So you get all the benefits of diffing, without a virtual DOM.
-
-If you want to avoid using the cache, because although it works well for most things, for some cases you might not want to cache, you can substitute `X` for `R`. When you call X, it operates like R in previous versions of brutal, and there is no keyed pinning of DOM or diffing, you just create new DOM with X. 
-
-Another breaking change, is `render` is gone. 
-
-It is replaced by the `to` method on the objects returned by R or X.
-
-### brutal 1.4 examples:
-
-An illustrative example shows:
-  - only need to quote attributes when you would otherwise need to in HTML5
-  - adding event handlers
-  - keyed diffing and updating
-  - the to method
-
-```JavaScript
-const MyKeyedWidget = state => R`${{key: state.key}}
-  <span 
-    name=widget-${state.name} 
-    class="widget ${state.editing ? 'editing' : ''}" 
-    mouseover=${e => console.log(e)}>${state.text}</span>
-`;
-
-const ws = {key: 'abc', text: 'ABC', name: 'A-B-C'};
-
-function WidgetHolder() {
-  return R`
-    <article>
-      ${MyKeyedWidget(ws)}
-    </article>
-  `;
-}
-
-onload => WidgetHolder().to('body', 'innerHTML');
-
-setInterval( () => {
-  ws.text += 'X';
-  MyKeyedWidget(ws);        // pinned DOM diffs here and you see update
-}, 1000);
-```
-
-### To method
-
-Supports positioning attributes: `innerHTML, replace, beforeBegin, afterBegin, beforeEnd, afterEnd`
 
 ## small
 
-[125 SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/r.js). 
+[< 500 SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/r.js). 
 
-2 functions: `R` and `render`.
+2 functions: `R` and `X`.
 
 Basic usage:
 
 ```JavaScript
-  render(App(), document.getElementById('root'));
+  App().to('#root', 'innerHTML');
 ```
 
 ## "React like"
@@ -135,6 +90,14 @@ $ npm i --save brutalist-web
 
 ## use it
 
+CDN *latest version*: 
+
+```HTML
+<script src=https://unpkg.com/brutalist-web/r.js></script>
+```
+
+Static:
+
 ```HTML
 <script src=node_modules/brutalist-web/r.js></script>
 ```
@@ -155,6 +118,21 @@ and
 ## roadmap ~ there isn't one :smiley_cat:
 
 Brutal is already perfect!
+
+But that's not entirely true.
+
+It's perfect (see section below) WRT its objective and vision. 
+In other words, the vision for Brutal is perfect WRT its objective.
+
+But the imlementation is still on its way toward that vision. 
+
+So the actual roadmap:
+
+- server side rendering
+- global component repository
+- scoped styles
+- router
+- more things
 
 ## perfection
 
@@ -194,6 +172,44 @@ If you know HTML and JS, you know brutal.js. Give it a spin, open an issue, make
 --------
 
 ## more information 
+
+### brutal 1.4 examples:
+
+An illustrative example shows:
+  - only need to quote attributes when you would otherwise need to in HTML5
+  - adding event handlers
+  - keyed diffing and updating
+  - the to method
+
+```JavaScript
+const MyKeyedWidget = state => R`${{key: state.key}}
+  <span 
+    name=widget-${state.name} 
+    class="widget ${state.editing ? 'editing' : ''}" 
+    mouseover=${e => console.log(e)}>${state.text}</span>
+`;
+
+const ws = {key: 'abc', text: 'ABC', name: 'A-B-C'};
+
+function WidgetHolder() {
+  return R`
+    <article>
+      ${MyKeyedWidget(ws)}
+    </article>
+  `;
+}
+
+onload => WidgetHolder().to('body', 'innerHTML');
+
+setInterval( () => {
+  ws.text += 'X';
+  MyKeyedWidget(ws);        // pinned DOM diffs here and you see update
+}, 1000);
+```
+
+### To method
+
+Supports positioning attributes: `innerHTML, replace, beforeBegin, afterBegin, beforeEnd, afterEnd`
 
 ### case-study: just how small is it? 
 
@@ -401,6 +417,18 @@ R`<style>
 -----
 
 ## news ~ 
+
+### news 1.4 release breaking changes - keyed diffing
+
+Things are different now. After experimenting with stateful components, and deciding against that, I've implemented keyed templates, which means that if your template / R function includes the metavalue `{key:<some key>}` your functions is cached on first call, and on subsequent calls, the DOM associated to that key is updated minimally. So you get all the benefits of diffing, without a virtual DOM.
+
+If you want to avoid using the cache, because although it works well for most things, for some cases you might not want to cache, you can substitute `X` for `R`. When you call `X`, it operates like `R` in previous versions of brutal, and there is no keyed pinning of DOM or diffing, you just create new DOM with `X`. 
+
+Another breaking change, is `render` is gone. 
+
+It is replaced by the `to` method on the objects returned by `R` or `X`.
+
+See the brutal 1.4 examples section above for illustrative example.
 
 ### bug fixes and "bond event"
 
