@@ -25,7 +25,7 @@
   const isKey             = v => typeof v === "object" &&  v.key !== null && v.key !== undefined;
   const cache = {};
 
-  Object.assign(R,{s});
+  Object.assign(R,{s,skip,die});
   export {R,X};
 
   function R(p,...v) {
@@ -293,6 +293,12 @@
       cached.update(v);
     }
     return {cached,firstCall};
+  }
+
+  function skip(str) {
+    str = (str || "")+'';
+    /* allow the thing to pass without replacement */
+    return { str, handlers: {}, code: currentKey };
   }
 
   function replaceVal(vmap) {
