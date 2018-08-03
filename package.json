@@ -2,7 +2,7 @@
   "name": "brutalist-web",
   "version": "1.4.0",
   "description": "3kb framework for building brutalist web apps",
-  "main": "r.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,5 +23,8 @@
     "url": "https://github.com/dosyago-coder-0/brutal.js/issues"
   },
   "homepage": "https://github.com/dosyago-coder-0/brutal.js#readme",
-  "devDependencies": {}
+  "devDependencies": {},
+  "dependencies": {
+    "esm": "^3.0.74"
+  }
 }
