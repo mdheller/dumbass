@@ -7,6 +7,7 @@
   const KEYLEN            = 20;
   const OURPROPS          = 'code,externals,nodes,to,update,v';
   const CODE              = ''+Math.random();
+  const currentKey        = CODE;
   const XSS               = () => `Possible XSS / object forgery attack detected. ` +
                             `Object value could not be verified.`;
   const OBJ               = () => `Object values not allowed here.`;
@@ -72,7 +73,7 @@
 
     parts = [...parts];
 
-    const keyObj = vals.find( v => v.key !== undefined ) || {};
+    const keyObj = vals.find( v => !!v && v.key !== undefined ) || {};
     const {key:key='singleton'} = keyObj;
 
     vals = vals.map(parseValue);
@@ -111,31 +112,7 @@
     if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
     str += parts.shift();
 
-    const page = `
-      <!DOCTYPE html>
-      <meta charset=utf8>
-      <body> 
-        ${str}
-        <script>
-          const key = ${JSON.stringify(key)};
-          const hydration = ${JSON.stringify(handlers,(k,v) => typeof v == "function" ? v.toString() : v)};
-
-          hydrate(hydration);
-
-          ${hydrate.toString()}
-
-          ${activateNode.toString()}
-
-          ${getHids.toString()}
-          
-          function revive(fstr) {
-            const f = eval(fstr);
-            return f;
-          }
-        </script>
-      </body>
-    `;
-    return page;
+    return {str,handlers,to,code:CODE};
   }
 
   function safe (v) {
@@ -155,7 +132,7 @@
       if (!!v.str && !!v.handlers) {
         return v;
       }
-      throw {error: OBJ, value: v};
+      throw {error: OBJ(), value: v};
     } else return v === null || v === undefined ? '' : v;
   }
 
@@ -346,7 +323,6 @@
                 node[oldName] = undefined;
               }
               if ( !! newVal ) {
-                console.log(node);
                 node.setAttribute(newVal.trim(),''); 
                 // FIXME: IDL
                 node[newVal] = true;
@@ -500,22 +476,52 @@
 
     if (str) {
       const o = {str,handlers:H};
-      o.code = sign(o,currentKey);
+      o.code = CODE;
       return o;
     }
   }
 
-  function to(selector, position = 'replace') {
-    const frag = document.createDocumentFragment();
-    this.nodes.forEach(n => frag.appendChild(n));
-    const elem = selector instanceof Node ? selector : document.querySelector(selector);
-    try {
-      MOVE[position](frag,elem);
-    } catch(e) {
-      die({error: INSERT()},e);
-    }
-    while(this.externals.length) {
-      this.externals.shift()();
+  function to(location, position = 'replace') {
+    if ( ! BROWSER_SIDE ) {
+      const {str,handlers} = this;
+      const page = `
+        <!DOCTYPE html>
+        <meta charset=utf8>
+        <body> 
+          ${str}
+          <script>
+            const hydration = ${JSON.stringify(handlers,(k,v) => typeof v == "function" ? v.toString() : v)};
+
+            hydrate(hydration);
+
+            document.currentScript.remove();
+
+            ${hydrate.toString()}
+
+            ${activateNode.toString()}
+
+            ${getHids.toString()}
+            
+            function revive(fstr) {
+              const f = eval(fstr);
+              return f;
+            }
+          </script>
+        </body>
+      `;
+      location.send(page); 
+    } else {
+      const frag = document.createDocumentFragment();
+      this.nodes.forEach(n => frag.appendChild(n));
+      const elem = location instanceof Node ? location : document.querySelector(location);
+      try {
+        MOVE[position](frag,elem);
+      } catch(e) {
+        die({error: INSERT()},e);
+      }
+      while(this.externals.length) {
+        this.externals.shift()();
+      }
     }
   }
 
