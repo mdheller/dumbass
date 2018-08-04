@@ -30,6 +30,30 @@
 
   export {R,X};
 
+  function X(p,...v) {
+    v = v.map(parseVal);
+
+    p = [...p]; 
+    const vmap = {};
+    const V = v.map(replaceVal(vmap));
+    const externals = [];
+    let str = '';
+
+    while( p.length > 1 ) str += p.shift() + V.shift();
+    str += p.shift();
+
+    const frag = toDOM(str);
+    const walker = document.createTreeWalker(frag, NodeFilter.SHOW_ALL);
+
+    do {
+      makeUpdaters({walker,vmap,externals});
+    } while(walker.nextNode())
+
+    const retVal = {externals,v:Object.values(vmap),to,
+      update,code:CODE,nodes:[...frag.childNodes]};
+    return retVal;
+  }
+
   function R(p,...v) {
     if ( ! BROWSER_SIDE ) return S(p,...v);
 
@@ -115,8 +139,53 @@
     return {str,handlers,to,code:CODE};
   }
 
-  function safe (v) {
-    return String(v).replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/&/g,'&amp;').replace(/"/g,'&#34;').replace(/'/g,'&#39;');
+  function isCached(cacheKey,v,instanceKey) {
+    let firstCall;
+    let cached = cache[cacheKey];
+    if ( cached == undefined ) {
+      cached = cache[cacheKey] = {};
+      if ( !! instanceKey ) {
+        cached.instances = {};
+        cached = cached.instances[instanceKey] = {};
+      }
+      firstCall = true;
+    } else {
+      if ( !! instanceKey ) {
+        if ( ! cached.instances ) {
+          cached.instances = {};
+          firstCall = true;
+        } else {
+          cached = cached.instances[instanceKey];
+          if ( ! cached ) {
+            firstCall = true;
+          } else {
+            firstCall = false;
+          }
+        }
+      } else {
+        firstCall = false;
+      }
+    }
+    if ( ! firstCall ) {
+      cached.update(v);
+    }
+    return {cached,firstCall};
+  }
+
+  function makeUpdaters({walker,vmap,externals}) {
+    //FIXME: If values are empty, things can fuck up.
+    let node = walker.currentNode;
+    switch( node.nodeType ) {
+      case Node.ELEMENT_NODE:
+        handleElementNode({node,vmap,externals});
+      break;
+      case Node.COMMENT_NODE:
+      case Node.TEXT_NODE:
+        handleTextNode({node,vmap,externals});
+      break;
+      default:
+      break;
+    }
   }
 
   function markInsertionPoint({str,lastNewTagIndex,lastTagName,hid}) {
@@ -136,85 +205,15 @@
     } else return v === null || v === undefined ? '' : v;
   }
 
-  function hydrate(handlers) {
-    const hids = getHids(document);
+  function Sjoin(rs) {
+    const H = {};
+    const str = rs.map(({str,handlers,code}) => (
+        verify({str,handlers,code},CODE),Object.assign(H,handlers),str)).join('\n');
 
-    Object.entries(handlers).forEach(
-      ([hid,nodeHandlers]) => activateNode(hids,{hid,nodeHandlers}));
-  }
-
-  function activateNode(hids,{hid,nodeHandlers}) {
-    const hidNode = hids[hid];
-    let node;
-
-    if (!!hidNode) {
-      node = hidNode.nextElementSibling;
-      hidNode.remove();
-    } else throw {error:MARKER(hid)}
-
-    const bondHandlers = [];
-
-    if (!!node && !!nodeHandlers) {
-      nodeHandlers.forEach(({eventName,handler}) => {
-        handler = revive(handler);
-        if ( eventName == 'bond' ) {
-          bondHandlers.push(()  => handler(node));
-        } else node.addEventListener(eventName,handler);
-      });
-    } else throw {error: HID(hid)} 
-
-    bondHandlers.forEach(f => f());
-  }
-
-  function getHids(parent) {
-    const walker = document.createTreeWalker(parent,NodeFilter.SHOW_COMMENT,{acceptNode: node => node.nodeType == Node.COMMENT_NODE && node.nodeValue.startsWith('hid_')});
-    const hids = {};
-    do{
-      const node = walker.currentNode;
-      if ( node.nodeType == Node.COMMENT_NODE && node.nodeValue.startsWith("hid_") ) {
-        hids[node.data] = node;
-      }
-    } while(walker.nextNode());
-    return hids;
-  }
-
-  function X(p,...v) {
-    v = v.map(parseVal);
-
-    p = [...p]; 
-    const vmap = {};
-    const V = v.map(replaceVal(vmap));
-    const externals = [];
-    let str = '';
-
-    while( p.length > 1 ) str += p.shift() + V.shift();
-    str += p.shift();
-
-    const frag = toDOM(str);
-    const walker = document.createTreeWalker(frag, NodeFilter.SHOW_ALL);
-
-    do {
-      makeUpdaters({walker,vmap,externals});
-    } while(walker.nextNode())
-
-    const retVal = {externals,v:Object.values(vmap),to,
-      update,code:CODE,nodes:[...frag.childNodes]};
-    return retVal;
-  }
-
-  function makeUpdaters({walker,vmap,externals}) {
-    //FIXME: If values are empty, things can fuck up.
-    let node = walker.currentNode;
-    switch( node.nodeType ) {
-      case Node.ELEMENT_NODE:
-        handleElementNode({node,vmap,externals});
-      break;
-      case Node.COMMENT_NODE:
-      case Node.TEXT_NODE:
-        handleTextNode({node,vmap,externals});
-      break;
-      default:
-      break;
+    if (str) {
+      const o = {str,handlers:H};
+      o.code = CODE;
+      return o;
     }
   }
 
@@ -376,43 +375,46 @@
     }
   }
 
-  function isCached(cacheKey,v,instanceKey) {
-    let firstCall;
-    let cached = cache[cacheKey];
-    if ( cached == undefined ) {
-      cached = cache[cacheKey] = {};
-      if ( !! instanceKey ) {
-        cached.instances = {};
-        cached = cached.instances[instanceKey] = {};
-      }
-      firstCall = true;
-    } else {
-      if ( !! instanceKey ) {
-        if ( ! cached.instances ) {
-          cached.instances = {};
-          firstCall = true;
-        } else {
-          cached = cached.instances[instanceKey];
-          if ( ! cached ) {
-            firstCall = true;
-          } else {
-            firstCall = false;
-          }
-        }
-      } else {
-        firstCall = false;
-      }
-    }
-    if ( ! firstCall ) {
-      cached.update(v);
-    }
-    return {cached,firstCall};
+  function hydrate(handlers) {
+    const hids = getHids(document);
+
+    Object.entries(handlers).forEach(
+      ([hid,nodeHandlers]) => activateNode(hids,{hid,nodeHandlers}));
   }
 
-  function skip(str) {
-    str = (str || "")+'';
-    /* allow the thing to pass without replacement */
-    return { str, handlers: {}, code: CODE };
+  function activateNode(hids,{hid,nodeHandlers}) {
+    const hidNode = hids[hid];
+    let node;
+
+    if (!!hidNode) {
+      node = hidNode.nextElementSibling;
+      hidNode.remove();
+    } else throw {error:MARKER(hid)}
+
+    const bondHandlers = [];
+
+    if (!!node && !!nodeHandlers) {
+      nodeHandlers.forEach(({eventName,handler}) => {
+        handler = revive(handler);
+        if ( eventName == 'bond' ) {
+          bondHandlers.push(()  => handler(node));
+        } else node.addEventListener(eventName,handler);
+      });
+    } else throw {error: HID(hid)} 
+
+    bondHandlers.forEach(f => f());
+  }
+
+  function getHids(parent) {
+    const walker = document.createTreeWalker(parent,NodeFilter.SHOW_COMMENT,{acceptNode: node => node.nodeType == Node.COMMENT_NODE && node.nodeValue.startsWith('hid_')});
+    const hids = {};
+    do{
+      const node = walker.currentNode;
+      if ( node.nodeType == Node.COMMENT_NODE && node.nodeValue.startsWith("hid_") ) {
+        hids[node.data] = node;
+      }
+    } while(walker.nextNode());
+    return hids;
   }
 
   function replaceVal(vmap) {
@@ -457,28 +459,12 @@
     return v+'';
   }
 
-  function itemIsFine(v) {
-    return onlyOurProps(v) && verify(v);
-  }
-
   function join(os) {
     const externals = [];
     const bigNodes = [];
     os.forEach(o => (externals.push(...o.externals),bigNodes.push(...o.nodes)));
     const retVal = {v:[],code:CODE,nodes:bigNodes,to,update,externals};
     return retVal;
-  }
-
-  function Sjoin(rs) {
-    const H = {};
-    const str = rs.map(({str,handlers,code}) => (
-        verify({str,handlers,code},CODE),Object.assign(H,handlers),str)).join('\n');
-
-    if (str) {
-      const o = {str,handlers:H};
-      o.code = CODE;
-      return o;
-    }
   }
 
   function to(location, position = 'replace') {
@@ -537,12 +523,26 @@
     this.v.forEach(({vi,replacers}) => replacers.forEach(f => f(newVals[vi])));
   }
 
+  function itemIsFine(v) {
+    return onlyOurProps(v) && verify(v);
+  }
+
   function onlyOurProps(v) {
     return OURPROPS === Object.keys(v||{}).sort().filter(p => p !== 'instances').join(',');
   }
 
   function verify(v) {
     return CODE === v.code;
+  }
+
+  function safe (v) {
+    return String(v).replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/&/g,'&amp;').replace(/"/g,'&#34;').replace(/'/g,'&#39;');
+  }
+
+  function skip(str) {
+    str = (str || "")+'';
+    /* allow the thing to pass without replacement */
+    return { str, handlers: {}, code: CODE };
   }
 
   function die(msg,err) {
