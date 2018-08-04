@@ -26,7 +26,7 @@
   const isKey             = v => typeof v === "object" &&  v.key !== null && v.key !== undefined;
   const cache = {};
 
-  Object.assign(R,{s,skip,die});
+  Object.assign(R,{s,skip,die,BROWSER_SIDE});
 
   export {R,X};
 
@@ -102,11 +102,11 @@
         Object.assign(handlers,val.handlers);
         str += part;
         val = val.str;
-        if (attrNameMatches) val = `"${val}"`;
+        if (attrNameMatches) val = `${val}`;
         str += val;
       } else {
         str += part;
-        str += attrNameMatches ? `"${safe(val)}"` : safe(val);
+        str += attrNameMatches ? `${safe(val)}` : safe(val);
       }
     }
     if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});
