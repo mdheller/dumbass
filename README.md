@@ -2,16 +2,9 @@
 
 A crazy-small framework for building brutal/brutalist web applications
 
-## features
-
-- small size
-- keyed DOM create/updating with `R` (model / view sync without vdom and **with** minimal change set)
-- uncached DOM creation with `X`
-
-
 ## small
 
-[< 500 SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/r.js). 
+[~ 500  SLOC](https://github.com/dosyago-coder-0/brutal.js/blob/master/r.js). 
 
 2 functions: `R` and `X`.
 
@@ -81,6 +74,13 @@ There's more to do on the roadmap, but for many projects, these simple functions
 For example, take a look at [a working TodoMVC example](https://dosyago-coder-0.github.io/rvanillatodo/) made with brutal.js.
 Everything in brutal is "as close to the metal" ( the JS / HTML ) as possible. This is ensured by there being minimal JS code,
 minimal opinionation (everything is just HTML elements and event handlers), leaving you free to structure things however you like. 
+
+## features
+
+- small size
+- keyed DOM create/updating with `R` (model / view sync without vdom and **with** minimal change set)
+- uncached DOM creation with `X`
+- server-side rendering (experimental)
 
 ## get it
 
