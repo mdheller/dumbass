@@ -456,7 +456,7 @@
     if ( isForgery )      die({error: XSS()});
     if ( isObject )       die({error: OBJ()});
 
-    return v+'';
+    return safe(v+'');
   }
 
   function join(os) {
