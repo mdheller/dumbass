@@ -1,13 +1,13 @@
 "use strict";
   const DEBUG             = true;
   const BROWSER_SIDE      = (() => {try{ return self.DOMParser && true; } catch(e) { return false; }})();
+  // Shouldn't this match attrs that have text as well? currently it matches name=" but not name="asda 
   const LAST_ATTR_NAME    = /\s+([\w-]+)\s*=\s*"?\s*$/;
   const NEW_TAG           = /<\w+/g;
   const KEYMATCH          = / ?(?:<!\-\-)? ?(key\d+) ?(?:\-\->)? ?/gm;
   const KEYLEN            = 20;
   const OURPROPS          = 'code,externals,nodes,to,update,v';
   const CODE              = ''+Math.random();
-  const currentKey        = CODE;
   const XSS               = () => `Possible XSS / object forgery attack detected. ` +
                             `Object value could not be verified.`;
   const OBJ               = () => `Object values not allowed here.`;
@@ -76,7 +76,7 @@
     const keyObj = vals.find( v => !!v && v.key !== undefined ) || {};
     const {key:key='singleton'} = keyObj;
 
-    vals = vals.map(parseValue);
+    vals = vals.map(SparseValue);
 
     while (parts.length > 1) {
       let part = parts.shift();
@@ -125,7 +125,7 @@
     return before + `<!--${hid}-->` + after;
   }
 
-  function parseValue(v) {
+  function SparseValue(v) {
     if (Array.isArray(v) && v.every(item => !!item.handlers && !!item.str)) {
       return Sjoin(v) || '';
     } else if (typeof v === 'object' && !!v) {
@@ -412,7 +412,7 @@
   function skip(str) {
     str = (str || "")+'';
     /* allow the thing to pass without replacement */
-    return { str, handlers: {}, code: currentKey };
+    return { str, handlers: {}, code: CODE };
   }
 
   function replaceVal(vmap) {
@@ -470,9 +470,9 @@
   }
 
   function Sjoin(rs) {
-    const H = {},
-      str = rs.map(({str,handlers,code}) => (
-        verify({str,handlers,code},currentKey),Object.assign(H,handlers),str)).join('\n');
+    const H = {};
+    const str = rs.map(({str,handlers,code}) => (
+        verify({str,handlers,code},CODE),Object.assign(H,handlers),str)).join('\n');
 
     if (str) {
       const o = {str,handlers:H};
@@ -485,29 +485,31 @@
     if ( ! BROWSER_SIDE ) {
       const {str,handlers} = this;
       const page = `
-        <!DOCTYPE html>
-        <meta charset=utf8>
-        <body> 
-          ${str}
-          <script>
-            const hydration = ${JSON.stringify(handlers,(k,v) => typeof v == "function" ? v.toString() : v)};
+        <html lang=en>
+          <!DOCTYPE html>
+          <meta charset=utf8>
+          <body> 
+            ${str}
+            <script>
+              const hydration = ${JSON.stringify(handlers,(k,v) => typeof v == "function" ? v.toString() : v)};
 
-            hydrate(hydration);
+              hydrate(hydration);
 
-            document.currentScript.remove();
+              document.currentScript.remove();
 
-            ${hydrate.toString()}
+              ${hydrate.toString()}
 
-            ${activateNode.toString()}
+              ${activateNode.toString()}
 
-            ${getHids.toString()}
-            
-            function revive(fstr) {
-              const f = eval(fstr);
-              return f;
-            }
-          </script>
-        </body>
+              ${getHids.toString()}
+
+              function revive(fstr) {
+                const f = eval(fstr);
+                return f;
+              }
+            </script>
+          </body>
+        </html>
       `;
       location.send(page); 
     } else {
