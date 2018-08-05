@@ -2,7 +2,7 @@
   "name": "brutalist-web",
   "version": "1.4.5",
   "description": "3kb framework for building brutalist web apps",
-  "main": "r.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
