@@ -6,6 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "./node_modules/.bin/rollup r.js --format umd --name bundleobrutal --file brutal.js"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dosyago-coder-0/brutal.js.git"
@@ -23,7 +28,10 @@
     "url": "https://github.com/dosyago-coder-0/brutal.js/issues"
   },
   "homepage": "https://github.com/dosyago-coder-0/brutal.js#readme",
-  "devDependencies": {},
+  "devDependencies": {
+    "husky": "^1.0.0-rc.13",
+    "rollup": "^0.63.5"
+  },
   "dependencies": {
     "esm": "^3.0.74"
   }
