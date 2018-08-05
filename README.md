@@ -14,6 +14,41 @@ Basic usage:
   App().to('#root', 'innerHTML');
 ```
 
+Installing:
+
+```shell
+$ npm i --save brutalist-web
+```
+
+Using on server with CJS:
+
+```JavaScript
+  const {R} = require('brutalist-web');
+```
+
+Using on client with the unpkg CDN:
+
+```HTML
+  <script type=module src=https://unpkg.com/brutalist-web/r.js></script>
+```
+
+Using on client from your own server, you must serve the brutalist-web directory, 
+for example if you route it from /brutalist-web, you would import like:
+
+```HTML
+  <script type=module src=/brutalist-web/r.js></script>
+```
+
+or simply into your files like:
+
+```JavaScript
+  import {R} from '/brutalist-web/r.js';
+```
+
+Notice the client imports require you to specify `r.js` while the server does not.
+This is owing to the current slightly different syntax and semantics of ES imports
+between client and server.
+
 ## "React like"
 
 This is React/JSX:
