@@ -26,9 +26,7 @@
 
   Object.assign(R,{s,skip,die,BROWSER_SIDE});
 
-  export {R,X};
-
-  function R(p,...v) {
+  export function R(p,...v) {
     if ( ! BROWSER_SIDE ) return S(p,...v);
 
     v = v.map(parseVal);
@@ -65,7 +63,7 @@
     return retVal;
   }
 
-  function X(p,...v) {
+  export function X(p,...v) {
     v = v.map(parseVal);
 
     p = [...p]; 

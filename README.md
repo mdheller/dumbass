@@ -35,12 +35,6 @@ Using on client with the unpkg CDN:
 Using on client from your own server, you must serve the brutalist-web directory, 
 for example if you route it from /brutalist-web, you would import like:
 
-```HTML
-  <script type=module src=/brutalist-web/r.js></script>
-```
-
-or simply into your files like:
-
 ```JavaScript
   import {R} from '/brutalist-web/r.js';
 ```
