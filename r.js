@@ -135,50 +135,44 @@
   function makeTextNodeUpdater({node,index,lengths,valIndex,val}) {
     let oldNodes = [node];
     let lastAnchor = node;
-    //s({initial:{lastAnchor}});
     return (newVal) => {
-      //s({entering:true});
       val.val = newVal;
       switch(typeof newVal) {
         case "object":
-          //s({textNodeUpdater:{object:{nodes:newVal.nodes}}});
           if ( !! newVal.nodes.length ) {
-            //s({someNodes:{lastAnchorIs:lastAnchor}});
             newVal.nodes.forEach(n => lastAnchor.parentNode.insertBefore(n,lastAnchor.nextSibling));
             lastAnchor = newVal.nodes[0];
-            //s({update:{lastAnchor}});
           } else {
-            //s({noNodes:{lastAnchor}});
-            // find or create a placeholder 
-            // FIXME: we might need to use comment node since perhaps
-            // meta is disallowed in some places 
-            const placeholderNode = lastAnchor.parentNode.querySelector('meta[name="placeholder"]') || toDOM(`<meta name=placeholder>`).firstElementChild;
-            //s({placeholderNode});
+            const placeholderNode = summonPlaceholder(lastAnchor);
             lastAnchor.parentNode.insertBefore(placeholderNode,lastAnchor.nextSibling);
             lastAnchor = placeholderNode;
-            //s({update:{lastAnchor}});
           }
           const dn = diffNodes(oldNodes,newVal.nodes);
           if ( dn.size ) {
             const f = document.createDocumentFragment();
             dn.forEach(n => f.appendChild(n));
           }
-          //void ( typeof newVal !== "string" && s({removing:{dn}}));
           oldNodes = newVal.nodes || [lastAnchor];
-          //void ( typeof newVal !== "string" && s({updating:{oldNodes}}));
-          //s({exiting:true});
           while ( newVal.externals.length ) {
             newVal.externals.shift()(); 
           } 
           break;
         default:
-          //s({textNodeUpdater:{text:{newVal}}});
           const lengthBefore = lengths.slice(0,valIndex).reduce((sum,x) => sum + x, 0);
           node.nodeValue = newVal;
           lengths[valIndex] = newVal.length;
           break;
       }
     };
+  }
+
+  function summonPlaceholder(sibling) {
+    let ph = [...sibling.parentNode.childNodes].find(
+      node => node.nodeType == Node.COMMENT_NODE && node.nodeValue == 'brutal-placeholder' );
+    if ( ! ph ) {
+      ph = toDOM(`<!--brutal-placeholder-->`).firstChild;
+    }
+    return ph;
   }
 
   function handleElementNode({node,vmap,externals}) {
