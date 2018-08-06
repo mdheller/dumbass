@@ -299,8 +299,7 @@
   }
 
   function skip(str) {
-    str = (str || "")+'';
-    /* allow the thing to pass without replacement */
+    str = (str || '')+'';
     return { str, handlers: {}, code: CODE };
   }
 
@@ -335,7 +334,7 @@
     const isVerified      = isObject          &&    verify(v);
     const isForgery       = onlyOurProps(v)   &&    !isVerified; 
 
-    if ( isFunc || isVerified || isKey(v) )) {
+    if ( isFunc || isVerified || isKey(v) ) {
       return v;
     } else if ( isGoodArray ) {
       return join(v); 
