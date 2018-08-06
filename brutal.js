@@ -176,7 +176,7 @@
     const KEYLEN            = 20;
     const OURPROPS          = 'code,externals,nodes,to,update,v';
     const XSS               = () => `Possible XSS / object forgery attack detected. ` +
-                              `Object value could not be verified.`;
+                              `Object code could not be verified.`;
     const OBJ$1               = () => `Object values not allowed here.`;
     const UNSET             = () => `Unset values not allowed here.`;
     const MOVE              = new class {
@@ -190,7 +190,7 @@
     const INSERT            = () => `Error inserting template into DOM. ` +
                               `Position must be one of: ` +
                               `replace, beforeBegin, afterBegin, beforeEnd, innerHTML, afterEnd`;
-    const isKey             = v => typeof v === "object" &&  v.key !== null && v.key !== undefined;
+    const isKey             = v => typeof v === "object" &&  !!(v.key+'');
     const cache = {};
 
     Object.assign(R,{s,skip,die,BROWSER_SIDE});
@@ -272,8 +272,7 @@
     }
 
     function makeUpdaters({walker,vmap,externals}) {
-      //FIXME: If values are empty, things can break.
-      let node = walker.currentNode;
+      const node = walker.currentNode;
       switch( node.nodeType ) {
         case Node.ELEMENT_NODE:
           handleElementNode({node,vmap,externals});
@@ -304,50 +303,44 @@
     function makeTextNodeUpdater({node,index,lengths,valIndex,val}) {
       let oldNodes = [node];
       let lastAnchor = node;
-      //s({initial:{lastAnchor}});
       return (newVal) => {
-        //s({entering:true});
         val.val = newVal;
         switch(typeof newVal) {
           case "object":
-            //s({textNodeUpdater:{object:{nodes:newVal.nodes}}});
             if ( !! newVal.nodes.length ) {
-              //s({someNodes:{lastAnchorIs:lastAnchor}});
               newVal.nodes.forEach(n => lastAnchor.parentNode.insertBefore(n,lastAnchor.nextSibling));
               lastAnchor = newVal.nodes[0];
-              //s({update:{lastAnchor}});
             } else {
-              //s({noNodes:{lastAnchor}});
-              // find or create a placeholder 
-              // FIXME: we might need to use comment node since perhaps
-              // meta is disallowed in some places 
-              const placeholderNode = lastAnchor.parentNode.querySelector('meta[name="placeholder"]') || toDOM(`<meta name=placeholder>`).firstElementChild;
-              //s({placeholderNode});
+              const placeholderNode = summonPlaceholder(lastAnchor);
               lastAnchor.parentNode.insertBefore(placeholderNode,lastAnchor.nextSibling);
               lastAnchor = placeholderNode;
-              //s({update:{lastAnchor}});
             }
             const dn = diffNodes(oldNodes,newVal.nodes);
             if ( dn.size ) {
               const f = document.createDocumentFragment();
               dn.forEach(n => f.appendChild(n));
             }
-            //void ( typeof newVal !== "string" && s({removing:{dn}}));
             oldNodes = newVal.nodes || [lastAnchor];
-            //void ( typeof newVal !== "string" && s({updating:{oldNodes}}));
-            //s({exiting:true});
             while ( newVal.externals.length ) {
               newVal.externals.shift()(); 
             } 
             break;
           default:
-            //s({textNodeUpdater:{text:{newVal}}});
             const lengthBefore = lengths.slice(0,valIndex).reduce((sum,x) => sum + x, 0);
             node.nodeValue = newVal;
             lengths[valIndex] = newVal.length;
             break;
         }
       };
+    }
+
+    function summonPlaceholder(sibling) {
+      let ph = [...sibling.parentNode.childNodes].find(
+        node => node.nodeType == Node.COMMENT_NODE && node.nodeValue == 'brutal-placeholder' );
+      if ( ! ph ) {
+        ph = toDOM(`<!--brutal-placeholder-->`).firstChild;
+      }
+      return ph;
     }
 
     function handleElementNode({node,vmap,externals}) {
@@ -388,12 +381,10 @@
               if ( attr !== newVal ) {
                 if ( !! attr ) {
                   node.removeAttribute(oldName);
-                  // FIXME: IDL
                   node[oldName] = undefined;
                 }
                 if ( !! newVal ) {
                   node.setAttribute(newVal.trim(),''); 
-                  // FIXME: IDL
                   node[newVal] = true;
                 }
                 oldName = newVal;
@@ -432,10 +423,8 @@
                 const before = attr.slice(0,index+correction);
                 const after = attr.slice(index+correction+oldVal.length);
 
-                //console.log(JSON.stringify({name,originalLengthBefore,lengthBefore,correction,index,attr,before,after,newVal,lengths,valIndex},null,2));
                 const newAttrValue = before + newVal + after;
                 node.setAttribute(name, newAttrValue);
-                //FIXME: IDL (this is required for some attributes, we need a map of attr name to IDL)
                 node[name] = newAttrValue;
 
                 oldVal = newVal;
@@ -479,8 +468,7 @@
     }
 
     function skip(str) {
-      str = (str || "")+'';
-      /* allow the thing to pass without replacement */
+      str = (str || '')+'';
       return { str, handlers: {}, code: CODE };
     }
 
@@ -515,10 +503,12 @@
       const isVerified      = isObject          &&    verify$1(v);
       const isForgery       = onlyOurProps(v)   &&    !isVerified; 
 
-      if ( isFunc )         return v;
-      if ( isVerified )     return v;
-      if ( isKey(v) )       return v;
-      if ( isGoodArray )    return join(v); 
+      if ( isFunc || isVerified || isKey(v) ) {
+        return v;
+      } else if ( isGoodArray ) {
+        return join(v); 
+      }
+
       if ( isUnset )        die({error: UNSET()});
       if ( isForgery )      die({error: XSS()});
       if ( isObject )       die({error: OBJ$1()});
@@ -557,28 +547,11 @@
     }
 
     function die(msg,err) {
-      if (err) console.warn(err);
-      msg.stack = ((err) || new Error()).stack.split(/\s*\n\s*/g);
+      msg.stack = (new Error()).stack.split(/\s*\n\s*/g);
       throw JSON.stringify(msg,null,2);
     }
 
     function s(msg) {
-      {
-        console.log(JSON.stringify(msg,showNodes,2));
-        console.info('.');
-      }
-    }
-
-    function showNodes(k,v) {
-      let out = v;
-      if ( v instanceof Node ) {
-        out = `<${v.nodeName.toLowerCase()} ${
-        !v.attributes ? '' : [...v.attributes].map(({name,value}) => `${name}='${value}'`).join(' ')}>${
-        v.nodeValue || ''}`;
-      } else if ( typeof v === "function" ) {
-        return `${v.name || 'anon'}() { ... }`
-      }
-      return out;
     }
 
   exports.R = R;
