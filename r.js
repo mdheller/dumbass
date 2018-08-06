@@ -2,12 +2,12 @@
   import {S} from './ssr.js';
   import {safe,CODE,BROWSER_SIDE} from './common.js';
 
-  const DEBUG             = true;
+  const DEBUG             = false;
   const KEYMATCH          = / ?(?:<!\-\-)? ?(key\d+) ?(?:\-\->)? ?/gm;
   const KEYLEN            = 20;
   const OURPROPS          = 'code,externals,nodes,to,update,v';
   const XSS               = () => `Possible XSS / object forgery attack detected. ` +
-                            `Object value could not be verified.`;
+                            `Object code could not be verified.`;
   const OBJ               = () => `Object values not allowed here.`;
   const UNSET             = () => `Unset values not allowed here.`;
   const MOVE              = new class {
@@ -21,7 +21,7 @@
   const INSERT            = () => `Error inserting template into DOM. ` +
                             `Position must be one of: ` +
                             `replace, beforeBegin, afterBegin, beforeEnd, innerHTML, afterEnd`;
-  const isKey             = v => typeof v === "object" &&  v.key !== null && v.key !== undefined;
+  const isKey             = v => typeof v === "object" &&  !!(v.key+'');
   const cache = {};
 
   Object.assign(R,{s,skip,die,BROWSER_SIDE});
@@ -103,8 +103,7 @@
   }
 
   function makeUpdaters({walker,vmap,externals}) {
-    //FIXME: If values are empty, things can break.
-    let node = walker.currentNode;
+    const node = walker.currentNode;
     switch( node.nodeType ) {
       case Node.ELEMENT_NODE:
         handleElementNode({node,vmap,externals});
@@ -213,12 +212,10 @@
             if ( attr !== newVal ) {
               if ( !! attr ) {
                 node.removeAttribute(oldName);
-                // FIXME: IDL
                 node[oldName] = undefined;
               }
               if ( !! newVal ) {
                 node.setAttribute(newVal.trim(),''); 
-                // FIXME: IDL
                 node[newVal] = true;
               }
               oldName = newVal;
@@ -257,10 +254,8 @@
               const before = attr.slice(0,index+correction);
               const after = attr.slice(index+correction+oldVal.length);
 
-              //console.log(JSON.stringify({name,originalLengthBefore,lengthBefore,correction,index,attr,before,after,newVal,lengths,valIndex},null,2));
               const newAttrValue = before + newVal + after;
               node.setAttribute(name, newAttrValue);
-              //FIXME: IDL (this is required for some attributes, we need a map of attr name to IDL)
               node[name] = newAttrValue;
 
               oldVal = newVal;
