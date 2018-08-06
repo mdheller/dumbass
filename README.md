@@ -11,7 +11,8 @@ A crazy-small framework for building brutal/brutalist web applications
 Basic usage:
 
 ```JavaScript
-  App().to('#root', 'innerHTML');
+  const App = data => R`<main>${data.name}</main>`;
+  App().to('html > body', 'innerHTML');
 ```
 
 Installing:
