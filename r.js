@@ -335,10 +335,12 @@
     const isVerified      = isObject          &&    verify(v);
     const isForgery       = onlyOurProps(v)   &&    !isVerified; 
 
-    if ( isFunc )         return v;
-    if ( isVerified )     return v;
-    if ( isKey(v) )       return v;
-    if ( isGoodArray )    return join(v); 
+    if ( isFunc || isVerified || isKey(v) )) {
+      return v;
+    } else if ( isGoodArray ) {
+      return join(v); 
+    }
+
     if ( isUnset )        die({error: UNSET()});
     if ( isForgery )      die({error: XSS()});
     if ( isObject )       die({error: OBJ()});
