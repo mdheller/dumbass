@@ -21,7 +21,7 @@
   const INSERT            = () => `Error inserting template into DOM. ` +
                             `Position must be one of: ` +
                             `replace, beforeBegin, afterBegin, beforeEnd, innerHTML, afterEnd`;
-  const isKey             = v => typeof v === "object" &&  !!(v.key+'');
+  const isKey             = v => typeof v === "object" &&  !!((v.key||'')+'');
   const cache = {};
 
   Object.assign(R,{s,skip,die,BROWSER_SIDE});
@@ -153,7 +153,8 @@
           }
           oldNodes = newVal.nodes || [lastAnchor];
           while ( newVal.externals.length ) {
-            newVal.externals.shift()(); 
+            const func = newVal.externals.shift();
+            func();
           } 
           break;
         default:
