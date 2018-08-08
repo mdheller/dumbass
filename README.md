@@ -92,9 +92,9 @@ Basic usage of R:
   }
 ```
 
-Basic usage of render:
-```JSX
-  onload = () => render(App('good'), document.body) 
+Basic usage of `to`:
+```JavaScript
+  onload = () => App('good').to(document.body, 'innerHTML')
 ```
 
 ## why brutalist?
