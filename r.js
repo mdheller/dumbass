@@ -1,7 +1,7 @@
 // r.js
-  import {T} from './node_modules/jtype-system/t.js';
-  import {S} from './ssr.js';
   import {safe,CODE,BROWSER_SIDE} from './common.js';
+  import {T} from '../jtype-system/t.js';
+  import {S} from './ssr.js';
 
   const DEBUG             = false;
   const KEYMATCH          = / ?(?:<!\-\-)? ?(key\d+) ?(?:\-\->)? ?/gm;
