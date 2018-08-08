@@ -1,5 +1,5 @@
 // r.js
-  import {T} from 'jtype-system';
+  import {T} from './node_modules/jtype-system/t.js';
   import {S} from './ssr.js';
   import {safe,CODE,BROWSER_SIDE} from './common.js';
 
