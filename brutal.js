@@ -1,8 +1,8 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-  typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (factory((global.bundleobrutal = {})));
-}(this, (function (exports) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('jtype-system')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'jtype-system'], factory) :
+  (factory((global.bundleobrutal = {}),global.jtypeSystem));
+}(this, (function (exports,jtypeSystem) { 'use strict';
 
   // common for all r submodules
     const CODE              = ''+Math.random();
