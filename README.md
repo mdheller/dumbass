@@ -1,4 +1,4 @@
-# brutal.js @1.5.5
+# brutal.js @1.5.6
 
 A crazy-small framework for building brutal/brutalist web applications
 
