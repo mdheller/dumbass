@@ -33,6 +33,7 @@
     "rollup": "^0.63.5"
   },
   "dependencies": {
-    "esm": "^3.0.74"
+    "esm": "^3.0.74",
+    "jtype-system": "^1.0.2"
   }
 }
