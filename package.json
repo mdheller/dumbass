@@ -4,7 +4,7 @@
   "description": "3kb framework for building brutalist web apps",
   "main": "index.js",
   "scripts": {
-    "test": "serve -s tests/ -p 8080"
+    "test": "serve -p 8080"
   },
   "husky": {
     "hooks": {
