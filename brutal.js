@@ -4,14 +4,22 @@
   (factory((global.bundleobrutal = {})));
 }(this, (function (exports) { 'use strict';
 
-  const BROWSER_SIDE      = (() => {try{ return self.DOMParser && true; } catch(e) { return false; }})();
+  // common for all r submodules
+    const CODE              = ''+Math.random();
+    const BROWSER_SIDE      = (() => {try{ return self.DOMParser && true; } catch(e) { return false; }})();
+
+    function safe (v) {
+      return String(v).replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/&/g,'&amp;').replace(/"/g,'&#34;').replace(/'/g,'&#39;');
+    }
+
+  const BROWSER_SIDE$1      = (() => {try{ return self.DOMParser && true; } catch(e) { return false; }})();
 
     const BuiltIns = [
       Symbol, Boolean, Number, String, Object, Set, Map, WeakMap, WeakSet,
       Uint8Array, Uint16Array, Uint32Array, Float32Array, Float64Array,
       Int8Array, Int16Array, Int32Array, 
       Uint8ClampedArray, 
-      ...(BROWSER_SIDE ? [
+      ...(BROWSER_SIDE$1 ? [
         Node,NodeList,Element,HTMLElement, Blob, ArrayBuffer,
         FileList, Text, Document, DocumentFragment,
         Error, File, Event, EventTarget, URL
@@ -227,14 +235,6 @@
       return i === null || i === undefined;
     }
 
-  // common for all r submodules
-    const CODE              = ''+Math.random();
-    const BROWSER_SIDE$1      = (() => {try{ return self.DOMParser && true; } catch(e) { return false; }})();
-
-    function safe (v) {
-      return String(v).replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/&/g,'&amp;').replace(/"/g,'&#34;').replace(/'/g,'&#39;');
-    }
-
   // server side rendering 
 
     const LAST_ATTR_NAME    = /\s+([\w-]+)\s*=\s*"?\s*$/;
@@ -416,10 +416,10 @@
     const isKey             = v => typeof v === "object" &&  !!((v.key||'')+'');
     const cache = {};
 
-    Object.assign(R,{s,skip,die,BROWSER_SIDE: BROWSER_SIDE$1});
+    Object.assign(R,{s,skip,die,BROWSER_SIDE});
 
     function R(p,...v) {
-      if ( ! BROWSER_SIDE$1 ) return S(p,...v);
+      if ( ! BROWSER_SIDE ) return S(p,...v);
 
       v = v.map(parseVal);
 

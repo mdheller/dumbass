@@ -1,7 +1,33 @@
 // r.js
   import {safe,CODE,BROWSER_SIDE} from './common.js';
-  import {T} from '../jtype-system/t.js';
+  //Build
+  //import {T} from '../jtype-system/t.js';
+  //Dev
+  import {T} from './node_modules/jtype-system/t.js';
   import {S} from './ssr.js';
+
+  T.def('Key', null, {verify: v => typeof v === "object" &&  !!((v.key||'')+'') });
+  T.def('BrutalLikeObject', {
+    code: T`String`,
+    externals: T`Array`,
+    nodes: T`Array`,
+    to: T`Function`,
+    update: T`Function`,
+    v: T`Array`
+  });
+  T.def('BrutalObject', {
+    code: T`String`,
+    externals: T`Array`,
+    nodes: T`Array`,
+    to: T`Function`,
+    update: T`Function`,
+    v: T`Array`
+  }, {verify: v => verify(v)});
+
+  T.defCollection('BrutalArray', {
+    container: T`Array`,
+    member: T`BrutalObject`
+  });
 
   const DEBUG             = false;
   const KEYMATCH          = / ?(?:<!\-\-)? ?(key\d+) ?(?:\-\->)? ?/gm;
@@ -12,17 +38,17 @@
   const OBJ               = () => `Object values not allowed here.`;
   const UNSET             = () => `Unset values not allowed here.`;
   const MOVE              = new class {
-                              beforeEnd   (frag,elem) { elem.appendChild(frag) }
-                              beforeBegin (frag,elem) { elem.parentNode.insertBefore(frag,elem) }
-                              afterEnd    (frag,elem) { elem.parentNode.insertBefore(frag,elem.nextSibling) }
-                              replace     (frag,elem) { elem.parentNode.replaceChild(frag,elem) }
-                              afterBegin  (frag,elem) { elem.insertBefore(frag,elem.firstChild) }
-                              innerHTML   (frag,elem) { elem.innerHTML = ''; elem.appendChild(frag) }
-                            };
+    beforeEnd   (frag,elem) { elem.appendChild(frag) }
+    beforeBegin (frag,elem) { elem.parentNode.insertBefore(frag,elem) }
+    afterEnd    (frag,elem) { elem.parentNode.insertBefore(frag,elem.nextSibling) }
+    replace     (frag,elem) { elem.parentNode.replaceChild(frag,elem) }
+    afterBegin  (frag,elem) { elem.insertBefore(frag,elem.firstChild) }
+    innerHTML   (frag,elem) { elem.innerHTML = ''; elem.appendChild(frag) }
+  };
   const INSERT            = () => `Error inserting template into DOM. ` +
-                            `Position must be one of: ` +
-                            `replace, beforeBegin, afterBegin, beforeEnd, innerHTML, afterEnd`;
-  const isKey             = v => typeof v === "object" &&  !!((v.key||'')+'');
+    `Position must be one of: ` +
+    `replace, beforeBegin, afterBegin, beforeEnd, innerHTML, afterEnd`;
+  const isKey             = v => T.check(T`Key`, v);
   const cache = {};
 
   Object.assign(R,{s,skip,die,BROWSER_SIDE});
@@ -92,7 +118,7 @@
     const position = options || 'replace';
     const frag = document.createDocumentFragment();
     this.nodes.forEach(n => frag.appendChild(n));
-    const elem = location instanceof Node ? location : document.querySelector(location);
+    const elem = T.check(T`>Node`, location) ? location : document.querySelector(location);
     try {
       MOVE[position](frag,elem);
     } catch(e) {
@@ -312,7 +338,7 @@
       }
       const key = ('key'+Math.random()).replace('.','').padEnd(KEYLEN,'0').slice(0,KEYLEN);
       let k = key;
-      if ( onlyOurProps(val) && verify(val) ) {
+      if ( T.check(T`BrutalObject`, val) ) {
         k = (`<!--${k}-->`);
       }
       k = `${k}`;
@@ -329,26 +355,22 @@
   }
 
   function parseVal(v) {
-    const isFunc          = typeof v == "function";
-    const isUnset         = v == null         ||    v == undefined;
-    const isObject        = !isUnset          &&    typeof v === "object";
-    const isGoodArray     = Array.isArray(v)  &&    v.every(itemIsFine);
-    const isVerified      = isObject          &&    verify(v);
-    const isForgery       = onlyOurProps(v)   &&    !isVerified; 
+    const isFunc          = T.check(T`Function`, v);
+    const isUnset         = T.check(T`None`, v);
+    const isObject        = T.check(T`Object`, v);
+    const isBrutalArray   = T.check(T`BrutalArray`, v);
+    const isBrutal        = T.check(T`BrutalObject`, v);
+    const isForgery       = T.check(T`BrutalLikeObject`, v)  && !isBrutal; 
 
     if ( isFunc )         return v;
-    if ( isVerified )     return v;
+    if ( isBrutal )       return v;
     if ( isKey(v) )       return v;
-    if ( isGoodArray )    return join(v); 
+    if ( isBrutalArray )  return join(v); 
     if ( isUnset )        die({error: UNSET()});
     if ( isForgery )      die({error: XSS()});
     if ( isObject )       die({error: OBJ()});
 
     return safe(v+'');
-  }
-
-  function itemIsFine(v) {
-    return onlyOurProps(v) && verify(v);
   }
 
   function join(os) {
@@ -367,10 +389,6 @@
 
   function update(newVals) {
     this.v.forEach(({vi,replacers}) => replacers.forEach(f => f(newVals[vi])));
-  }
-
-  function onlyOurProps(v) {
-    return OURPROPS === Object.keys(v||{}).sort().filter(p => p !== 'instances').join(',');
   }
 
   function verify(v) {
@@ -392,7 +410,7 @@
 
   function showNodes(k,v) {
     let out = v;
-    if ( v instanceof Node ) {
+    if ( T.check(T`>Node`, v) ) {
       out = `<${v.nodeName.toLowerCase()} ${
         !v.attributes ? '' : [...v.attributes].map(({name,value}) => `${name}='${value}'`).join(' ')}>${
         v.nodeValue || ''}`;
