@@ -8,14 +8,14 @@
   const LAST_ATTR_NAME    = /\s+([\w-]+)\s*=\s*"?\s*$/;
   const NEW_TAG           = /<\w+/g;
 
-  T.def('BrutalObject', {
+  T.def('SBrutalObject', {
     str: T`String`,
     handlers: T`Object`
   });
 
-  T.defCollection('BrutalArray', {
+  T.defCollection('SBrutalArray', {
     container: T`Array`,
-    member: T`BrutalObject`
+    member: T`SBrutalObject`
   });
 
   export function S(parts, ...vals) {
@@ -24,7 +24,7 @@
 
     parts = [...parts];
 
-    const keyObj = vals.find( v => !!v && v.key !== undefined ) || {};
+    const keyObj = vals.find(v => T.check(T`Key`,v))|| {};
     const {key:key='singleton'} = keyObj;
 
     vals = vals.map(SparseValue);
@@ -49,7 +49,7 @@
         str += attrName ? newPart : part;
         if ( T.check(T`Array`, handlers[hid]) ) handlers[hid] = [];
         handlers[hid].push({eventName: attrName, handler: val});
-      } else if (T.check(T`BrutalObject`, val)) {
+      } else if (T.check(T`SBrutalObject`, val)) {
         Object.assign(handlers,val.handlers);
         str += part;
         val = val.str;
@@ -109,10 +109,10 @@
   }
 
   function SparseValue(v) {
-    if ( T.check(T`BrutalArray`, v) ) {
+    if ( T.check(T`SBrutalArray`, v) ) {
       return Sjoin(v) || '';
     } else if ( T.check(T`Object`, v) ) {
-      if ( T.check(T`BrutalObject`, v) ) {
+      if ( T.check(T`SBrutalObject`, v) ) {
         return v;
       }
       throw {error: OBJ(), value: v};
