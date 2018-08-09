@@ -1,8 +1,22 @@
 // server side rendering 
   import {safe,CODE} from './common.js';
+  //Build
+  //import {T} from '../jtype-system/t.js';
+  //Dev
+  import {T} from './node_modules/jtype-system/t.js';
 
   const LAST_ATTR_NAME    = /\s+([\w-]+)\s*=\s*"?\s*$/;
   const NEW_TAG           = /<\w+/g;
+
+  T.def('BrutalObject', {
+    str: T`String`,
+    handlers: T`Object`
+  });
+
+  T.defCollection('BrutalArray', {
+    container: T`Array`,
+    member: T`BrutalObject`
+  });
 
   export function S(parts, ...vals) {
     const handlers = {};
@@ -27,15 +41,15 @@
         lastNewTagIndex = part.lastIndexOf(lastTag) + str.length;
         lastTagName = lastTag.slice(1);
       }
-      if (typeof val === 'function') {
+      if (T.check(T`Function`, val)) {
         const attrName = attrNameMatches && attrNameMatches.length > 1
             ? attrNameMatches[1].replace(/^on/,'').toLowerCase()
             : false,
           newPart = part.replace(attrNameMatches[0], '');
         str += attrName ? newPart : part;
-        if ( !Array.isArray(handlers[hid]) ) handlers[hid] = [];
+        if ( T.check(T`Array`, handlers[hid]) ) handlers[hid] = [];
         handlers[hid].push({eventName: attrName, handler: val});
-      } else if (!!val && !!val.handlers && typeof val.str == "string") {
+      } else if (T.check(T`BrutalObject`, val)) {
         Object.assign(handlers,val.handlers);
         str += part;
         val = val.str;
@@ -64,7 +78,7 @@
       <body> 
         ${str}
         <script>
-          const hydration = ${JSON.stringify(handlers,(k,v) => typeof v == "function" ? v.toString() : v)};
+          const hydration = ${JSON.stringify(handlers,(k,v) => T.check(T`Function`, v) ? v.toString() : v)};
 
           hydrate(hydration);
 
@@ -95,14 +109,14 @@
   }
 
   function SparseValue(v) {
-    if (Array.isArray(v) && v.every(item => !!item.handlers && !!item.str)) {
+    if ( T.check(T`BrutalArray`, v) ) {
       return Sjoin(v) || '';
-    } else if (typeof v === 'object' && !!v) {
-      if (!!v.str && !!v.handlers) {
+    } else if ( T.check(T`Object`, v) ) {
+      if ( T.check(T`BrutalObject`, v) ) {
         return v;
       }
       throw {error: OBJ(), value: v};
-    } else return v === null || v === undefined ? '' : v;
+    } else T.check(T`None`, v) ? '' : v;
   }
 
   function hydrate(handlers) {
