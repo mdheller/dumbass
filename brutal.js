@@ -238,6 +238,8 @@
     }
 
   // server side rendering 
+    //Dev
+    //import {T} from './node_modules/jtype-system/t.js';
 
     const LAST_ATTR_NAME    = /\s+([\w-]+)\s*=\s*"?\s*$/;
     const NEW_TAG           = /<\w+/g;
