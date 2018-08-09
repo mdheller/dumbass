@@ -1,6 +1,12 @@
-# brutal.js @1.5.6
+# brutal.js @1.5.8
 
 A crazy-small framework for building brutal/brutalist web applications
+
+## news ~ jtype-system lands in 1.5.8
+
+Now using `jtype-system` (rudimentary runtime type checking) for type checking code in Brutal
+to make everything clearer and abstract away any type logic from the main logic of Brutal.
+
 
 ## small
 
