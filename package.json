@@ -4,7 +4,7 @@
   "description": "3kb framework for building brutalist web apps",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "serve -s tests/ -p 8080"
   },
   "husky": {
     "hooks": {
