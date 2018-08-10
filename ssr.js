@@ -1,22 +1,9 @@
 // server side rendering 
   import {safe,CODE} from './common.js';
-  //Build
-  import {T} from '../jtype-system/t.js';
-  //Dev
-  //import {T} from './node_modules/jtype-system/t.js';
+  import T from './types.js';
 
   const LAST_ATTR_NAME    = /\s+([\w-]+)\s*=\s*"?\s*$/;
   const NEW_TAG           = /<\w+/g;
-
-  T.def('SBrutalObject', {
-    str: T`String`,
-    handlers: T`Object`
-  });
-
-  T.defCollection('SBrutalArray', {
-    container: T`Array`,
-    member: T`SBrutalObject`
-  });
 
   export function S(parts, ...vals) {
     const handlers = {};
