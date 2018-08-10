@@ -1,14 +1,14 @@
 {
   "name": "brutalist-web",
   "version": "1.5.9",
-  "description": "3kb framework for building brutalist web apps",
+  "description": "Minimalist 500 line framework for building brutalist web apps",
   "main": "index.js",
   "scripts": {
     "test": "serve -p 8080"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "./node_modules/.bin/rollup r.js --format umd --name bundleobrutal --file brutal.js"
+      "x-pre-commit": "./node_modules/.bin/rollup r.js --format umd --name bundleobrutal --file brutal.js"
     }
   },
   "repository": {

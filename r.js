@@ -1,33 +1,7 @@
 // r.js
   import {safe,CODE,BROWSER_SIDE} from './common.js';
-  //Build
-  import {T} from '../jtype-system/t.js';
-  //Dev
-  //import {T} from './node_modules/jtype-system/t.js';
   import {S} from './ssr.js';
-
-  T.def('Key', null, {verify: v => typeof v === "object" &&  !!((v.key||'')+'') });
-  T.def('BrutalLikeObject', {
-    code: T`String`,
-    externals: T`Array`,
-    nodes: T`Array`,
-    to: T`Function`,
-    update: T`Function`,
-    v: T`Array`
-  });
-  T.def('BrutalObject', {
-    code: T`String`,
-    externals: T`Array`,
-    nodes: T`Array`,
-    to: T`Function`,
-    update: T`Function`,
-    v: T`Array`
-  }, {verify: v => verify(v)});
-
-  T.defCollection('BrutalArray', {
-    container: T`Array`,
-    member: T`BrutalObject`
-  });
+  import T from './types.js';
 
   const DEBUG             = false;
   const KEYMATCH          = / ?(?:<!\-\-)? ?(key\d+) ?(?:\-\->)? ?/gm;
