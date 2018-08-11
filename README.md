@@ -51,19 +51,7 @@ at the `/node_modules` path, and the script importing was serving from the `/app
 This is owing to the current slightly different syntax and semantics of ES imports
 between client and server.*
 
-## "React like"
-
-This is React/JSX:
-
-```JSX
-  function ButtonWidget(props) {
-    return (
-      <button onClick={() => showModal(props.name)}>
-        Show {props.name} Modal
-      </button>
-    );
-  }
-```
+## Simple Example
 
 This is Brutal.js:
 
