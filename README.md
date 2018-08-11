@@ -74,7 +74,4 @@ For more extensive examples, see [a TodoMVC app written in Brutal.js](https://gi
 
 - Working on a subset that enables SSR without requiring client side JS. The idea is to base it on forms and submit the entire application state to the server at each request. This "monolithic" view can be further factored into targeted forms and named iframes if desired.
 
-## Inspiration
-
-Althought I developed Brutal independently based on my own reflections and observations of what I would want in a good framework to make myself productive and the weaknesses of existing solutions, it turns out there are others, such as [lit-html](https://github.com/Polymer/lit-html) and [HEX](https://medium.com/@metapgmr/hex-a-no-framework-approach-to-building-modern-web-apps-e43f74190b9c) that are thinking similar things. This is good. I hope the next couple years ushers in a new era of web dev where we see a proliferation of smaller frameworks, perhaps implementing something that converges toward some sort of "standard" for web dev.
 
