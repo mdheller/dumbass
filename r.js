@@ -4,7 +4,7 @@
   import T from './types.js';
 
   const DEBUG             = false;
-  const KEYMATCH          = / ?(?:<!\-\-)? ?(key\d+) ?(?:\-\->)? ?/gm;
+  const KEYMATCH          = /(?:<!\-\-)?(key\d+)(?:\-\->)?/gm;
   const KEYLEN            = 20;
   const OURPROPS          = 'code,externals,nodes,to,update,v';
   const XSS               = () => `Possible XSS / object forgery attack detected. ` +
@@ -195,10 +195,11 @@
         val.replacers.push( replacer );
       }
       while( result = KEYMATCH.exec(value) ) {
-        const {index} = result;
+        const {index,input} = result;
+        console.log({index,result});
         const key = result[1];
         const val = vmap[key];
-        const replacer = makeAttributeUpdater({val,node,index,name,externals,lengths,valIndex:val.vi});
+        const replacer = makeAttributeUpdater({val,node,input,index,name,externals,lengths,valIndex:val.vi});
         externals.push(() => replacer(val.val));
         val.replacers.push( replacer );
       }
@@ -206,7 +207,7 @@
   }
 
   function makeAttributeUpdater({
-    updateName: updateName = false,node,index,name,val,externals,lengths,oldLengths,valIndex}) {
+    updateName: updateName = false,node,input,index,name,val,externals,lengths,oldLengths,valIndex}) {
     let oldVal = {length: KEYLEN};
     let oldName = name;
     if ( updateName ) {
@@ -259,6 +260,7 @@
               const correction = lengthBefore-originalLengthBefore;
               const before = attr.slice(0,index+correction);
               const after = attr.slice(index+correction+oldVal.length);
+              //console.log(JSON.stringify({index,input,originalLengthBefore,valIndex,correction,before,after,oldValLength:oldVal.length},null,2));
 
               const newAttrValue = before + newVal + after;
               node.setAttribute(name, newAttrValue);
@@ -266,6 +268,7 @@
 
               oldVal = newVal;
             }
+
         }
       };
     }
