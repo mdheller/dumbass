@@ -5,6 +5,8 @@
   const LAST_ATTR_NAME    = /\s+([\w-]+)\s*=\s*"?\s*$/;
   const NEW_TAG           = /<\w+/g;
 
+  Object.assign(S,{skip:Sskip});
+
   export function S(parts, ...vals) {
     const handlers = {};
     let hid, lastNewTagIndex, lastTagName, str = '';
@@ -93,6 +95,11 @@
     const before = str.slice(0,lastNewTagIndex);
     const after = str.slice(lastNewTagIndex);
     return before + `<!--${hid}-->` + after;
+  }
+
+  function Sskip(str) {
+    str = (str || '')+'';
+    return { str, handlers: {}, code: CODE };
   }
 
   function SparseValue(v) {

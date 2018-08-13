@@ -10,7 +10,9 @@
 
   // Both SSR and Browser
 
-    export const TKey = T.def('Key', null, {verify: v => typeof v === "object" &&  !!((v.key||'')+'') });
+    export const TKey = T.def('Key', {
+      key: T.defOr('ValidKey', T`String`, T`Number`)
+    });
 
   // Browser side
 
