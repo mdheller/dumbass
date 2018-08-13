@@ -196,7 +196,6 @@
       }
       while( result = KEYMATCH.exec(value) ) {
         const {index,input} = result;
-        console.log({index,result});
         const key = result[1];
         const val = vmap[key];
         const replacer = makeAttributeUpdater({val,node,input,index,name,externals,lengths,valIndex:val.vi});
