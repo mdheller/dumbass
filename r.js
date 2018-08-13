@@ -27,6 +27,10 @@
 
   Object.assign(R,{s,skip,die,BROWSER_SIDE});
 
+  if ( DEBUG && BROWSER_SIDE ) {
+    Object.assign(self, {R,T}); 
+  }
+
   export function R(p,...v) {
     if ( ! BROWSER_SIDE ) return S(p,...v);
 
@@ -301,9 +305,13 @@
   }
 
   function skip(str) {
-    str = (str || '')+'';
-    return { str, handlers: {}, code: CODE };
+    str = T.check(T`None`, str) ? '' : str; 
+    const frag = toDOM(str);
+    const retVal = {externals:[],v:[],to,
+      update,code:CODE,nodes:[...frag.childNodes]};
+    return retVal;
   }
+
 
   function replaceVal(vmap) {
     return (val,vi) => {

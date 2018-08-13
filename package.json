@@ -1,19 +1,50 @@
 {
-  "name": "brutalist-web",
-  "version": "1.5.10",
-  "description": "Minimalist 500 line framework for building brutalist web apps",
-  "main": "index.js",
-  "scripts": {
-    "test": "serve -p 8080"
+  "_from": "brutalist-web",
+  "_id": "brutalist-web@1.5.10",
+  "_inBundle": false,
+  "_integrity": "sha512-rBGDQf+sgz4hMWf2HGJsh1Kf+7JGAtlIi6ifGdCxNKvk1RHQNoeaOSV5hzXuWruah2nz63mUJcQ2FG5vEmjNfA==",
+  "_location": "/brutalist-web",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "brutalist-web",
+    "name": "brutalist-web",
+    "escapedName": "brutalist-web",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
   },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/brutalist-web/-/brutalist-web-1.5.10.tgz",
+  "_shasum": "a1c43d73da7c55948ccc3c867010ff9e08875778",
+  "_spec": "brutalist-web",
+  "_where": "/home/criscanbereached/brutestrap",
+  "author": {
+    "name": "@dosy"
+  },
+  "bugs": {
+    "url": "https://github.com/dosyago-coder-0/brutal.js/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "esm": "^3.0.74",
+    "jtype-system": "^1.0.2"
+  },
+  "deprecated": false,
+  "description": "Minimalist 500 line framework for building brutalist web apps",
+  "devDependencies": {
+    "husky": "^1.0.0-rc.13",
+    "rollup": "^0.63.5"
+  },
+  "homepage": "https://github.com/dosyago-coder-0/brutal.js#readme",
   "husky": {
     "hooks": {
       "x-pre-commit": "./node_modules/.bin/rollup r.js --format umd --name bundleobrutal --file brutal.js"
     }
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dosyago-coder-0/brutal.js.git"
   },
   "keywords": [
     "brutalist",
@@ -22,18 +53,15 @@
     "brutal",
     "r"
   ],
-  "author": "@dosy",
   "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/dosyago-coder-0/brutal.js/issues"
+  "main": "index.js",
+  "name": "brutalist-web",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dosyago-coder-0/brutal.js.git"
   },
-  "homepage": "https://github.com/dosyago-coder-0/brutal.js#readme",
-  "devDependencies": {
-    "husky": "^1.0.0-rc.13",
-    "rollup": "^0.63.5"
+  "scripts": {
+    "test": "serve -p 8080"
   },
-  "dependencies": {
-    "esm": "^3.0.74",
-    "jtype-system": "^1.0.2"
-  }
+  "version": "1.5.10"
 }
