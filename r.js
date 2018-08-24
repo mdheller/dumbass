@@ -96,6 +96,7 @@
     const position = options || 'replace';
     const frag = document.createDocumentFragment();
     this.nodes.forEach(n => frag.appendChild(n));
+    console.log(this.nodes, options);
     const elem = T.check(T`>Node`, location) ? location : document.querySelector(location);
     try {
       MOVE[position](frag,elem);
@@ -144,7 +145,10 @@
       switch(typeof newVal) {
         case "object":
           if ( !! newVal.nodes.length ) {
-            newVal.nodes.forEach(n => lastAnchor.parentNode.insertBefore(n,lastAnchor.nextSibling));
+            newVal.nodes.forEach(n => {
+              lastAnchor.parentNode.insertBefore(n,lastAnchor.nextSibling);
+              lastAnchor = lastAnchor.nextSibling;
+            });
             lastAnchor = newVal.nodes[0];
           } else {
             const placeholderNode = summonPlaceholder(lastAnchor);

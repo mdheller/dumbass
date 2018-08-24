@@ -1,8 +1,8 @@
 // types
   //Build
-  import {T} from '../jtype-system/t.js';
+  //import {T} from '../jtype-system/t.js';
   //Dev
-  //import {T} from './node_modules/jtype-system/t.js';
+  import {T} from './node_modules/jtype-system/t.js';
 
   // T
 

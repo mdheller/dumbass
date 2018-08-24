@@ -1,0 +1,37 @@
+{
+  "name": "brutestrap",
+  "version": "1.0.2",
+  "description": "A port of Blueprint/React-Bootstrap UI kit components to Brutal.js and CSS Grid, energized by the pursuit of minimalist code and minimalist design in all things.",
+  "main": "index.js",
+  "scripts": {
+    "test": "serve -p 8080 -s"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crislin2046/brutestrap.git"
+  },
+  "keywords": [
+    "UI",
+    "ui-kit",
+    "blueprint",
+    "palantir",
+    "bootstrap",
+    "brutalist",
+    "brutal.js",
+    "dosy",
+    "dosyago",
+    "ui-components",
+    "components",
+    "widgets"
+  ],
+  "author": "@dosy",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/crislin2046/brutestrap/issues"
+  },
+  "homepage": "https://github.com/crislin2046/brutestrap#readme",
+  "dependencies": {
+    "@dosy/perfect.css": "^1.0.2",
+    "brutalist-web": "^1.5.14"
+  }
+}
