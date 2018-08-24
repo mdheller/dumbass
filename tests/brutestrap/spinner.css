@@ -1,0 +1,56 @@
+.spinner, .mover {
+  box-sizing: border-box;
+}
+
+.spinner {
+  width: 4em;
+  height: 4em;
+  position: relative;
+  border: 0.1em solid;
+  background: dodgerblue;
+}
+
+@keyframes moveit {
+  0% {
+    top: 0; left: 0;
+    border-top: none;
+    border-right: 0.1em solid;
+    border-bottom: 0.1em solid;
+    border-left: none;
+  }
+  25% {
+    top: 0; right: 0; left: unset;
+    border-top: none;
+    border-right: none;
+    border-bottom: 0.1em solid;
+    border-left: 0.1em solid;
+  }
+  50% {
+    bottom: 0; right: 0; top: unset; left: unset;
+    border-top: 0.1em solid;
+    border-right: none;
+    border-bottom: none;
+    border-left: 0.1em solid;
+  }
+  75% {
+    bottom: 0; left: 0; right: unset; top: unset;
+    border-top: 0.1em solid;
+    border-right: 0.1em solid;
+    border-bottom: none;
+    border-left: none;
+  }
+}
+
+.mover {
+  position: absolute;
+  top: 0; left: 0;
+  width: 51.8%;
+  height: 51.8%;
+  background: white;
+  border-top: none;
+  border-right: 0.1em solid;
+  border-bottom: 0.1em solid;
+  border-left: none;
+  animation: moveit 0.5s step-start infinite;
+}
+

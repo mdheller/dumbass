@@ -1,0 +1,73 @@
+// The last style sheet you'll ever need
+
+* {
+  transition: all 920ms ease-in-out;
+}
+
+p, h1, h2, h3, h4, legend, cite, catpion, th {
+  margin: 0; padding: 0;
+  margin: 1rem; padding: 1rem;
+  font-size: 1em; 
+  line-height: 1.325;
+}
+
+h1 {
+  font-size: 500%
+}
+h2 {
+  font-size: 309%
+}
+h3 {
+  font-size: 191%
+}
+h4 {
+  font-size: 118%
+}
+
+br, hr {
+  height: 1.325em;
+  margin: 0; padding: 0;
+}
+
+.modal {
+  left: -100%;
+}
+
+.modal.active {
+  left: 0;
+}
+
+.modal-parent {
+  position: fixed;
+  display: block;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  z-index: 12;
+}
+
+header {
+  position: sticky;
+  top: 1em;
+}
+
+:root {
+  z-index: 0;
+  position: relative;
+  height: 100%;
+  margin: 0; padding: 0;
+}
+
+body {
+  z-index: 1;
+  position: relative;
+  height: 100%;
+  display: block !important;
+  margin: 0; padding: 0;
+}
+
+body * {
+  z-index: 2;
+}
+
+

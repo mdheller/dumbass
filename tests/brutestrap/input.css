@@ -1,0 +1,139 @@
+  label {
+    display: table;
+    position: relative;
+    border: none;
+    margin: 0.25em;
+    padding: 0.25em;
+  }
+
+  .label-text {
+    text-decoration: underline;
+    font-variant: small-caps;
+    text-transform: lowercase;
+    font-size: 1.2em;
+    margin: 0.25em;
+  }
+
+  label:focus-within .label-text {
+    color: dodgerblue;
+  }
+
+  button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"] {
+    appearance: none;
+    background: dodgerblue;
+    color: white;
+    padding: 0.25em 0.5em;
+    border: none;
+    border-top: 0.15em solid cyan;
+    border-bottom: 0.15em solid blue;
+    border-radius: 0.15em;
+    font-size: 120%;
+    margin: 0.25em;
+  }
+
+  :-webkit-any(button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"]):active, 
+  :-webkit-any(button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"]).active {
+    background: cyan;
+    color: black;
+    border-color: transparent;
+    border: 0.15em solid dodgerblue;
+    padding: 0.25em;
+    cursor: progress;
+  }
+
+  :-webkit-any(button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"]):focus {
+    border-style: dotted;
+  }
+  :-webkit-any(button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"]):active:focus,
+  :-webkit-any(button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"]).active:focus {
+    border-color: dodgerblue;
+  }
+  *:focus {
+    outline: none;
+  }
+
+  label:focus-within::before {
+    animation: blurout 3.2s ease;
+    content: "X";
+    -webkit-clip-path: polygon(0 0, 0% 100%, 100% 50%);
+    clip-path: polygon(0 0, 0% 100%, 100% 50%);
+    position: absolute;
+    background: dodgerblue;
+    color: dodgerblue;
+    width: 1em;
+    height: 1em;
+    top: 50%;
+    left: 0;
+    transform: translate(-100%,-50%);
+    z-index: var(--ztop);
+  }
+
+  button .spinner {
+    display: none;
+    margin-left: 0.3em;
+  }
+
+
+  button.active .spinner {
+    display: inline-block;
+    width: 1.2em;
+    height: 1.2em;
+    vertical-align: text-top;
+  }
+
+  [contenteditable], select, input[type="text"], input[type="number"], input[type="file"], input[type="email"], input[type="date"], input[type="time"], input[type="month"], input[type="tel"], input[type="url"], input[type="week"], input[type="password"], input:not([type]) {
+    font-size: 1em;
+    border: 1px solid transparent;
+    border-bottom: 0.25em solid;
+    padding: 0.25em 0.5em;
+  }
+
+  input[type="file"] {
+    border-color: transparent;
+  }
+
+  select {
+    border-color: inherit;
+  }
+
+  :-webkit-any([contenteditable], input, textarea):focus {
+    border-color: dodgerblue;
+    border-style: dashed;
+  }
+
+  select:focus {
+    border-color: dodgerblue;
+  }
+
+  :-webkit-any([contenteditable], textarea, select, input[type="text"], input[type="number"], input[type="email"], input[type="date"], input[type="time"], input[type="month"], input[type="tel"], input[type="url"], input[type="week"], input[type="password"], input:not([type]))[disabled] {
+    pointer-events: none;
+    cursor: not-allowed;
+    background: grey;
+  }
+
+  div.tag-editor {
+    display: inline-block;
+    min-width: 40ch;
+  }
+
+  div.tag-editor {
+    min-width: 25ch;
+    padding: 0.125em;
+    flex-wrap: wrap;
+  }
+
+  div.tag-editor, div.tag-editor div {
+    display: inline-flex;
+    max-width: 55ch;
+    align-items: start;
+  }
+
+  span.tag {
+    display: inline-block;
+    margin: 0.25em;
+    padding: 0.25em;
+    font-size: 85%;
+    line-height: 0.85;
+    border-bottom: 1px dotted;
+    min-height: 0.85em;
+  }
