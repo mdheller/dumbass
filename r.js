@@ -96,7 +96,6 @@
     const position = options || 'replace';
     const frag = document.createDocumentFragment();
     this.nodes.forEach(n => frag.appendChild(n));
-    console.log(this.nodes, options);
     const elem = T.check(T`>Node`, location) ? location : document.querySelector(location);
     try {
       MOVE[position](frag,elem);

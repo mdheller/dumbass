@@ -1,0 +1,51 @@
+{
+  "_from": "jtype-system@^1.0.2",
+  "_id": "jtype-system@1.0.3",
+  "_inBundle": false,
+  "_integrity": "sha512-87ClmewymFm+QdcG2Tfan90S6EM8EMVk8nYwrE3jsb071tjSqmjQ9vVCvEknV2tcG4IoLWbGZzcx84F0rOZ1yw==",
+  "_location": "/jtype-system",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "jtype-system@^1.0.2",
+    "name": "jtype-system",
+    "escapedName": "jtype-system",
+    "rawSpec": "^1.0.2",
+    "saveSpec": null,
+    "fetchSpec": "^1.0.2"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/jtype-system/-/jtype-system-1.0.3.tgz",
+  "_shasum": "4ace046e936c80b51845a2b32c9692e82dd6b383",
+  "_spec": "jtype-system@^1.0.2",
+  "_where": "/home/crislin2046/brutal.js",
+  "author": {
+    "name": "@dosy"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "esm": "^3.0.74"
+  },
+  "deprecated": false,
+  "description": "A rudimentary type system for JS",
+  "keywords": [
+    "javascript",
+    "type-system",
+    "jtype",
+    "dosy"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "jtype-system",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com//crislin2046/jtype"
+  },
+  "scripts": {
+    "test": "serve -p 8080"
+  },
+  "version": "1.0.3"
+}
