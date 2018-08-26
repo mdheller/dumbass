@@ -22,7 +22,7 @@ R`<input handlers=${handlers}>`
 
 is equivalent to:
 ```JavaScript
-R`<input click=$(e => console.log(e)} mouseover=${e => alert(e)}>`;
+R`<input click=${e => console.log(e)} mouseover=${e => alert(e)}>`;
 ```
 
 ## Features
