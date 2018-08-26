@@ -1,6 +1,29 @@
-# brutal.js (1.5.19)
+# brutal.js (1.6.0)
 
 Minimalist framework for building JS apps.
+
+## News
+
+New minor release (1.6.0).
+
+Updates in this:
+
+- Handlers object can be passed to templates on browser-side (tested) and server-side (untested) to dynamically add handlers.
+
+Example:
+
+```JavaScript
+const handlers = {
+  click: e => console.log(e),
+  mouseover: e => alert(e)
+};
+R`<input handlers=${handlers}>`
+```
+
+is equivalent to:
+```JavaScript
+R`<input click=$(e => console.log(e)} mouseover=${e => alert(e)}>`;
+```
 
 ## Features
 
