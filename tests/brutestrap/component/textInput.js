@@ -1,5 +1,4 @@
 import {R,X} from '../../../r.js';
-//import {R,X} from 'https://unpkg.com/brutalist-web/r.js';
 
 export default textInput;
 
@@ -7,6 +6,7 @@ function textInput({
     name,
     options: options = [],
     placeholder: placeholder = '', 
+    handlers: handlers = {},
     inline: inline = false,
     value: value = '', 
     label: label = '', 
@@ -20,18 +20,18 @@ function textInput({
   let input;
 
   if( type === 'textarea' ) {
-    input = X`<textarea value="${value}" name=${name} placeholder="${placeholder}"></textarea>`;
+    input = X`<textarea handlers=${handlers} value="${value}" name=${name} placeholder="${placeholder}"></textarea>`;
   } else if ( type === 'select' ) {
     input = X`
-      <select name=${name} value="${value}">
+      <select handlers=${handlers} name=${name} value="${value}">
         ${options.map(o => X`<option value="${o}">${o}</option>`)}
       </select>`;
   } else {
-    input = X`<input name=${name} type=${type} placeholder="${placeholder}" value="${value}">`;
+    input = X`<input handlers=${handlers} name=${name} type=${type} placeholder="${placeholder}" value="${value}">`;
   }
 
   return X`
-    <label>
+    <label class="${type=='textarea'?'multiline':''}">
       <span class=label-text>${label}</span>
       <span class="input ${type=='textarea'?'multiline':''} ${inline ? 'inline': ''} ${round ? 'round': ''}">
         ${input}

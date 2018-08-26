@@ -12,6 +12,8 @@ function testAll() {
   testTagInput();
   testFileInput();
   testSelect();
+  testDateInput();
+  testTextareaInput();
 }
 
 function testSelect() {
@@ -57,11 +59,43 @@ function testSpinner() {
   s().to(...spot);
 }
 
+function testDateInput() {
+  const ti = component.textInput;
+
+  ti({
+    round: false,
+    name: 'month',
+    label: R.skip('Month'),
+    type: 'month',
+    rightElement: component.button({name:'btn', text:'Go',spinnerOnActive:true})
+  }).to(...spot);
+
+  ti({
+    round: false,
+    name: 'date',
+    label: R.skip('Date'),
+    type: 'date',
+    rightElement: component.button({name:'btn', text:'Go',spinnerOnActive:true})
+  }).to(...spot);
+
+  ti({
+    round: false,
+    name: 'datetime-local',
+    label: R.skip('Date & Time'),
+    type: 'datetime-local',
+    rightElement: component.button({name:'btn', text:'Go',spinnerOnActive:true})
+  }).to(...spot);
+}
+
 function testTextInput() {
   const ti = component.textInput;
 
   ti({
     round: false,
+    handlers: {
+      mouseover: e => console.log(e),
+      click: e => alert(e.target.localName + ' clicked')
+    },
     name: 'text',
     placeholder: 'Your textual input',
     label: 'Text',
@@ -94,4 +128,18 @@ function testFileInput() {
     text: 'Choose an image to upload',
     accept: 'image/*',
   }).to(...spot);
+}
+
+function testTextareaInput() {
+  const ti = component.textInput;
+
+  ti({
+    round: false,
+    name: 'textarea',
+    placeholder: 'Your multiline textual input',
+    label: 'Textarea',
+    type: 'textarea',
+    rightElement: component.button({name:'btn', text:'Search',spinnerOnActive:true})
+  }).to(...spot);
+
 }

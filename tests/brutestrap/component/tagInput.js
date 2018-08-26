@@ -1,5 +1,4 @@
 import {R,X} from '../../../r.js';
-//import {R,X} from 'https://unpkg.com/brutalist-web/r.js';
 
 
 export default tagInput;
@@ -39,7 +38,7 @@ function tagInput({
   if ( ! name ) throw {error: `All inputs must specify name`};
 
   return X`
-    <label click=${focusEditable}>
+    <label class=multiline click=${focusEditable}>
       <span class=label-text>${label}</span>
       <span class="multiline input ${inline ? 'inline': ''} ${round ? 'round': ''}">
         <div input=${startNewTagIfEmpty} class=tag-editor contenteditable name=${name}><span class=tag>first tag</span></div>
