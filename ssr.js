@@ -44,6 +44,8 @@
         val = val.str;
         if (attrNameMatches) val = `${val}`;
         str += val;
+      } else if (T.check(T`Handlers`, val)) {
+        handlers[hid].push(...Object.entries(val).map(([eventName,handler]) => {eventName,handler}));
       } else {
         str += part;
         str += attrNameMatches ? `${safe(val)}` : safe(val);
@@ -107,6 +109,8 @@
       return Sjoin(v) || '';
     } else if ( T.check(T`Object`, v) ) {
       if ( T.check(T`SBrutalObject`, v) ) {
+        return v;
+      } else if ( T.check(T`Handlers`, v ) ) {
         return v;
       }
       throw {error: OBJ(), value: v};

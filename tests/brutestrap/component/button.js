@@ -1,5 +1,4 @@
 import {R,X} from '../../../r.js';
-//import {R,X} from 'https://unpkg.com/brutalist-web/r.js';
 import spinner from './spinner.js';
 
 export default button;

@@ -23,6 +23,7 @@
     `Position must be one of: ` +
     `replace, beforeBegin, afterBegin, beforeEnd, innerHTML, afterEnd`;
   const isKey             = v => T.check(T`Key`, v);
+  const isHandlers        = v => T.check(T`Handlers`, v);
   const cache = {};
 
   Object.assign(R,{s,skip,die,BROWSER_SIDE});
@@ -235,7 +236,9 @@
       return (newVal) => {
         const originalLengthBefore = Object.keys(lengths.slice(0,valIndex)).length*KEYLEN;
         val.val = newVal;
-        switch(typeof newVal) {
+        const type = T.check(T`Function`, newVal) ? 'function' :
+          T.check(T`Handlers`, newVal) ? 'handlers' : 'default';
+        switch(type) {
           case "function":
             if ( name !== 'bond' ) {
               if ( !! oldVal ) {
@@ -251,6 +254,17 @@
               }
               externals.push(() => newVal(node)); 
             }
+            oldVal = newVal;
+          break;
+          case "handlers":
+            // Add a remove for oldVal handlers object, to remove the handlers in oldVal
+            Object.entries(newVal).forEach(([eventName,funcVal]) => {
+              if ( eventName !== 'bond' ) {
+                node.addEventListener(eventName, funcVal); 
+              } else {
+                externals.push(() => funcVal(node)); 
+              }
+            });
             oldVal = newVal;
           break;
           default:
@@ -270,7 +284,6 @@
 
               oldVal = newVal;
             }
-
         }
       };
     }
@@ -317,10 +330,9 @@
     return retVal;
   }
 
-
   function replaceVal(vmap) {
     return (val,vi) => {
-      if ( !! val.key ) {
+      if ( T.check(T`Key`, val) ) {
         return '';
       }
       const key = ('key'+Math.random()).replace('.','').padEnd(KEYLEN,'0').slice(0,KEYLEN);
@@ -352,6 +364,7 @@
     if ( isFunc )         return v;
     if ( isBrutal )       return v;
     if ( isKey(v) )       return v;
+    if ( isHandlers(v) )  return v;
     if ( isBrutalArray )  return join(v); 
     if ( isUnset )        die({error: UNSET()});
     if ( isForgery )      die({error: XSS()});

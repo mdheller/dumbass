@@ -11,6 +11,20 @@
       key: T.defOr('ValidKey', T`String`, T`Number`)
     });
 
+    export const THandlers = T.def('Handlers', null, {verify: i => {
+      const validObject = T.check(T`Object`, i);
+
+      if ( ! validObject ) return false;
+
+      const eventNames = Object.keys(i);
+      const handlerFuncs = Object.values(i);
+      const validNames = eventNames.every(name => T.check(T`String`, name));
+      const validFuncs = handlerFuncs.every(func => T.check(T`Function`, func));
+      const valid = validNames && validFuncs;
+
+      return valid;
+    }});
+
   // Browser side
 
     export const TBrutalLikeObject = T.def('BrutalLikeObject', {
@@ -40,7 +54,7 @@
 
     export const TSBrutalObject = T.def('SBrutalObject', {
       str: T`String`,
-      handlers: T`Object`
+      handlers: THandlers
     });
 
     export const TSBrutalArray = T.defCollection('SBrutalArray', {
@@ -50,8 +64,8 @@
 
   // export
 
-  export const BS = {TKey,TBrutalObject,TBrutalLikeObject,TBrutalArray};
+  export const BS = {TKey,THandlers,TBrutalObject,TBrutalLikeObject,TBrutalArray};
 
-  export const SSR = {TKey,TSBrutalObject,TSBrutalArray};
+  export const SSR = {TKey,THandlers,TSBrutalObject,TSBrutalArray};
 
   export const Types = {BS,SSR};
