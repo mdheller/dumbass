@@ -54,6 +54,6 @@
   "scripts": {
     "test": "serve -p 8080"
   },
-  "version": "1.5.19",
+  "version": "1.6.0",
   "devDependencies": {}
 }
