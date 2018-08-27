@@ -75,7 +75,7 @@ For more extensive examples, see [a TodoMVC app written in Brutal.js](https://gi
 
 There's two ways to add event handlers to your markup. 
 
-Either directly in the template string with eventName=${functionValue}` syntax or by passing an object with 
+Either directly in the template string with `eventName=${functionValue}` syntax or by passing an object with 
 `handlers=${handlersObj}` syntax.
 
 The handlers object must map event names to function values. 
