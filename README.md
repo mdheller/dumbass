@@ -2,29 +2,6 @@
 
 Minimalist framework for building JS apps.
 
-## News
-
-New minor release (1.6.0).
-
-Updates in this:
-
-- Handlers object can be passed to templates on browser-side (tested) and server-side (untested) to dynamically add handlers.
-
-Example:
-
-```JavaScript
-const handlers = {
-  click: e => console.log(e),
-  mouseover: e => alert(e)
-};
-R`<input handlers=${handlers}>`
-```
-
-is equivalent to:
-```JavaScript
-R`<input click=${e => console.log(e)} mouseover=${e => alert(e)}>`;
-```
-
 ## Features
 
 - Uses native JS features and requires no transpilation or build step.
@@ -92,9 +69,31 @@ function ButtonWidget({name}) {
 
 For more extensive examples, see [a TodoMVC app written in Brutal.js](https://github.com/crislin2046/rvanillatodo).
 
+## Basic documentation
 
-## Roadmap
+### Handlers 
 
-- Working on a subset that enables SSR without requiring client side JS. The idea is to base it on forms and submit the entire application state to the server at each request. This "monolithic" view can be further factored into targeted forms and named iframes if desired.
+There's two ways to add event handlers to your markup. 
 
+Either directly in the template string with eventName=${functionValue}` syntax or by passing an object with 
+`handlers=${handlersObj}` syntax.
+
+The handlers object must map event names to function values. 
+
+Currently only 1 handler per event per element can be added. 
+
+Example:
+
+```JavaScript
+const handlers = {
+  click: e => console.log(e),
+  mouseover: e => alert(e)
+};
+R`<input handlers=${handlers}>`
+```
+
+is equivalent to:
+```JavaScript
+R`<input click=${e => console.log(e)} mouseover=${e => alert(e)}>`;
+```
 
