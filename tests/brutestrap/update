@@ -1,0 +1,2 @@
+npm update
+cp node_modules/goldenfont.css/goldenfont.css .

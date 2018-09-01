@@ -1,0 +1,139 @@
+/* Perfect typographic CSS */
+
+:root, body, select, option, input, a, textarea, button, pre, code, kbd, samp {
+  font: 12pt/135% serif;
+}
+
+:root, body, select, option, input, textarea, button, pre, code, kbd, samp {
+  color: rgb(55,15,0);
+}
+
+:root, body {
+  margin: 1.35em;
+  background: rgb(237,237,237);
+}
+
+body.document, main[role="document"], main.app {
+  display: table;
+  margin: 0 auto;
+  padding: 1.35em;
+  border: none;
+  border-left: thin solid silver;
+}
+
+button, input, input[type="text"], select, option, textarea, [contenteditable] {
+  border-radius: 0;
+  background: white;
+  box-shadow: none;
+  background-clip: padding-box;
+}
+
+body {
+  background: rgb(249,249,249);
+}
+
+h1 {
+  font-size: 14pt;
+}
+
+h2 {
+  font-size: 13pt;
+}
+
+label, legend, input, button, th {
+  font-size: 12.5pt;
+}
+
+h3, h4, h5, h6 { display: none; }
+
+h1, h2 {
+  font-weight: bold;
+}
+
+h1, h2 {
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+}
+
+th, legend {
+  padding-top: 0.5em;
+  padding-bottom: 1em;
+}
+
+p, textarea, [contenteditable], figure, ol, ul, form, fieldset {
+  margin: 0;
+  margin-bottom: 0.75em;
+}
+
+.caps, .small-caps {
+  letter-spacing: 0.08em;
+}
+
+.caps {
+  text-transform: uppercase;
+  font-weight: normal;
+}
+
+.small-caps {
+  font-variant: small-caps;
+  font-weight: normal;
+}
+
+fieldset, hr, iframe, object {
+  border: none;
+  border-top: thin solid;
+}
+
+ol {
+  counter-reset: section;
+  list-style-type: none;
+}
+
+ol li::before {
+  counter-increment: section;
+  content: counters(section, ".") ".";
+  margin-left: -1.35em;
+  padding-right: 0.65em;
+}
+
+ol, ul {
+  padding-left: 0;
+  margin-left: 0;
+  margin-left: 1em;
+}
+
+li {
+  padding-left: 0.35em;
+}
+
+blockquote, dd, fieldset, figure {
+  padding-left: 0;
+  margin-left: 0;
+  padding-left: 1.35em;
+}
+
+p, blockquote, ol, ul, dl, h1, h2, textarea, [contenteditable] {
+  width: 30em;
+  max-width: 100%;
+}
+
+textarea, [contenteditable] { max-width: 30em; }
+
+input[type="range"], input[type="color"] { 
+  display: inline-block;
+  vertical-align: middle; 
+}
+
+ul ul, fieldset > ul {
+  margin-left: -0.35em;
+}
+
+th, caption {
+  text-align: left;
+}
+
+input, button, textarea, select, [contenteditable] {
+  margin: 0.25em;
+  padding: 0.25em;
+  box-sizing: border-box;
+}

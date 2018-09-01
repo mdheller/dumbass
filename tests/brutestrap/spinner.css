@@ -1,3 +1,5 @@
+
+
 .spinner, .mover {
   box-sizing: border-box;
 }
@@ -6,9 +8,8 @@
   width: 4em;
   height: 4em;
   position: relative;
-  color: white;
-  border: 0.1em solid;
   background: dodgerblue;
+  --spinner-bg: currentColor;
 }
 
 @keyframes moveit {
@@ -47,7 +48,8 @@
   top: 0; left: 0;
   width: 51.8%;
   height: 51.8%;
-  background: white;
+  color: var(--spinner-bg);
+  background: var(--spinner-bg);
   border-top: none;
   border-right: 0.1em solid;
   border-bottom: 0.1em solid;
