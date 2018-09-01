@@ -155,7 +155,7 @@ function testDatalist() {
   dl({
     round: false,
     name: 'datalist',
-    placeholder: "Relax its cool to have a codename",
+    placeholder: R.skip("Relax it's cool to have a codename"),
     label: 'Pick your agent name (datalist)',
     type: 'text',
     list: listFunction,
