@@ -237,7 +237,8 @@
         const originalLengthBefore = Object.keys(lengths.slice(0,valIndex)).length*KEYLEN;
         val.val = newVal;
         const type = T.check(T`Function`, newVal) ? 'function' :
-          T.check(T`Handlers`, newVal) ? 'handlers' : 'default';
+          T.check(T`Handlers`, newVal) ? 'handlers' : 
+          T.check(T`BrutalObject`, newVal) ? 'brutalobject' : 'default';
         switch(type) {
           case "function":
             if ( name !== 'bond' ) {
@@ -267,6 +268,11 @@
             });
             oldVal = newVal;
           break;
+          case "brutalobject":
+            // convert the nodes to a string, and fall through
+              // could be we skipped over replacing unsafe text in an attribute value
+              // or could be we want to add a srcdoc attribute or some other reason
+            newVal = nodesToStr(newVal.nodes);
           default:
             lengths[valIndex] = newVal.length;
             const attr = node.getAttribute(name);
@@ -276,11 +282,25 @@
               const correction = lengthBefore-originalLengthBefore;
               const before = attr.slice(0,index+correction);
               const after = attr.slice(index+correction+oldVal.length);
-              //console.log(JSON.stringify({index,input,originalLengthBefore,valIndex,correction,before,after,oldValLength:oldVal.length},null,2));
 
               const newAttrValue = before + newVal + after;
+
               node.setAttribute(name, newAttrValue);
-              node[name] = newAttrValue;
+
+              // we have a try block here because some 
+                // IDL attributes are readonly
+                // https://www.w3.org/TR/html50/forms.html
+                // and rather than trying to keep a white or black list 
+                // for which to try or not try setting the value
+                // we just capture the intent of the standard by trying which
+                // work 
+
+              try {
+                node[name] = newAttrValue;
+              } catch(e) {
+                const idlType = node ? node.constructor ? node.constructor.name : 'unknown' : 'unknown';
+                console.warn(`Attempt to set readonly attribute ${name} on ${node.constructor.name}`);
+              }
 
               oldVal = newVal;
             }
@@ -379,6 +399,14 @@
     os.forEach(o => (externals.push(...o.externals),bigNodes.push(...o.nodes)));
     const retVal = {v:[],code:CODE,nodes:bigNodes,to,update,externals};
     return retVal;
+  }
+
+  function nodesToStr(nodes) {
+    const frag = document.createDocumentFragment();
+    nodes.forEach(n => frag.appendChild(n));
+    const container = document.createElement('body');
+    container.appendChild(frag);
+    return container.innerHTML;
   }
 
   function diffNodes(last,next) {
