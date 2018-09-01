@@ -8,7 +8,8 @@ function select({
     inline: inline = false,
     value: value = '', 
     label: label = '', 
-    round: round = true,
+    multiple: multiple = false,
+    rightElement: rightElement = undefined,
   } = {}) {
 
   if ( ! name ) throw {error: `All inputs must specify name`};
@@ -16,17 +17,18 @@ function select({
   let input;
 
   input = X`
-    <select name=${name} value="${value}">
+    <select name=${name} value="${value}" ${multiple?'multiple':''}>
       ${options.map(({value,name}) => X`<option value="${value}">${name}</option>`)}
     </select>
   `;
 
   return X`
-    <label>
-      <span class=label-text>${label}</span>
-      <span class="input ${inline ? 'inline': ''} ${round ? 'round': ''}">
+    <div class="input ${inline ? 'inline': ''} ${multiple? 'multiline': ''}">
+      <label>
+        <span class=label-text>${label}</span>
         ${input}
-      </span>
-    </label>
+      </label>
+      ${rightElement? rightElement: ''}
+    </div>
   `;
 }

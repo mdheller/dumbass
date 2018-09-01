@@ -7,20 +7,20 @@ function fileInput({
     text: text = '',
     multiple: multiple = false,
     accept: accept = "*/*",
-    round: round = true,
-    placeholder: placeholder = '', 
     inline: inline = false,
     label: label = '', 
+    rightElement: rightElement = undefined,
   } = {}) {
 
   if ( ! name ) throw {error: `All inputs must specify name`};
 
   return X`
-    <label>
-      <span class=label-text>${label}</span>
-      <span class="input ${inline ? 'inline': ''} ${round ? 'round': ''}">
+    <div class="input ${inline ? 'inline': ''}">
+      <label>
+        <span class=label-text>${label}</span>
         <input type=file title="${text}" multiple=${multiple} accept=${accept}>
-      </span>
-    </label>
+      </label>
+      ${rightElement ? rightElement: ''}
+    </div>
   `;
 }

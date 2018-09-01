@@ -4,14 +4,13 @@ export default textInput;
 
 function textInput({
     name,
-    options: options = [],
     placeholder: placeholder = '', 
     handlers: handlers = {},
     inline: inline = false,
     value: value = '', 
     label: label = '', 
+    spaced: spaced = false,
     type: type = 'text',
-    round: round = true,
     rightElement: rightElement = undefined,
   } = {}) {
 
@@ -20,25 +19,18 @@ function textInput({
   let input;
 
   if( type === 'textarea' ) {
-    input = X`<textarea handlers=${handlers} value="${value}" name=${name} placeholder="${placeholder}"></textarea>`;
-  } else if ( type === 'select' ) {
-    input = X`
-      <select handlers=${handlers} name=${name} value="${value}">
-        ${options.map(o => X`<option value="${o}">${o}</option>`)}
-      </select>`;
+    input = X`<textarea handlers=${handlers} value="${value}" name=${name} placeholder="${placeholder}">${value}</textarea>`;
   } else {
     input = X`<input handlers=${handlers} name=${name} type=${type} placeholder="${placeholder}" value="${value}">`;
   }
 
   return X`
-    <label class="${type=='textarea'?'multiline':''}">
-      <span class=label-text>${label}</span>
-      <span class="input ${type=='textarea'?'multiline':''} ${inline ? 'inline': ''} ${round ? 'round': ''}">
+    <div class="input ${type==='textarea'?'multiline':''} ${inline?'inline':''} ${spaced?'spaced':''}">
+      <label>
+        <span class="label-text">${label}</span>
         ${input}
-        <span class=right>
-          ${rightElement ? rightElement : ''}
-        </span>
-      </span>
-    </label>
+      </label>
+      ${rightElement ? rightElement : ''}
+    </div>
   `;
 }

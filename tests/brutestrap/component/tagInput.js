@@ -1,6 +1,5 @@
 import {R,X} from '../../../r.js';
 
-
 export default tagInput;
 
 function startNewTagIfEmpty(inputEvent) {
@@ -31,18 +30,23 @@ function tagInput({
     name,
     inline: inline = false,
     label: label = '',
-    round: round = true,
     placeholder: placeholder = '',
+    rightElement: rightElement = undefined,
   } = {}) {
 
   if ( ! name ) throw {error: `All inputs must specify name`};
 
   return X`
-    <label class=multiline click=${focusEditable}>
-      <span class=label-text>${label}</span>
-      <span class="multiline input ${inline ? 'inline': ''} ${round ? 'round': ''}">
-        <div input=${startNewTagIfEmpty} class=tag-editor contenteditable name=${name}><span class=tag>first tag</span></div>
-      </span>
-    </label>
+    <div class="multiline input ${inline ? 'inline': ''}" click=${focusEditable}>
+      <label>
+        <span class=label-text>
+          ${label}
+        </span>
+        <div input=${startNewTagIfEmpty} class=tag-editor contenteditable name=${name}>
+          <span class=tag>${placeholder}</span>
+        </div>
+      </label>
+      ${rightElement ? rightElement : ''}
+    </div>
   `;
 }

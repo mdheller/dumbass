@@ -1,26 +1,27 @@
 import component from './index.js';
-import {R,X} from '../../r.js';
+import {R,X} from '../../r.js'
 
 const spot = ['#tests', 'beforeEnd'];
 
 onload = testAll;
 
 function testAll() {
-  testSpinner();
-  testButton();
   testTextInput();
   testTagInput();
   testFileInput();
   testSelect();
+  testSelect({multiple:true});
   testDateInput();
   testTextareaInput();
+  testDatalist();
 }
 
-function testSelect() {
+function testSelect({multiple:multiple=false}={}) {
   const s = component.select;
 
   s({
     name: 'select',
+    multiple,
     label: 'Option',
     value: 'option-1',
     options: [
@@ -64,8 +65,9 @@ function testDateInput() {
 
   ti({
     round: false,
+    spaced: true,
     name: 'month',
-    label: R.skip('Month'),
+    label: R.skip('Month (spaced)'),
     type: 'month',
     rightElement: component.button({name:'btn', text:'Go',spinnerOnActive:true})
   }).to(...spot);
@@ -94,7 +96,7 @@ function testTextInput() {
     round: false,
     handlers: {
       mouseover: e => console.log(e),
-      click: e => alert(e.target.localName + ' clicked')
+      click: e => console.log(e.target.localName + ' clicked')
     },
     name: 'text',
     placeholder: 'Your textual input',
@@ -141,5 +143,22 @@ function testTextareaInput() {
     type: 'textarea',
     rightElement: component.button({name:'btn', text:'Search',spinnerOnActive:true})
   }).to(...spot);
+}
 
+function testDatalist() {
+  const dl = component.datalist;
+
+  const Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+  const listFunction = i => i < Alphabet.length ? 'Agent ' + Alphabet[i] + '.' : null;
+
+  dl({
+    round: false,
+    name: 'datalist',
+    placeholder: R.skip("Relax its cool to have a codename"),
+    label: 'Pick your agent name (datalist)',
+    type: 'text',
+    list: listFunction,
+    rightElement: component.button({name:'save-btn', text:'Save',spinnerOnActive:true})
+  }).to(...spot);
 }

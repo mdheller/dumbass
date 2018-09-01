@@ -1,6 +1,6 @@
 {
   "name": "brutestrap",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A port of Blueprint/React-Bootstrap UI kit components to Brutal.js and CSS Grid, energized by the pursuit of minimalist code and minimalist design in all things.",
   "main": "index.js",
   "scripts": {
@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/crislin2046/brutestrap#readme",
   "dependencies": {
-    "@dosy/perfect.css": "^1.0.2",
-    "brutalist-web": "^1.5.14"
+    "brutalist-web": "^1.5.14",
+    "goldenfont.css": "^1.0.1"
   }
 }

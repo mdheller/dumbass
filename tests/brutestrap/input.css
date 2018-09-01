@@ -1,221 +1,193 @@
-  label {
-    display: table;
-    position: relative;
-    border: none;
-    margin: 0.25em;
-    padding: 0.25em;
-  }
+/** styles for inputs **/ 
+  /** normalizing input styles **/
+    button, input, input[type="text"], select, textarea, [contenteditable] {
+      border: thin solid silver;
+      box-sizing: border-box;
+      border-radius: 0;
+      margin: 0;
+      background: white;
+      box-shadow: none;
+      background-clip: padding-box;
+      touch-action: none;
+    }
 
-  .multiline > span {
-    vertical-align: top;
-    display: inline-block;
-  }
+    button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"] {
+      padding: 0.25em 0.5em;
+    }
 
-  .label-text {
-    text-decoration: underline;
-    font-variant: small-caps;
-    text-transform: lowercase;
-    font-size: 1.2em;
-    margin: 0.25em;
-  }
+    button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"], .label-text {
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      -moz-user-select: none;
+      -ms-touch-action: none;
+      -ms-touch-select: none;
+      touch-action: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
 
-  label:focus-within .label-text {
-    color: dodgerblue;
-  }
+    select[multiple] { overflow: auto; }
 
-  button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"] {
-    appearance: none;
-    background: dodgerblue;
-    color: white;
-    padding: 0.25em 0.5em;
-    border: none;
-    border: 2px solid dodgerblue;
-    border-bottom: 0.25em solid dodgerblue;
-    font-size: 120%;
-    margin: 0.25em;
-  }
+    textarea { resize: none; }
 
-  :-moz-any(button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"]):-moz-any(:active, .active) {
-    background: white;
-    color: black;
-    border-color: transparent;
-    border-color: dodgerblue;
-    padding: 0.25em;
-    cursor: progress;
-  }
-  :any(button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"]):any(:active, .active) {
-    background: white;
-    color: black;
-    border-color: transparent;
-    border-color: dodgerblue;
-    padding: 0.25em;
-    cursor: progress;
-  }
-  :-webkit-any(button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"]):-webkit-any(:active, .active) {
-    background: white;
-    color: black;
-    border-color: transparent;
-    border-color: dodgerblue;
-    padding: 0.25em;
-    cursor: progress;
-  }
+  /** layout perfection **/ 
+    .input {
+      display: flex;
+      align-items: stretch;
+      margin: 0.75em 0;
+      box-sizing: border-box;
+    }
 
-  :-webkit-any(button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"]):focus {
-    text-decoration: underline;
-  }
-  :-moz-any(button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"]):focus {
-    text-decoration: underline;
-  }
-  :any(button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"]):focus {
-    text-decoration: underline;
-  }
+    label {
+      display: inline-flex;
+      align-items: stretch;
+    }
 
-  :-webkit-any(button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"]):-webkit-any(:active:focus, .active:focus) {
-    text-decoration: none;
-    border-style: dotted;
-    border-color: dodgerblue;
-  }
-  :-moz-any(button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"]):-moz-any(:active:focus, .active:focus) {
-    text-decoration: none;
-    border-style: dotted;
-    border-color: dodgerblue;    
-  }
-  :any(button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"]):any(:active:focus, .active:focus) {
-    text-decoration: none;
-    border-style: dotted;
-    border-color: dodgerblue;
-  }
+    .label-text {
+      margin-right: 0.25em;
+      padding: 0;
+      align-self: center;
+    }
 
-  *:focus {
-    outline: none;
-  }
-  ::-moz-focus-inner {
-    border: 0;
-  }
+    .input.inline { display: inline-flex; }
 
-  label:focus-within::before {
-    animation: blurout 3.2s ease;
-    content: "X";
-    -webkit-clip-path: polygon(0 0, 0% 100%, 100% 50%);
-    clip-path: polygon(0 0, 0% 100%, 100% 50%);
-    position: absolute;
-    background: dodgerblue;
-    color: dodgerblue;
-    width: 1em;
-    height: 1em;
-    top: 50%;
-    left: 0;
-    transform: translate(-100%,-50%);
-    z-index: var(--ztop);
-   }
+    .input.multiline { align-items: start; }
 
-  button .spinner {
-    display: none;
-    margin-left: 0.3em;
-  }
+    .input.spaced :-webkit-any(button, select, textarea, input, [contenteditable]) {
+      margin: 0.25em;
+    }
+ 
+    .input.multiline .label-text {
+      /** this normalizes label vertical align on Chrome and Safari, trying margins/padding gives 1 pixel errors **/
+      align-self: start;
+      line-height: 1.8;
+    }
 
+    select[multiple] option {
+      /** this vertical aligns option to label in multiple select **/
+      padding: 0.075em 0.25em;
+      line-height: 1.35;
+      font-size: 12.5pt;
+    }
 
-  button.active .spinner {
-    display: inline-block;
-    width: 1.2em;
-    height: 1.2em;
-    vertical-align: text-top;
-  }
+  /** bring as much consistency as possible to file inputs  **/
+    ::placeholder, input[type="file"] {
+      color: grey;
+      font-weight: normal;
+      font-family: inherit;
+    }
 
-  [contenteditable], textarea, select, input[type="text"], input[type="number"], input[type="file"], input[type="email"], input[type="tel"], input[type="url"], input[type="password"], input:not([type]) {
-    font-size: 1em;
-    border: 2px solid transparent;
-    border-bottom: 0.25em solid silver;
-    padding: 0.25em 0.5em;
-  }
+    input[type="file"]::-webkit-file-upload-button {
+      display: inline-block;
+      background: aliceblue;
+      padding: 0.25em 0.5em;
+      height: 2em;
+      font-family: inherit;
+      color: rgb(55,15,0);
+      border-radius: 0 !important;
+      border: none;
+      border-right: 0.5em solid white;
+      outline: none;
+    }
 
-  input[type="file"] {
-    border-color: transparent;
-    font-family: monospace;
-  }
+    input[type="file"] {
+      padding: 0;
+      padding-right: 0.5em;
+      line-height: 1;
+      font-size: 12pt;
+    }
 
-  :-webkit-any([contenteditable], input, textarea):focus {
-    border-color: dodgerblue;
-    border-style: dotted;
-  }
+    /** ms only **/
+      ::-ms-browse {
+        display: inline-block;
+        background: aliceblue;
+        padding: 0.25em 0.5em;
+        height: 2em;
+        font-family: inherit;
+        color: rgb(55,15,0);
+        border-radius: 0 !important;
+        border: none;
+        border-right: 0.5em solid white;
+        outline: none;
+      }
 
-  :-moz-any([contenteditable], input, textarea):focus {
-    border-color: dodgerblue;
-    border-style: dotted;
-  }    
-  
-  :any([contenteditable], input, textarea):focus {
-    border-color: dodgerblue;
-    border-style: dotted;
-  }
+    /** safari only **/
+      _:default:not(:root:root), input[type="file"] {
+        font-size: 0.75em;
+        padding: 0.5em;
+      }
 
-  input[type="date"], input[type="datetime-local"], input[type="month"], select {
-    font-size: 1em;
-    border-style: solid;
-    border-color: silver;
-    border: 2px solid silver;
-    border-bottom: 0.25em solid silver;
-    font-family: monospace;
-    padding: 0.25em 0.5em;
-  }
+      _:default:not(:root:root), input[type="file"]::-webkit-file-upload-button {
+        border: thin solid silver;
+      }
 
-  :-webkit-any(input[type="date"], input[type="datetime-local"], input[type="month"], select):focus {
-    border-style: solid;
-    border-color: dodgerblue;
-  }
-     
-  :-moz-any(input[type="date"], input[type="datetime-local"], input[type="month"], select):focus {
-    border-style: solid;
-    border-color: dodgerblue;
-  }
-    
-  :any(input[type="date"], input[type="datetime-local"], input[type="month"], select):focus {
-    border-style: solid;
-    border-color: dodgerblue;
-  }
+    div.tag-editor, [contenteditable], textarea {
+      display: inline-block;
+      min-width: 25ch;
+      max-width: 55ch;
+    }
 
-  :-webkit-any([contenteditable], textarea, select, input)[disabled] {
-    pointer-events: none;
-    cursor: not-allowed;
-    background: grey;
-  }    
-    
-  :-moz-any([contenteditable], textarea, select, input)[disabled] {
-    pointer-events: none;
-    cursor: not-allowed;
-    background: grey;
-  }
-   
-  :any([contenteditable], textarea, select, input)[disabled] {
-    pointer-events: none;
-    cursor: not-allowed;
-    background: grey;
-  }
+  /** tag input **/
+    div.tag-editor {
+      padding: 0.25em;
+      flex-wrap: wrap;
+    }
 
-  div.tag-editor {
-    display: inline-block;
-    min-width: 40ch;
-    font-family: monospace;
-  }
+    div.tag-editor, div.tag-editor div {
+      display: inline-flex;
+      max-width: 55ch;
+      align-items: start;
+    }
 
-  div.tag-editor {
-    min-width: 25ch;
-    padding: 0.125em;
-    flex-wrap: wrap;
-  }
+    span.tag {
+      display: inline-block;
+      margin: 0.125em;
+      padding: 0.125em;
+      font-size: 85%;
+      line-height: 0.85;
+      text-decoration: underline;
+      min-height: 0.85em;
+    }
 
-  div.tag-editor, div.tag-editor div {
-    display: inline-flex;
-    max-width: 55ch;
-    align-items: start;
-  }
+  /** spinner integration **/
+    button .spinner {
+      display: none;
+      margin-left: 0.25em;
+    }
 
-  span.tag {
-    display: inline-block;
-    margin: 0.25em;
-    padding: 0.25em;
-    font-size: 85%;
-    line-height: 0.85;
-    text-decoration: underline;
-    min-height: 0.85em;
-  }
+    button.active .spinner {
+      display: inline-block;
+      width: 1.2em;
+      height: 1.2em;
+      vertical-align: text-top;
+    }
+
+    .spinner {
+      color: gainsboro;
+    }
+
+  /** special button styles **/
+    button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"] {
+      background: gainsboro;
+      color: rgba(50,50,50,0.75);
+      text-shadow: 0.25px 0.25px 0 #ececfd;
+    } 
+
+    input[type="file"]::-webkit-file-upload-button {
+      background: gainsboro;
+      color: rgba(50,50,50,0.75);
+      text-shadow: 0.25px 0.25px 0 #ececfd;
+    }
+
+    ::-ms-browse {
+      background: gainsboro;
+      color: rgba(50,50,50,0.75);
+      text-shadow: 0.25px 0.25px 0 #ececfd;
+    }
+
+    _:default:not(:root:root), input[type="file"]::-webkit-file-upload-button {
+      background: gainsboro;
+      color: rgba(50,50,50,0.75);
+      text-shadow: 0.25px 0.25px 0 #ececfd;
+    }
+
