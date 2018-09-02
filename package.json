@@ -32,7 +32,7 @@
   "bundleDependencies": false,
   "dependencies": {
     "esm": "^3.0.74",
-    "jtype-system": "^1.0.2"
+    "jtype-system": "^1.0.4"
   },
   "deprecated": false,
   "description": "Minimalist 500 line framework for building brutalist web apps",
