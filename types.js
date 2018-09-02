@@ -1,4 +1,5 @@
 // types
+  import {CODE} from './common.js';
   import {T} from '../jtype-system/t.js';
 
   // T
@@ -69,3 +70,10 @@
   export const SSR = {TKey,THandlers,TSBrutalObject,TSBrutalArray};
 
   export const Types = {BS,SSR};
+
+
+  // verify function 
+    function verify(v) {
+      return CODE === v.code;
+    }
+
