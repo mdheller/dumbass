@@ -3,7 +3,7 @@
   import {S} from './ssr.js';
   import T from './types.js';
 
-  const DEBUG             = false;
+  const DEBUG             = true;
   const KEYMATCH          = /(?:<!\-\-)?(key\d+)(?:\-\->)?/gm;
   const KEYLEN            = 20;
   const OURPROPS          = 'code,externals,nodes,to,update,v';
@@ -417,10 +417,6 @@
 
   function update(newVals) {
     this.v.forEach(({vi,replacers}) => replacers.forEach(f => f(newVals[vi])));
-  }
-
-  function verify(v) {
-    return CODE === v.code;
   }
 
   function die(msg,err) {
