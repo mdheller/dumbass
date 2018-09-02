@@ -1,27 +1,28 @@
 {
-  "_from": "jtype-system@^1.0.2",
-  "_id": "jtype-system@1.0.3",
+  "_from": "jtype-system@1.0.4",
+  "_id": "jtype-system@1.0.4",
   "_inBundle": false,
-  "_integrity": "sha512-87ClmewymFm+QdcG2Tfan90S6EM8EMVk8nYwrE3jsb071tjSqmjQ9vVCvEknV2tcG4IoLWbGZzcx84F0rOZ1yw==",
+  "_integrity": "sha512-LXzoSBjwBiIRfPsYUJYSM8BplCwutw/Bsb/T8WojWSaRCjJI6YkcfdoL2TzRS+cOAz/MKhKZWU1iKAJdnkco2Q==",
   "_location": "/jtype-system",
   "_phantomChildren": {},
   "_requested": {
-    "type": "range",
+    "type": "version",
     "registry": true,
-    "raw": "jtype-system@^1.0.2",
+    "raw": "jtype-system@1.0.4",
     "name": "jtype-system",
     "escapedName": "jtype-system",
-    "rawSpec": "^1.0.2",
+    "rawSpec": "1.0.4",
     "saveSpec": null,
-    "fetchSpec": "^1.0.2"
+    "fetchSpec": "1.0.4"
   },
   "_requiredBy": [
+    "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/jtype-system/-/jtype-system-1.0.3.tgz",
-  "_shasum": "4ace046e936c80b51845a2b32c9692e82dd6b383",
-  "_spec": "jtype-system@^1.0.2",
-  "_where": "/home/crislin2046/brutal.js",
+  "_resolved": "https://registry.npmjs.org/jtype-system/-/jtype-system-1.0.4.tgz",
+  "_shasum": "193c6866d36163eea5424687e2de2a811fa6a450",
+  "_spec": "jtype-system@1.0.4",
+  "_where": "/home/cris7fe/brutal.js",
   "author": {
     "name": "@dosy"
   },
@@ -47,5 +48,5 @@
   "scripts": {
     "test": "serve -p 8080"
   },
-  "version": "1.0.3"
+  "version": "1.0.4"
 }
