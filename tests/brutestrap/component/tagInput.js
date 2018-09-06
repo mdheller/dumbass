@@ -1,4 +1,4 @@
-import {R,X} from '../../../r.js';
+import {R,X} from '../externals.js';
 
 export default tagInput;
 
@@ -42,7 +42,12 @@ function tagInput({
         <span class=label-text>
           ${label}
         </span>
-        <div input=${startNewTagIfEmpty} class=tag-editor contenteditable name=${name}>
+        <div
+          input=${startNewTagIfEmpty}
+          class=tag-editor
+          contenteditable
+          name=${name}
+        >
           <span class=tag>${placeholder}</span>
         </div>
       </label>

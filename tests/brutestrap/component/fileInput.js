@@ -1,4 +1,4 @@
-import {R,X} from '../../../r.js';
+import {R,X} from '../externals.js';
 
 export default fileInput;
 
@@ -15,10 +15,15 @@ function fileInput({
   if ( ! name ) throw {error: `All inputs must specify name`};
 
   return X`
-    <div class="input ${inline ? 'inline': ''}">
+    <div class="input ${inline ?'inline':''}">
       <label>
         <span class=label-text>${label}</span>
-        <input type=file title="${text}" multiple=${multiple} accept=${accept}>
+        <input
+          type=file
+          title="${text}"
+          multiple=${multiple}
+          accept=${accept}
+        >
       </label>
       ${rightElement ? rightElement: ''}
     </div>

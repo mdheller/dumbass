@@ -1,5 +1,5 @@
 import component from './index.js';
-import {R,X} from '../../r.js'
+import {R,X} from './externals.js';
 
 const spot = ['#tests', 'beforeEnd'];
 
@@ -14,6 +14,7 @@ function testAll() {
   testDateInput();
   testTextareaInput();
   testDatalist();
+  testTable();
 }
 
 function testSelect({multiple:multiple=false}={}) {
@@ -162,3 +163,25 @@ function testDatalist() {
     rightElement: component.button({name:'save-btn', text:'Save',spinnerOnActive:true})
   }).to(...spot);
 }
+
+function testTable() {
+  const t = component.table;
+
+  const rh = i => i < 10 ? `Row ${i}` : null;
+  const ch = i => i < 10 ? `Column ${i}` : null;
+  const cell = (i,j) => i < 10 && j < 10 ? i*j : null;
+
+  t({
+    round: false,
+    name: 'table',
+    label: 'What label for a table?',
+    type: 'number',
+    rowHeader: rh,
+    inputSize: 3,
+    columnHeader: ch,
+    cell,
+    rightElement: component.button({name:'save-btn', text:'Save',spinnerOnActive:true})
+  }).to(...spot);
+}
+
+

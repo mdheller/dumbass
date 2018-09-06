@@ -1,6 +1,6 @@
-# brutestrap (v1.0.3)
+# brutestrap (v1.1.0)
 
-A port of Blueprint/React-Bootstrap UI kit components to Brutal.js and CSS Grid, energized by the pursuit of minimalist code and minimalist design in all things.
+A port of Blueprint/React-Bootstrap (also with Inspiration from Ignite and Evergreen) UI kit components to Brutal.js and CSS Grid, energized by the pursuit of minimalist code and minimalist design in all things.
 
 ```JavaScript
 [...new Set([...Blueprint, ...Bootstrap])].map(convertTo(Brutal.js, CSSGrid)).filter(minimalistCode)
@@ -17,9 +17,22 @@ A port of Blueprint/React-Bootstrap UI kit components to Brutal.js and CSS Grid,
 - ~Spinner~
 - ~Button with spinner~
 
-### Data Presentation Components
-- Table (defined by three functions, column_header(i), row_header(j), cell_data(i,j))
-- Datalist (defined by 1 function data(i)) and can include options like "autocomplete" which is a fuzzy search
+### Intermediate Components
+- ~Table (defined by three functions, column_header(i), row_header(j), cell_data(i,j))~
+  - Rename columns (optional)
+  - Reorder rows (optional)
+  - Reorder columns (optional)
+  - Columns can be deleted (optional)
+  - Columns can be hidden (optional)
+  - Presentation mutations can be saved.
+- ~Datalist (defined by 1 function data(i))~
+- List component (list of inputs).
+  - Slots can be reordered (optional).
+  - Can page for more inputs (optional).
+- Map component (map of inputs, string keys to inputs).
+  - Keys can be renamed (optional).
+  - Keys can have order (optional).
+  - Keys can be reordered (optional).
 
 ### Layout Components
 - Modal (of various kinds)
@@ -29,18 +42,7 @@ A port of Blueprint/React-Bootstrap UI kit components to Brutal.js and CSS Grid,
 - Menu
 
 ### Advanced Input components
-- Live updating fuzzy search input (e.g: "type your city...", "skill...", "topic...")
+- Live updating fuzzy search input (e.g: "type your city...", "skill...", "topic...") (not just a datalist or its select polyfill on iOS, but a true fuzzy search input with updating list that works on any target)
 - Group of inputs (group of observations of a particular input, either listed, or mapped) "higher order component" that takes any imput component, and either "list" or "map" type (map types will just support string keys for now)
-
-### Improvements
-- Form layout
-- Form states: invalid, required (but no custom validation messages probably just use built in to save work on i18n))
-
-## Design required
-
-- Think about how to do i18n: What sort of parameters ( a map of messages ? ) How to tell a component what language to render in? 
-- I think like "message files" should be factorable and importable by components in order to render whatever messages they want.
-- Brutestrap should provide some built in message files in English that can be expanded into other high value languages (the BRICS countries + German, French, Japanese and Korean, plus one high value African language + one high value Eastern Europe language).
-- Initially translations will be done by hand using Google translate / its API, using a script. Later can be "improved" by contractors / contributors. 
 
 
