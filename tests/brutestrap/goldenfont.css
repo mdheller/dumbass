@@ -22,8 +22,10 @@ body.document, main[role="document"], main.app {
 }
 
 button, input, input[type="text"], select, option, textarea, [contenteditable] {
+  box-sizing: border-box;
   border-radius: 0;
   background: white;
+  border: thin solid silver;
   box-shadow: none;
   background-clip: padding-box;
 }
@@ -135,5 +137,4 @@ th, caption {
 input, button, textarea, select, [contenteditable] {
   margin: 0.25em;
   padding: 0.25em;
-  box-sizing: border-box;
 }

@@ -1,4 +1,4 @@
-import {R,X} from '../../../r.js'
+import {R,X} from '../externals.js';
 
 export default datalist;
 
@@ -28,22 +28,33 @@ function datalist({
     listIndex++;
   }
 
-  const input = X`<input handlers=${handlers} name=${name} 
-    type=${type} placeholder="${placeholder}" 
-    list=${listId} 
-    value="${value}">`;
+  const input = X`
+    <input
+      handlers=${handlers}
+      name=${name} 
+      type=${type}
+      placeholder="${placeholder}" 
+      list=${listId} 
+      value="${value}"
+    >
+  `;
 
   const datalist = X`
     <datalist id=${listId}>
       <!-- select polyfills for Safari iOS which has NO datalist -->
-      <select name=${name} value="${value}">
-        ${values.map(v => X`<option value="${v}">${v}</option>`)}
+      <select
+        mame=${name}
+        value="${value}"
+      >
+      ${values.map(v => X`
+        <option value="${v}">${v}</option>
+      `)}
       </select>
     </datalist>
-  `
+  `;
 
   return X`
-    <div class="input ${type==='textarea'?'multiline':''} ${inline?'inline':''} ${spaced?'spaced':''}">
+    <div class="input ${type=='textarea'?'multiline':''} ${inline?'inline':''} ${spaced?'spaced':''}">
       <label>
         <span class="label-text">${label}</span>
         ${input}

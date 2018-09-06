@@ -1,15 +1,42 @@
 {
-  "name": "brutestrap",
-  "version": "1.0.3",
+  "_from": "brutestrap",
+  "_id": "brutestrap@1.1.0",
+  "_inBundle": false,
+  "_integrity": "sha512-+nLTYtGc+Mi2ZfSboLvkh8Zak5jCQiXXVRnA6gLBTc3UwUBgvC2UmzvkGe+FHBS4bM2YDkjhVTD6LL6et6TFKQ==",
+  "_location": "/brutestrap",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "brutestrap",
+    "name": "brutestrap",
+    "escapedName": "brutestrap",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/brutestrap/-/brutestrap-1.1.0.tgz",
+  "_shasum": "8d9cdd03ec6d85893659949dcbe1edb07abbfa30",
+  "_spec": "brutestrap",
+  "_where": "/home/cris7fe/brutal.js",
+  "author": {
+    "name": "@dosy"
+  },
+  "bugs": {
+    "url": "https://github.com/crislin2046/brutestrap/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "brutalist-web": "^1.6.3",
+    "goldenfont.css": "^1.0.2"
+  },
+  "deprecated": false,
   "description": "A port of Blueprint/React-Bootstrap UI kit components to Brutal.js and CSS Grid, energized by the pursuit of minimalist code and minimalist design in all things.",
-  "main": "index.js",
-  "scripts": {
-    "test": "serve -p 8080 -s"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/crislin2046/brutestrap.git"
-  },
+  "homepage": "https://github.com/crislin2046/brutestrap#readme",
   "keywords": [
     "UI",
     "ui-kit",
@@ -24,14 +51,15 @@
     "components",
     "widgets"
   ],
-  "author": "@dosy",
   "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/crislin2046/brutestrap/issues"
+  "main": "index.js",
+  "name": "brutestrap",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crislin2046/brutestrap.git"
   },
-  "homepage": "https://github.com/crislin2046/brutestrap#readme",
-  "dependencies": {
-    "brutalist-web": "^1.5.14",
-    "goldenfont.css": "^1.0.1"
-  }
+  "scripts": {
+    "test": "serve -p 8080 -s"
+  },
+  "version": "1.1.0"
 }

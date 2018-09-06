@@ -53,6 +53,8 @@
 
     .input.multiline { align-items: start; }
 
+    .input.flex-col { flex-direction: column; }
+
     .input.spaced :-webkit-any(button, select, textarea, input, [contenteditable]) {
       margin: 0.25em;
     }
@@ -190,4 +192,10 @@
       color: rgba(50,50,50,0.75);
       text-shadow: 0.25px 0.25px 0 #ececfd;
     }
+
+  /** datalist (safari workaround) **/
+
+  _:default:not(:root:root), input[list] { display: none; }
+  _:default:not(:root:root), datalist { display: inline-flex; }
+
 

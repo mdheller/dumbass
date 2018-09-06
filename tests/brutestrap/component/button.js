@@ -1,4 +1,4 @@
-import {R,X} from '../../../r.js';
+import {R,X} from '../externals.js';
 import spinner from './spinner.js';
 
 export default button;
@@ -22,7 +22,12 @@ function button({
   let input;
 
   return X`
-    <button click=${addActiveClass} type=${type} name=${name} value="${value}">
+    <button 
+      click=${addActiveClass}
+      type=${type}
+      name=${name}
+      value="${value}"
+    >
       ${text}
       ${spinnerOnActive ? spinner() : ''}
     </button>

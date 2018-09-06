@@ -1,4 +1,4 @@
-import {R,X} from '../../../r.js';
+import {R,X} from '../externals.js';
 
 export default spinner;
 

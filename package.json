@@ -55,5 +55,7 @@
     "test": "serve -p 8080"
   },
   "version": "1.6.3",
-  "devDependencies": {}
+  "devDependencies": {
+    "brutestrap": "^1.1.0"
+  }
 }

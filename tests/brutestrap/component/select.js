@@ -1,4 +1,4 @@
-import {R,X} from '../../../r.js';
+import {R,X} from '../externals.js';
 
 export default select;
 
@@ -17,8 +17,14 @@ function select({
   let input;
 
   input = X`
-    <select name=${name} value="${value}" ${multiple?'multiple':''}>
-      ${options.map(({value,name}) => X`<option value="${value}">${name}</option>`)}
+    <select
+      name=${name}
+      value="${value}" 
+      ${multiple?'multiple':''}
+    >
+    ${options.map(({value,name}) => X`
+      <option value="${value}">${name}</option>
+    `)}
     </select>
   `;
 
