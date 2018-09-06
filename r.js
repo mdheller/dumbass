@@ -185,7 +185,11 @@
   }
 
   function handleElementNode({node,vmap,externals}) {
-    const attrs = [...node.attributes]; 
+    // const attrs = [...node.attributes]; 
+    // The above line breaks Edge (Microsoft Edge 42.17134.1.0/Microsoft EdgeHTML 17.17134) with 
+    // SCRIPT5002: Function expected
+    // So I replaced it with:
+    const attrs = Array.from(node.attributes);
     attrs.forEach(({name,value}) => {
       const lengths = [];
       let result;
