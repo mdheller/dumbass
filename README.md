@@ -67,7 +67,7 @@ function ButtonWidget({name}) {
 
 ## More examples
 
-For more extensive examples, see [a TodoMVC app written in Brutal.js](https://github.com/crislin2046/rvanillatodo).
+For more extensive examples, [the tests listed above](https://thiscris.com/brutal.js/tests/), or see [a TodoMVC app written in Brutal.js](https://github.com/crislin2046/rvanillatodo). Also take a look at the component code in [Brutestrap UI Kit](https://github.com/crislin2046/brutestrap), a UI Kit being built with Brutal.js (and incorporating [C3S](https://github.com/crislin2046/c3s) for scoping styles to components).
 
 ## Basic documentation
 
