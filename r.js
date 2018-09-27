@@ -242,8 +242,31 @@
         val.val = newVal;
         const type = T.check(T`Function`, newVal) ? 'function' :
           T.check(T`Handlers`, newVal) ? 'handlers' : 
-          T.check(T`BrutalObject`, newVal) ? 'brutalobject' : 'default';
+          T.check(T`BrutalObject`, newVal) ? 'brutalobject' : 
+          T.check(T`FuncArray`, newVal) ? 'funcarray' : 'default';
         switch(type) {
+          case "funcarray":
+            if ( !! oldVal && ! Array.isArray(oldVal) ) {
+              oldVal = [oldVal]; 
+            }
+            if ( name !== 'bond' ) {
+              if ( !! oldVal ) {
+                oldVal.forEach(of => node.removeEventListener(name, of));
+              }
+              newVal.forEach(f => node.addEventListener(name, f));
+            } else {
+              if ( !! oldVal ) {
+                oldVal.forEach(of => {
+                  const index = externals.indexOf(of);
+                  if ( index >= 0 ) {
+                    externals.splice(index,1);
+                  }
+                });
+              }
+              newVal.forEach(f => externals.push(() => newVal(node)));
+            }
+            oldVal = newVal;
+          break;
           case "function":
             if ( name !== 'bond' ) {
               if ( !! oldVal ) {
@@ -382,12 +405,14 @@
     const isUnset         = T.check(T`None`, v);
     const isObject        = T.check(T`Object`, v);
     const isBrutalArray   = T.check(T`BrutalArray`, v);
+    const isFuncArray     = T.check(T`FuncArray`, v);
     const isBrutal        = T.check(T`BrutalObject`, v);
     const isForgery       = T.check(T`BrutalLikeObject`, v)  && !isBrutal; 
 
     if ( isFunc )         return v;
     if ( isBrutal )       return v;
     if ( isKey(v) )       return v;
+    if ( isFuncArray )    return v;
     if ( isHandlers(v) )  return v;
     if ( isBrutalArray )  return join(v); 
     if ( isUnset )        die({error: UNSET()});
