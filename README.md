@@ -97,3 +97,11 @@ is equivalent to:
 R`<input click=${e => console.log(e)} mouseover=${e => alert(e)}>`;
 ```
 
+## Current Issues 
+
+- R.skip in attribute values turns into replacement placeholder comment tags which can break attribute values and markup.
+- But without R.skip how to get around the regular "safe replacement" of special characters?
+- Empty arrays are OK as Brutal Objects but not as Func arrays for adding event handlers, because they will become Brutal Objects and leave placeholder comment tags for replacement which breaks attribute values and markup.
+- The main issue is Brutal Objects in attribute values, and one reason this occurs is because our decision about which placeholder replacement type to use (comment or key) is based on the type of the value, and not on its "lexical scope" // location.
+- This is actaully a feature, since the code is way simpler. But given that I am running into these issues, what's the simple and elegant solution? 
+- Needs more thinking.

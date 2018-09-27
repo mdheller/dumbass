@@ -31,6 +31,8 @@
       member: T`Function`
     });
 
+    export const TEmptyArray = T.def('EmptyArray', null, {verify: i => Array.isArray(i) && i.length == 0});
+
   // Browser side
 
     export const TBrutalLikeObject = T.def('BrutalLikeObject', {

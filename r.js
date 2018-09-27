@@ -3,6 +3,7 @@
   import {S} from './ssr.js';
   import T from './types.js';
 
+  const TAGFUNC           = () => 1;
   const DEBUG             = true;
   const KEYMATCH          = /(?:<!\-\-)?(key\d+)(?:\-\->)?/gm;
   const KEYLEN            = 20;
@@ -26,7 +27,7 @@
   const isHandlers        = v => T.check(T`Handlers`, v);
   const cache = {};
 
-  Object.assign(R,{s,skip,die,BROWSER_SIDE});
+  Object.assign(R,{s,safe,skip,die,BROWSER_SIDE});
 
   if ( DEBUG && BROWSER_SIDE ) {
     Object.assign(self, {R,T}); 
@@ -297,8 +298,22 @@
           break;
           case "brutalobject":
             // convert the nodes to a string, and fall through
-              // could be we skipped over replacing unsafe text in an attribute value
-              // or could be we want to add a srcdoc attribute or some other reason
+              // ideally, this could support:
+                // could be we skipped over replacing unsafe text in an attribute value
+                // or could be we want to add a srcdoc attribute or some other reason
+              // but actually right now there is no way to support this as:
+                // there is no way to resolve
+                // the issue that brutal objects are always placeheld by comment tags
+                // which will error out if used in attribute values
+                // so right now we just make it empty
+                // and assume that, the only way a brutal object ended up here
+                // was an empty array was converted to a brutal object
+                // when really it was a func array that was empty.
+                // we need to assume it's a brutal object, so we can do things like
+                // replace an empty list with a filled list, and vice versa
+                // and we need to base the type conversion off the passed in type
+                // rather than location to keep the code simple and not checking
+                // WHERE the replacement occurs. 
             newVal = nodesToStr(newVal.nodes);
           default:
             lengths[valIndex] = newVal.length;
@@ -372,7 +387,7 @@
   function skip(str) {
     str = T.check(T`None`, str) ? '' : str; 
     const frag = toDOM(str);
-    const retVal = {externals:[],v:[],to,
+    const retVal = {externals:[TAGFUNC],v:[],to,
       update,code:CODE,nodes:[...frag.childNodes]};
     return retVal;
   }
@@ -385,9 +400,11 @@
       const key = ('key'+Math.random()).replace('.','').padEnd(KEYLEN,'0').slice(0,KEYLEN);
       let k = key;
       if ( T.check(T`BrutalObject`, val) ) {
-        k = (`<!--${k}-->`);
+        k = `<!--${k}-->`;
+        if ( val.externals[0] == TAGFUNC ) {
+          console.log({val,k});
+        }
       }
-      k = `${k}`;
       vmap[key.trim()] = {vi,val,replacers:[]};
       return k;
     };
@@ -412,9 +429,9 @@
     if ( isFunc )         return v;
     if ( isBrutal )       return v;
     if ( isKey(v) )       return v;
-    if ( isFuncArray )    return v;
     if ( isHandlers(v) )  return v;
     if ( isBrutalArray )  return join(v); 
+    if ( isFuncArray )    return v;
     if ( isUnset )        die({error: UNSET()});
     if ( isForgery )      die({error: XSS()});
     if ( isObject )       die({error: OBJ()});
