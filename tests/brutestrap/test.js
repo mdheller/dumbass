@@ -1,11 +1,19 @@
 import component from './index.js';
-import {R,X} from './externals.js';
+import {
+  R, X, 
+  resetClassName, styleClassName, layoutClassName,
+  inputClassName, spinnerClassName, 
+  fileInputClassName, tableClassName 
+} from './externals.js';
+
+const classNames = [resetClassName, styleClassName, layoutClassName];
 
 const spot = ['#tests', 'beforeEnd'];
 
 onload = testAll;
 
 function testAll() {
+  testButton();
   testTextInput();
   testTagInput();
   testFileInput();
@@ -23,6 +31,7 @@ function testSelect({multiple:multiple=false}={}) {
   s({
     name: 'select',
     multiple,
+    classNames,
     label: 'Option',
     value: 'option-1',
     options: [
@@ -49,6 +58,8 @@ function testButton() {
     spinnerOnActive: true, 
     name: 'btn',
     value: 'ButtonValue',
+    classNames,
+    active: true,
     text: 'Button Text',
     type: 'submit',
     intent: undefined
@@ -58,7 +69,7 @@ function testButton() {
 function testSpinner() {
   const s = component.spinner;
 
-  s().to(...spot);
+  s({classNames}).to(...spot);
 }
 
 function testDateInput() {
@@ -66,27 +77,30 @@ function testDateInput() {
 
   ti({
     round: false,
+    classNames,
     spaced: true,
     name: 'month',
     label: R.skip('Month (spaced)'),
     type: 'month',
-    rightElement: component.button({name:'btn', text:'Go',spinnerOnActive:true})
+    rightElement: component.button({classNames,name:'btn', text:'Go', activeClassOnClick: false}),
   }).to(...spot);
 
   ti({
     round: false,
+    classNames,
     name: 'date',
     label: R.skip('Date'),
     type: 'date',
-    rightElement: component.button({name:'btn', text:'Go',spinnerOnActive:true})
+    rightElement: component.button({classNames,name:'btn', text:'Go',spinnerOnActive:true})
   }).to(...spot);
 
   ti({
     round: false,
+    classNames,
     name: 'datetime-local',
     label: R.skip('Date & Time'),
     type: 'datetime-local',
-    rightElement: component.button({name:'btn', text:'Go',spinnerOnActive:true})
+    rightElement: component.button({classNames, name:'btn', text:'Go',spinnerOnActive:true})
   }).to(...spot);
 }
 
@@ -95,6 +109,7 @@ function testTextInput() {
 
   ti({
     round: false,
+    classNames,
     handlers: {
       mouseover: e => console.log(e),
       click: e => console.log(e.target.localName + ' clicked')
@@ -103,7 +118,7 @@ function testTextInput() {
     placeholder: 'Your textual input',
     label: 'Text',
     type: 'text',
-    rightElement: component.button({name:'btn', text:'Search',spinnerOnActive:true})
+    rightElement: component.button({classNames, name:'btn', text:'Search',handlers: { click: e => console.log("btn clicked") },spinnerOnActive:true})
   }).to(...spot);
 }
 
@@ -113,10 +128,13 @@ function testTagInput() {
   ti({
     round: false,
     name: 'tags',
+    classNames,
     label: 'Tags',
     values: [],
+    spaced: true,
     placeholder: 'Starting tagging.',
     separator: /[,\n\r]/,
+    rightElement: component.button({classNames, name:'btn', text:'Save',spinnerOnActive:true})
   }).to(...spot);
 }
 
@@ -126,10 +144,12 @@ function testFileInput() {
   fi({
     round: false,
     name: 'files',
+    classNames,
     label: 'Files',
     multiple: false,
     text: 'Choose an image to upload',
     accept: 'image/*',
+    rightElement: component.button({classNames, name:'btn-up', text:'Upload',spinnerOnActive:true})
   }).to(...spot);
 }
 
@@ -139,10 +159,12 @@ function testTextareaInput() {
   ti({
     round: false,
     name: 'textarea',
+    classNames,
     placeholder: 'Your multiline textual input',
     label: 'Textarea',
     type: 'textarea',
-    rightElement: component.button({name:'btn', text:'Search',spinnerOnActive:true})
+    spaced: true,
+    rightElement: component.button({classNames, name:'btn', text:'Search',spinnerOnActive:true})
   }).to(...spot);
 }
 
@@ -157,10 +179,11 @@ function testDatalist() {
     round: false,
     name: 'datalist',
     placeholder: R.skip("Relax it's cool to have a codename"),
+    classNames,
     label: 'Pick your agent name (datalist)',
     type: 'text',
     list: listFunction,
-    rightElement: component.button({name:'save-btn', text:'Save',spinnerOnActive:true})
+    rightElement: component.button({classNames, name:'save-btn', text:'Save',spinnerOnActive:true})
   }).to(...spot);
 }
 
@@ -174,13 +197,15 @@ function testTable() {
   t({
     round: false,
     name: 'table',
+    classNames,
     label: 'What label for a table?',
     type: 'number',
     rowHeader: rh,
     inputSize: 3,
     columnHeader: ch,
+    spaced: true,
     cell,
-    rightElement: component.button({name:'save-btn', text:'Save',spinnerOnActive:true})
+    rightElement: component.button({classNames, name:'save-btn', text:'Save',spinnerOnActive:true})
   }).to(...spot);
 }
 

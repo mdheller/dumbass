@@ -1,4 +1,4 @@
-import {R,X} from '../externals.js';
+import {R,X,inputClassName} from '../externals.js';
 
 export default select;
 
@@ -8,11 +8,13 @@ function select({
     inline: inline = false,
     value: value = '', 
     label: label = '', 
+    classNames: classNames = [],
     multiple: multiple = false,
     rightElement: rightElement = undefined,
   } = {}) {
 
   if ( ! name ) throw {error: `All inputs must specify name`};
+  if ( ! classNames.includes(inputClassName) ) classNames.push(inputClassName);
 
   let input;
 
@@ -29,7 +31,9 @@ function select({
   `;
 
   return X`
-    <div class="input ${inline ? 'inline': ''} ${multiple? 'multiline': ''}">
+    <div class="input ${inline ? 'inline': ''} ${
+        multiple? 'multiline': ''} ${
+        classNames.join(' ')}">
       <label>
         <span class=label-text>${label}</span>
         ${input}
