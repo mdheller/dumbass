@@ -43,6 +43,8 @@ function textInput({
         id=${id}
         ${required?'required':''}
         handlers=${handlers}
+        mousedown=${[e => console.log(e), ({clientX,clientY}) => console.log({clientX,clientY})]}
+        mouseup=${[]}
         name=${name}
         type=${type}
         size=${size} 

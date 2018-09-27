@@ -2,7 +2,7 @@
 const DEV = false;
 
 import {R,X} from '../../r.js';
-import {T} from 'https://unpkg.com/jtype-system/t.js';
+import {T} from '../../node_modules/jtype-system/t.js';
 import {scope} from 'https://unpkg.com/maskingtape.css/c3s.js';
 
 const base = DEV ? `${location.protocol}//${location.host}${location.pathname}` : 'https://unpkg.com/brutestrap/';

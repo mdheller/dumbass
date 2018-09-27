@@ -26,6 +26,11 @@
       return valid;
     }});
 
+    export const TFuncArray = T.defCollection('FuncArray', {
+      container: T`Array`,
+      member: T`Function`
+    });
+
   // Browser side
 
     export const TBrutalLikeObject = T.def('BrutalLikeObject', {
@@ -65,9 +70,9 @@
 
   // export
 
-  export const BS = {TKey,THandlers,TBrutalObject,TBrutalLikeObject,TBrutalArray};
+  export const BS = {TKey,THandlers,TFuncArray,TBrutalObject,TBrutalLikeObject,TBrutalArray};
 
-  export const SSR = {TKey,THandlers,TSBrutalObject,TSBrutalArray};
+  export const SSR = {TKey,THandlers,TFuncArray,TSBrutalObject,TSBrutalArray};
 
   export const Types = {BS,SSR};
 
