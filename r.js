@@ -3,8 +3,7 @@
   import {S} from './ssr.js';
   import T from './types.js';
 
-  const TAGFUNC           = () => 1;
-  const DEBUG             = true;
+  const DEBUG             = false;
   const KEYMATCH          = /(?:<!\-\-)?(key\d+)(?:\-\->)?/gm;
   const KEYLEN            = 20;
   const OURPROPS          = 'code,externals,nodes,to,update,v';
@@ -387,7 +386,7 @@
   function skip(str) {
     str = T.check(T`None`, str) ? '' : str; 
     const frag = toDOM(str);
-    const retVal = {externals:[TAGFUNC],v:[],to,
+    const retVal = {externals:[],v:[],to,
       update,code:CODE,nodes:[...frag.childNodes]};
     return retVal;
   }
@@ -401,9 +400,6 @@
       let k = key;
       if ( T.check(T`BrutalObject`, val) ) {
         k = `<!--${k}-->`;
-        if ( val.externals[0] == TAGFUNC ) {
-          console.log({val,k});
-        }
       }
       vmap[key.trim()] = {vi,val,replacers:[]};
       return k;
