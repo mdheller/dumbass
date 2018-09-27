@@ -1,14 +1,15 @@
 /** styles for inputs **/ 
   /** normalizing input styles **/
-    button, input, input[type="text"], select, textarea, [contenteditable] {
+    input:not([type="file"]), input[type="text"], textarea, [contenteditable] {
       border: thin solid silver;
       box-sizing: border-box;
-      border-radius: 0;
       margin: 0;
-      background: white;
       box-shadow: none;
+      border-radius: 0;
       background-clip: padding-box;
       touch-action: none;
+      font-family: inherit;
+      padding: 0 0.35em;
     }
 
     button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"] {
@@ -26,9 +27,19 @@
       -webkit-touch-callout: none;
     }
 
-    select[multiple] { overflow: auto; }
+    select[multiple] { 
+      overflow: auto; 
+      height: 6.75em;
+    }
 
     textarea { resize: none; }
+
+    .multiline textarea, .multiline [contenteditable] {
+      padding: 0.35em;
+      max-width: 55ch;
+      min-width: 25ch;
+      min-height: 4.15em;
+    }
 
   /** layout perfection **/ 
     .input {
@@ -41,6 +52,11 @@
     label {
       display: inline-flex;
       align-items: stretch;
+      min-height: 1.625em;
+    }
+
+    .label-text:empty {
+      margin: 0;
     }
 
     .label-text {
@@ -51,102 +67,60 @@
 
     .input.inline { display: inline-flex; }
 
-    .input.multiline { align-items: start; }
+    .input.multiline,     
+    .input.multiline label { 
+      align-items: start; 
+      flex-direction: column;
+    }
 
     .input.flex-col { flex-direction: column; }
 
-    .input.spaced :-webkit-any(button, select, textarea, input, [contenteditable]) {
-      margin: 0.25em;
+    .input.spaced:not(.multiline) label {
+      margin-right: 0.35em;
     }
- 
+
+    .input.spaced.multiline .label-text,
+    .input.spaced.multiline > label {
+      margin-bottom: 0.35em;
+    }
+
     .input.multiline .label-text {
       /** this normalizes label vertical align on Chrome and Safari, trying margins/padding gives 1 pixel errors **/
       align-self: start;
-      line-height: 1.8;
     }
 
-    select[multiple] option {
-      /** this vertical aligns option to label in multiple select **/
-      padding: 0.075em 0.25em;
-      line-height: 1.35;
-      font-size: 12.5pt;
+    /** this gives options similar height and layout to buttons in chrome at least. **/
+    select, option { 
+      text-align: center; 
+      font-size: small;
     }
 
-  /** bring as much consistency as possible to file inputs  **/
-    ::placeholder, input[type="file"] {
-      color: grey;
-      font-weight: normal;
-      font-family: inherit;
+    select:not([multiple]) {
+      padding: 0.1em 0.15em;
     }
 
-    input[type="file"]::-webkit-file-upload-button {
-      display: inline-block;
-      background: aliceblue;
-      padding: 0.25em 0.5em;
+    option {
+      box-sizing: border-box;
       height: 2em;
-      font-family: inherit;
-      color: rgb(55,15,0);
-      border-radius: 0 !important;
-      border: none;
-      border-right: 0.5em solid white;
-      outline: none;
-    }
-
-    input[type="file"] {
-      padding: 0;
-      padding-right: 0.5em;
-      line-height: 1;
-      font-size: 12pt;
-    }
-
-    /** ms only **/
-      ::-ms-browse {
-        display: inline-block;
-        background: aliceblue;
-        padding: 0.25em 0.5em;
-        height: 2em;
-        font-family: inherit;
-        color: rgb(55,15,0);
-        border-radius: 0 !important;
-        border: none;
-        border-right: 0.5em solid white;
-        outline: none;
-      }
-
-    /** safari only **/
-      _:default:not(:root:root), input[type="file"] {
-        font-size: 0.75em;
-        padding: 0.5em;
-      }
-
-      _:default:not(:root:root), input[type="file"]::-webkit-file-upload-button {
-        border: thin solid silver;
-      }
-
-    div.tag-editor, [contenteditable], textarea {
-      display: inline-block;
-      min-width: 25ch;
-      max-width: 55ch;
+      border: 2px outset transparent;
+      padding: 0.25em 0.35em;
     }
 
   /** tag input **/
     div.tag-editor {
-      padding: 0.25em;
       flex-wrap: wrap;
     }
 
-    div.tag-editor, div.tag-editor div {
+    div.tag-editor,
+    div.tag-editor div {
       display: inline-flex;
-      max-width: 55ch;
       align-items: start;
     }
 
     span.tag {
       display: inline-block;
-      margin: 0.125em;
-      padding: 0.125em;
-      font-size: 85%;
-      line-height: 0.85;
+      margin: 0 0.7em 0.7em 0;
+      font-size: smaller;
       text-decoration: underline;
       min-height: 0.85em;
     }
@@ -154,48 +128,63 @@
   /** spinner integration **/
     button .spinner {
       display: none;
-      margin-left: 0.25em;
+      vertical-align: middle;
+      width: 0; 
+      height: 0;
+      transition: width 0.2s ease;
     }
 
     button.active .spinner {
       display: inline-block;
-      width: 1.2em;
-      height: 1.2em;
-      vertical-align: text-top;
-    }
-
-    .spinner {
-      color: gainsboro;
+      width: 0.8em;
+      height: 0.8em;
+      margin-left: 0.25em;
     }
 
   /** special button styles **/
     button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"] {
-      background: gainsboro;
-      color: rgba(50,50,50,0.75);
+      color: darkslategray;
       text-shadow: 0.25px 0.25px 0 #ececfd;
     } 
 
-    input[type="file"]::-webkit-file-upload-button {
-      background: gainsboro;
-      color: rgba(50,50,50,0.75);
-      text-shadow: 0.25px 0.25px 0 #ececfd;
-    }
-
-    ::-ms-browse {
-      background: gainsboro;
-      color: rgba(50,50,50,0.75);
-      text-shadow: 0.25px 0.25px 0 #ececfd;
-    }
-
-    _:default:not(:root:root), input[type="file"]::-webkit-file-upload-button {
-      background: gainsboro;
-      color: rgba(50,50,50,0.75);
-      text-shadow: 0.25px 0.25px 0 #ececfd;
-    }
+  /** vertically center spin buttons **/
+    ::-webkit-inner-spin-button { align-self: center; }
 
   /** datalist (safari workaround) **/
+    _:default:not(:root:root), input[list] { display: none; }
+    _:default:not(:root:root), datalist { display: inline-flex; }
+  /** special input styles **/
+    /* remove spin buttons from number */
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
+      input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
 
-  _:default:not(:root:root), input[list] { display: none; }
-  _:default:not(:root:root), datalist { display: inline-flex; }
+    /* make safari controls have silver border */
+      _:default:not(:root:root), select, button {
+        border-color: silver;
+        background: linear-gradient(to top, gainsboro, snow);
+        font-size: small;
+        border-radius: 0;
+        margin: 0;
+      }
 
 
+  /** states **/
+    :focus {
+      z-index: 2; /* to show outline above adjacent */
+      outline-style: solid;
+      outline-offset: -1px;
+      outline-color: dodgerblue;
+      outline-width: 1px;
+    }
+
+    button, input, textarea, [contenteditable], option, select {
+      font-size: small;
+    }
+
+
+    

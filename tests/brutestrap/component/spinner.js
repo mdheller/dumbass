@@ -1,10 +1,15 @@
-import {R,X} from '../externals.js';
+import {R,X,spinnerClassName} from '../externals.js';
 
 export default spinner;
 
-function spinner() {
+function spinner({
+    classNames: classNames = [],
+  } = {}) {
+
+  if ( ! classNames.includes(spinnerClassName)) classNames.push(spinnerClassName);
+
   return X`
-    <div class=spinner>
+    <div class="spinner ${classNames.join(' ')}">
       <div class=mover></div>
     </div>
   `;

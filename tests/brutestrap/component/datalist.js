@@ -8,6 +8,7 @@ function datalist({
     placeholder: placeholder = '', 
     handlers: handlers = {},
     inline: inline = false,
+    classNames: classNames = [],
     value: value = '', 
     label: label = '', 
     spaced: spaced = false,
@@ -54,7 +55,9 @@ function datalist({
   `;
 
   return X`
-    <div class="input ${type=='textarea'?'multiline':''} ${inline?'inline':''} ${spaced?'spaced':''}">
+    <div class="input ${type=='textarea'?'multiline':''} ${
+      inline?'inline':''} ${spaced?'spaced':''} ${
+      classNames.join(' ')}">
       <label>
         <span class="label-text">${label}</span>
         ${input}

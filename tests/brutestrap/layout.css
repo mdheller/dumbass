@@ -1,0 +1,3 @@
+:not(.step-scroll) {
+  scroll-behavior: smooth;
+}

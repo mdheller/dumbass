@@ -1,4 +1,4 @@
-import {R,X} from '../externals.js';
+import {R,X,inputClassName,spinnerClassName} from '../externals.js';
 import spinner from './spinner.js';
 
 export default button;
@@ -12,24 +12,41 @@ function addActiveClass(clickEvent) {
 function button({
     name,
     value: value = 'submit', 
-    type: type = 'submit',
+    type: type = 'button',
     text: text = '',
+    classNames: classNames = [],
+    handlers: handlers = {},
+    active: active = false,
+    activeClassOnClick: activeClassOnClick = true,
     spinnerOnActive: spinnerOnActive = false
   } = {}) {
-
+  
   if ( ! name ) throw {error: `All inputs must specify name`};
+  if ( ! classNames.includes(inputClassName) ) classNames.push(inputClassName);
+  if ( ! classNames.includes(spinnerClassName) ) classNames.push(spinnerClassName);
 
-  let input;
+  /* the following is a hack until brutal allows multiple event handlers for same input name 
+     since otherwise we cannot BOTH have a user supplied click handler
+     and the built in "addActiveClass" handler
+  */
+
+  function addBuiltinClickHandler(buttonEl) {
+    if ( activeClassOnClick ) {
+      buttonEl.addEventListener('click', addActiveClass );
+    }
+  }
 
   return X`
     <button 
-      click=${addActiveClass}
+      bond=${addBuiltinClickHandler}
+      handlers=${handlers}
       type=${type}
       name=${name}
       value="${value}"
+      class="${active?'active':''} ${classNames.join(' ')}"
     >
       ${text}
-      ${spinnerOnActive ? spinner() : ''}
+      ${spinnerOnActive ? spinner() : R.skip('<!--bug-->')}
     </button>
   `;
 }
