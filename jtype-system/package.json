@@ -1,29 +1,30 @@
 {
-  "_from": "jtype-system@^1.0.4",
-  "_id": "jtype-system@1.0.4",
+  "_from": "jtype-system@1.0.5",
+  "_id": "jtype-system@1.0.5",
   "_inBundle": false,
-  "_integrity": "sha512-LXzoSBjwBiIRfPsYUJYSM8BplCwutw/Bsb/T8WojWSaRCjJI6YkcfdoL2TzRS+cOAz/MKhKZWU1iKAJdnkco2Q==",
+  "_integrity": "sha512-18URlQ0/rLbxvaMT9OtzqUKraNfYmfGciyLIrP190Ap9WnkyOao2LKxXlomJZFcD7BUx3NGhInu94yp1L/g9DQ==",
   "_location": "/jtype-system",
   "_phantomChildren": {},
   "_requested": {
-    "type": "range",
+    "type": "version",
     "registry": true,
-    "raw": "jtype-system@^1.0.4",
+    "raw": "jtype-system@1.0.5",
     "name": "jtype-system",
     "escapedName": "jtype-system",
-    "rawSpec": "^1.0.4",
+    "rawSpec": "1.0.5",
     "saveSpec": null,
-    "fetchSpec": "^1.0.4"
+    "fetchSpec": "1.0.5"
   },
   "_requiredBy": [
+    "#USER",
     "/",
     "/brutalist-web",
     "/brutestrap",
     "/maskingtape.css"
   ],
-  "_resolved": "https://registry.npmjs.org/jtype-system/-/jtype-system-1.0.4.tgz",
-  "_shasum": "193c6866d36163eea5424687e2de2a811fa6a450",
-  "_spec": "jtype-system@^1.0.4",
+  "_resolved": "https://registry.npmjs.org/jtype-system/-/jtype-system-1.0.5.tgz",
+  "_shasum": "7353017b0a6962e1ddcfbcb25bf8523164770eba",
+  "_spec": "jtype-system@1.0.5",
   "_where": "/home/cris7fe/brutal.js",
   "author": {
     "name": "@dosy"
@@ -50,5 +51,5 @@
   "scripts": {
     "test": "serve -p 8080"
   },
-  "version": "1.0.4"
+  "version": "1.0.5"
 }

@@ -80,7 +80,7 @@ function testDateInput() {
     classNames,
     spaced: true,
     name: 'month',
-    label: R.skip('Month (spaced)'),
+    label: 'Month (spaced)',
     type: 'month',
     rightElement: component.button({classNames,name:'btn', text:'Go', activeClassOnClick: false}),
   }).to(...spot);
