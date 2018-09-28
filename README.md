@@ -1,4 +1,4 @@
-# brutal.js (1.6.8)
+# brutal.js (1.7.0)
 
 Minimalist framework for building JS apps.
 
