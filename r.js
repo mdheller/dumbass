@@ -26,7 +26,7 @@
   const isHandlers        = v => T.check(T`Handlers`, v);
   const cache = {};
 
-  Object.assign(R,{s,safe,skip,die,BROWSER_SIDE});
+  Object.assign(R,{s,safe,attrskip,skip,die,BROWSER_SIDE});
 
   if ( DEBUG && BROWSER_SIDE ) {
     Object.assign(self, {R,T}); 
@@ -142,8 +142,15 @@
     let lastAnchor = node;
     return (newVal) => {
       val.val = newVal;
-      switch(typeof newVal) {
-        case "object":
+      const type = T.check(T`Function`, newVal) ? 'function' :
+        T.check(T`Handlers`, newVal) ? 'handlers' : 
+        T.check(T`BrutalObject`, newVal) ? 'brutalobject' : 
+        T.check(T`SafeObject`, newVal) ? 'safeobject' :
+        T.check(T`SafeAttrObject`, newVal) ? 'safeattrobject' :
+        T.check(T`FuncArray`, newVal) ? 'funcarray' : 'default';
+      switch(type) {
+        case "safeobject": 
+        case "brutalobject": {
           if ( !! newVal.nodes.length ) {
             newVal.nodes.forEach(n => {
               lastAnchor.parentNode.insertBefore(n,lastAnchor.nextSibling);
@@ -166,11 +173,12 @@
             func();
           } 
           break;
-        default:
+        } default: {
           const lengthBefore = lengths.slice(0,valIndex).reduce((sum,x) => sum + x, 0);
           node.nodeValue = newVal;
           lengths[valIndex] = newVal.length;
           break;
+        }
       }
     };
   }
@@ -243,6 +251,8 @@
         const type = T.check(T`Function`, newVal) ? 'function' :
           T.check(T`Handlers`, newVal) ? 'handlers' : 
           T.check(T`BrutalObject`, newVal) ? 'brutalobject' : 
+          T.check(T`SafeObject`, newVal) ? 'safeobject' :
+          T.check(T`SafeAttrObject`, newVal) ? 'safeattrobject' :
           T.check(T`FuncArray`, newVal) ? 'funcarray' : 'default';
         switch(type) {
           case "funcarray":
@@ -314,6 +324,8 @@
                 // rather than location to keep the code simple and not checking
                 // WHERE the replacement occurs. 
             newVal = nodesToStr(newVal.nodes);
+          case "safeattrobject":
+            newVal = newVal.str;
           default:
             lengths[valIndex] = newVal.length;
             const attr = node.getAttribute(name);
@@ -383,11 +395,28 @@
     return {cached,firstCall};
   }
 
+  // Returns a "safe object"
   function skip(str) {
     str = T.check(T`None`, str) ? '' : str; 
     const frag = toDOM(str);
-    const retVal = {externals:[],v:[],to,
-      update,code:CODE,nodes:[...frag.childNodes]};
+    const retVal = {
+      type: 'SafeObject',
+      code:CODE,
+      nodes:[...frag.childNodes],
+      externals: []
+    };
+    return retVal;
+  }
+
+  // Returns a "safe attr object"
+  function attrskip(str) {
+    str = T.check(T`None`, str) ? '' : str; 
+    str = str.replace(/"/g,'&quot;');
+    const retVal = {
+      type: 'SafeAttrObject',
+      code: CODE,
+      str
+    };
     return retVal;
   }
 
@@ -398,7 +427,7 @@
       }
       const key = ('key'+Math.random()).replace('.','').padEnd(KEYLEN,'0').slice(0,KEYLEN);
       let k = key;
-      if ( T.check(T`BrutalObject`, val) ) {
+      if ( T.check(T`BrutalObject`, val) || T.check(T`SafeObject`, val) ) {
         k = `<!--${k}-->`;
       }
       vmap[key.trim()] = {vi,val,replacers:[]};
@@ -419,6 +448,8 @@
     const isObject        = T.check(T`Object`, v);
     const isBrutalArray   = T.check(T`BrutalArray`, v);
     const isFuncArray     = T.check(T`FuncArray`, v);
+    const isSafeObject    = T.check(T`SafeObject`, v);
+    const isSafeAttrObject= T.check(T`SafeAttrObject`, v);
     const isBrutal        = T.check(T`BrutalObject`, v);
     const isForgery       = T.check(T`BrutalLikeObject`, v)  && !isBrutal; 
 
@@ -428,6 +459,8 @@
     if ( isHandlers(v) )  return v;
     if ( isBrutalArray )  return join(v); 
     if ( isFuncArray )    return v;
+    if ( isSafeObject )   return v;
+    if ( isSafeAttrObject)return v;
     if ( isUnset )        die({error: UNSET()});
     if ( isForgery )      die({error: XSS()});
     if ( isObject )       die({error: OBJ()});

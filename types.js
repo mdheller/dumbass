@@ -33,6 +33,19 @@
 
     export const TEmptyArray = T.def('EmptyArray', null, {verify: i => Array.isArray(i) && i.length == 0});
 
+    export const TSafeObject = T.def('SafeObject', {
+      type: T`String`,
+      code: T`String`,
+      nodes: T`Array`,
+      externals: T`Array`,
+    }, {verify: v => v.type == 'SafeObject' && v.code == CODE});
+
+    export const TSafeAttrObject = T.def('SafeAttrObject', {
+      type: T`String`,
+      code: T`String`,
+      str: T`String`
+    }, {verify: v => v.type == 'SafeAttrObject' && v.code == CODE});
+
   // Browser side
 
     export const TBrutalLikeObject = T.def('BrutalLikeObject', {
