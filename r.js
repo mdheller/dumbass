@@ -4,6 +4,7 @@
   import T from './types.js';
 
   const DEBUG             = false;
+  const NULLFUNC          = () => void 0;
   const KEYMATCH          = /(?:<!\-\-)?(key\d+)(?:\-\->)?/gm;
   const KEYLEN            = 20;
   const OURPROPS          = 'code,externals,nodes,to,update,v';
@@ -26,7 +27,7 @@
   const isHandlers        = v => T.check(T`Handlers`, v);
   const cache = {};
 
-  Object.assign(R,{s,safe,attrskip,skip,die,BROWSER_SIDE});
+  Object.assign(R,{s,safe,attrskip,skip,guardEmptyHandlers,die,BROWSER_SIDE});
 
   if ( DEBUG && BROWSER_SIDE ) {
     Object.assign(self, {R,T}); 
@@ -406,6 +407,19 @@
       externals: []
     };
     return retVal;
+  }
+
+  function guardEmptyHandlers(val) {
+    if ( Array.isArray(val) ) {
+      if ( val.length == 0 ) {
+        return [NULLFUNC]
+      } 
+      return val;
+    } else {
+      if ( T.check(T`None`, val) ) {
+        return NULLFUNC;
+      }
+    }
   }
 
   // Returns a "safe attr object"
