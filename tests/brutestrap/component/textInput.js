@@ -44,7 +44,7 @@ function textInput({
         ${required?'required':''}
         handlers=${handlers}
         mousedown=${[e => console.log(e), ({clientX,clientY}) => console.log({clientX,clientY})]}
-        mouseup=${[e => console.log(`Up`)]}
+        mouseup=${R.guardEmptyHandlers([])}
         name=${name}
         type=${type}
         size=${size} 
