@@ -3,7 +3,7 @@
   import {S} from './ssr.js';
   import T from './types.js';
 
-  const DEBUG             = true;
+  const DEBUG             = false;
   const NULLFUNC          = () => void 0;
   const KEYMATCH          = /(?:<!\-\-)?(key\d+)(?:\-\->)?/gm;
   const KEYLEN            = 20;
@@ -139,17 +139,11 @@
   }
 
   function makeTextNodeUpdater({node,index,lengths,valIndex,val}) {
+    let oldVal = {length: KEYLEN};
     let oldNodes = [node];
     let lastAnchor = node;
-    let flagIt = false;
-    if ( DEBUG && val.val == "Amazing Go" ) {
-      console.log({node,val:val.val});
-      flagIt = true;
-    }
     return (newVal) => {
-      if ( DEBUG && flagIt ) {
-        console.log({val:val.val,newVal});
-      }
+      const originalLengthBefore = Object.keys(lengths.slice(0,valIndex)).length*KEYLEN;
       val.val = newVal;
       const type = T.check(T`Function`, newVal) ? 'function' :
         T.check(T`Handlers`, newVal) ? 'handlers' : 
@@ -157,9 +151,6 @@
         T.check(T`SafeObject`, newVal) ? 'safeobject' :
         T.check(T`SafeAttrObject`, newVal) ? 'safeattrobject' :
         T.check(T`FuncArray`, newVal) ? 'funcarray' : 'default';
-      if ( DEBUG && flagIt ) {
-        console.log({type});
-      }
       switch(type) {
         case "safeobject": 
         case "brutalobject": {
@@ -187,46 +178,21 @@
           break;
         } default: {
           const lengthBefore = lengths.slice(0,valIndex).reduce((sum,x) => sum + x, 0);
-          if ( DEBUG && flagIt ) {
-            console.log(node.nodeValue,newVal);
-          }
-          node.nodeValue = newVal;
+          const value = node.nodeValue;
           lengths[valIndex] = newVal.length;
-          break;
+
+          const correction = lengthBefore-originalLengthBefore;
+          const before = value.slice(0,index+correction);
+          const after = value.slice(index+correction+oldVal.length);
+
+          const newValue = before + newVal + after;
+
+          node.nodeValue = newValue;
+
+          oldVal = newVal;
         }
       }
     };
-
-     /** 
-            lengths[valIndex] = newVal.length;
-            const attr = node.getAttribute(name);
-            const lengthBefore = lengths.slice(0,valIndex).reduce((sum,x) => sum + x, 0);
-
-            const correction = lengthBefore-originalLengthBefore;
-            const before = attr.slice(0,index+correction);
-            const after = attr.slice(index+correction+oldVal.length);
-
-            const newAttrValue = before + newVal + after;
-
-            node.setAttribute(name, newAttrValue);
-
-            // we have a try block here because some 
-              // IDL attributes are readonly
-              // https://www.w3.org/TR/html50/forms.html
-              // and rather than trying to keep a white or black list 
-              // for which to try or not try setting the value
-              // we just capture the intent of the standard by trying which
-              // work 
-
-            try {
-              node[name] = newAttrValue;
-            } catch(e) {
-              const idlType = node ? node.constructor ? node.constructor.name : 'unknown' : 'unknown';
-              console.warn(`Attempt to set readonly attribute ${name} on ${node.constructor.name}`);
-            }
-
-            oldVal = newVal;
-      **/
   }
 
   function summonPlaceholder(sibling) {
