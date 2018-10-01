@@ -46,7 +46,7 @@ function button({
       class="${active?'active':''} ${classNames.join(' ')}"
     >
       ${text}
-      ${spinnerOnActive ? spinner() : 'abc' /*R.skip('<!--bug-->')*/}
+      ${spinnerOnActive ? spinner() : ''}
     </button>
   `;
 }
