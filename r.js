@@ -196,6 +196,37 @@
         }
       }
     };
+
+     /** 
+            lengths[valIndex] = newVal.length;
+            const attr = node.getAttribute(name);
+            const lengthBefore = lengths.slice(0,valIndex).reduce((sum,x) => sum + x, 0);
+
+            const correction = lengthBefore-originalLengthBefore;
+            const before = attr.slice(0,index+correction);
+            const after = attr.slice(index+correction+oldVal.length);
+
+            const newAttrValue = before + newVal + after;
+
+            node.setAttribute(name, newAttrValue);
+
+            // we have a try block here because some 
+              // IDL attributes are readonly
+              // https://www.w3.org/TR/html50/forms.html
+              // and rather than trying to keep a white or black list 
+              // for which to try or not try setting the value
+              // we just capture the intent of the standard by trying which
+              // work 
+
+            try {
+              node[name] = newAttrValue;
+            } catch(e) {
+              const idlType = node ? node.constructor ? node.constructor.name : 'unknown' : 'unknown';
+              console.warn(`Attempt to set readonly attribute ${name} on ${node.constructor.name}`);
+            }
+
+            oldVal = newVal;
+      **/
   }
 
   function summonPlaceholder(sibling) {
@@ -344,34 +375,32 @@
           default:
             lengths[valIndex] = newVal.length;
             const attr = node.getAttribute(name);
-            if ( attr !== newVal ) {
-              const lengthBefore = lengths.slice(0,valIndex).reduce((sum,x) => sum + x, 0);
+            const lengthBefore = lengths.slice(0,valIndex).reduce((sum,x) => sum + x, 0);
 
-              const correction = lengthBefore-originalLengthBefore;
-              const before = attr.slice(0,index+correction);
-              const after = attr.slice(index+correction+oldVal.length);
+            const correction = lengthBefore-originalLengthBefore;
+            const before = attr.slice(0,index+correction);
+            const after = attr.slice(index+correction+oldVal.length);
 
-              const newAttrValue = before + newVal + after;
+            const newAttrValue = before + newVal + after;
 
-              node.setAttribute(name, newAttrValue);
+            node.setAttribute(name, newAttrValue);
 
-              // we have a try block here because some 
-                // IDL attributes are readonly
-                // https://www.w3.org/TR/html50/forms.html
-                // and rather than trying to keep a white or black list 
-                // for which to try or not try setting the value
-                // we just capture the intent of the standard by trying which
-                // work 
+            // we have a try block here because some 
+              // IDL attributes are readonly
+              // https://www.w3.org/TR/html50/forms.html
+              // and rather than trying to keep a white or black list 
+              // for which to try or not try setting the value
+              // we just capture the intent of the standard by trying which
+              // work 
 
-              try {
-                node[name] = newAttrValue;
-              } catch(e) {
-                const idlType = node ? node.constructor ? node.constructor.name : 'unknown' : 'unknown';
-                console.warn(`Attempt to set readonly attribute ${name} on ${node.constructor.name}`);
-              }
-
-              oldVal = newVal;
+            try {
+              node[name] = newAttrValue;
+            } catch(e) {
+              const idlType = node ? node.constructor ? node.constructor.name : 'unknown' : 'unknown';
+              console.warn(`Attempt to set readonly attribute ${name} on ${node.constructor.name}`);
             }
+
+            oldVal = newVal;
         }
       };
     }
