@@ -82,7 +82,7 @@ function testDateInput() {
     name: 'month',
     label: 'Month (spaced)',
     type: 'month',
-    rightElement: component.button({classNames,name:'btn', text:'Go', activeClassOnClick: false}),
+    rightElement: component.button({classNames,name:'btn', text:'Amazing Go', activeClassOnClick: false}),
   }).to(...spot);
 
   ti({

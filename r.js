@@ -3,7 +3,7 @@
   import {S} from './ssr.js';
   import T from './types.js';
 
-  const DEBUG             = false;
+  const DEBUG             = true;
   const NULLFUNC          = () => void 0;
   const KEYMATCH          = /(?:<!\-\-)?(key\d+)(?:\-\->)?/gm;
   const KEYLEN            = 20;
@@ -141,7 +141,15 @@
   function makeTextNodeUpdater({node,index,lengths,valIndex,val}) {
     let oldNodes = [node];
     let lastAnchor = node;
+    let flagIt = false;
+    if ( DEBUG && val.val == "Amazing Go" ) {
+      console.log({node,val:val.val});
+      flagIt = true;
+    }
     return (newVal) => {
+      if ( DEBUG && flagIt ) {
+        console.log({val:val.val,newVal});
+      }
       val.val = newVal;
       const type = T.check(T`Function`, newVal) ? 'function' :
         T.check(T`Handlers`, newVal) ? 'handlers' : 
@@ -149,6 +157,9 @@
         T.check(T`SafeObject`, newVal) ? 'safeobject' :
         T.check(T`SafeAttrObject`, newVal) ? 'safeattrobject' :
         T.check(T`FuncArray`, newVal) ? 'funcarray' : 'default';
+      if ( DEBUG && flagIt ) {
+        console.log({type});
+      }
       switch(type) {
         case "safeobject": 
         case "brutalobject": {
@@ -176,6 +187,9 @@
           break;
         } default: {
           const lengthBefore = lengths.slice(0,valIndex).reduce((sum,x) => sum + x, 0);
+          if ( DEBUG && flagIt ) {
+            console.log(node.nodeValue,newVal);
+          }
           node.nodeValue = newVal;
           lengths[valIndex] = newVal.length;
           break;
