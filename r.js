@@ -6,6 +6,7 @@
   const DEBUG             = false;
   const NULLFUNC          = () => void 0;
   const KEYMATCH          = /(?:<!\-\-)?(key\d+)(?:\-\->)?/gm;
+  const ATTRMATCH         = /\w+=/;
   const KEYLEN            = 20;
   const OURPROPS          = 'code,externals,nodes,to,update,v';
   const XSS               = () => `Possible XSS / object forgery attack detected. ` +
@@ -249,8 +250,22 @@
                 node[oldName] = undefined;
               }
               if ( !! newVal ) {
-                node.setAttribute(newVal.trim(),''); 
-                node[newVal] = true;
+                newVal = newVal.trim();
+                let result;
+
+                if( ATTRMATCH.test(newVal) ) {
+                  const assignmentIndex = newVal.indexOf('='); 
+                  const [name,value] = [newVal.slice(0,assignmentIndex), newVal.slice(assignmentIndex+1)];
+                  node.setAttribute(name,value);
+                  try {
+                    node[name] = value;
+                  } catch(e) {}
+                } else {
+                  node.setAttribute(newVal.trim(),''); 
+                  try {
+                    node[newVal] = true;
+                  } catch(e) {}
+                }
               }
               oldName = newVal;
             }
