@@ -40,7 +40,7 @@ function textInput({
   } else {
     input = X`
       <input
-        id=${id}
+        ${id?`id=${id}`:''}
         ${required?'required':''}
         handlers=${handlers}
         mousedown=${[e => console.log(e), ({clientX,clientY}) => console.log({clientX,clientY})]}

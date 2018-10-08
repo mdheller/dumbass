@@ -108,6 +108,7 @@ function testTextInput() {
   const ti = component.textInput;
 
   ti({
+    id: 'crisrocks',
     round: false,
     classNames,
     handlers: {
