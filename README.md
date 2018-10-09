@@ -99,10 +99,10 @@ R`<input click=${e => console.log(e)} mouseover=${e => alert(e)}>`;
 
 In order to add multiple listeners, use an array of functions:
 
-```JavaScript
+```JSX
 R`<button click=${[
     e => console.log(e), 
-    f => { if ( e.target.matches('[value="clear"]') ) e.target.closest('form').reset() }
+    f => { if ( f.target.matches('[value="clear"]') ) f.target.closest('form').reset() }
   ]}>Clear Form</button>`;
   ```
   
