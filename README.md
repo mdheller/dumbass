@@ -80,8 +80,6 @@ Either directly in the template string with `eventName=${functionValue}` syntax 
 
 The handlers object must map event names to function values. 
 
-Currently only 1 handler per event per element can be added. 
-
 Example:
 
 ```JavaScript
@@ -96,3 +94,15 @@ is equivalent to:
 ```JavaScript
 R`<input click=${e => console.log(e)} mouseover=${e => alert(e)}>`;
 ```
+
+### Multiple listeners per event
+
+In order to add multiple listeners, use an array of functions:
+
+```JavaScript
+R`<button click=${[
+    e => console.log(e), 
+    f => { if ( e.target.matches('[value="clear"]') ) e.target.closest('form').reset() }
+  ]}>Clear Form</button>`;
+  ```
+  
