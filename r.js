@@ -144,6 +144,7 @@
     let oldNodes = [node];
     let lastAnchor = node;
     return (newVal) => {
+      if ( oldVal == newVal ) return;
       const originalLengthBefore = Object.keys(lengths.slice(0,valIndex)).length*KEYLEN;
       val.val = newVal;
       const type = T.check(T`Function`, newVal) ? 'function' :
@@ -240,6 +241,7 @@
     let oldName = name;
     if ( updateName ) {
       return (newVal) => {
+        if ( oldVal == newVal ) return;
         val.val = newVal;
         switch(typeof newVal) {
           default:
@@ -273,6 +275,7 @@
       };
     } else {
       return (newVal) => {
+        if ( oldVal == newVal ) return;
         const originalLengthBefore = Object.keys(lengths.slice(0,valIndex)).length*KEYLEN;
         val.val = newVal;
         const type = T.check(T`Function`, newVal) ? 'function' :
