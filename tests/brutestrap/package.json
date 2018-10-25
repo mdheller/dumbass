@@ -1,15 +1,43 @@
 {
-  "name": "brutestrap",
-  "version": "1.3.4",
+  "_from": "brutestrap@^1.1.0",
+  "_id": "brutestrap@1.4.7",
+  "_inBundle": false,
+  "_integrity": "sha512-fvj78G5472ege1eoifQKz9MxY+JCwgwQUf9mFomUmC9xQJgMQFXdqPsLrKoECdRd/Hor4vDat8u7HuTNFpvLTw==",
+  "_location": "/brutestrap",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "range",
+    "registry": true,
+    "raw": "brutestrap@^1.1.0",
+    "name": "brutestrap",
+    "escapedName": "brutestrap",
+    "rawSpec": "^1.1.0",
+    "saveSpec": null,
+    "fetchSpec": "^1.1.0"
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/brutestrap/-/brutestrap-1.4.7.tgz",
+  "_shasum": "59ada46349e8eca6f0c60b9922084a56fbb24ba1",
+  "_spec": "brutestrap@^1.1.0",
+  "_where": "/home/cris7fe/brutal.js",
+  "author": {
+    "name": "@dosy"
+  },
+  "bugs": {
+    "url": "https://github.com/crislin2046/brutestrap/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "brutalist-web": "^1.8.4",
+    "jtype-system": "^1.0.8",
+    "maskingtape.css": "^1.1.0"
+  },
+  "deprecated": false,
   "description": "A port of Blueprint/React-Bootstrap UI kit components to Brutal.js and CSS Grid, energized by the pursuit of minimalist code and minimalist design in all things.",
-  "main": "index.js",
-  "scripts": {
-    "test": "serve -p 8080 -s"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/crislin2046/brutestrap.git"
-  },
+  "homepage": "https://github.com/crislin2046/brutestrap#readme",
   "keywords": [
     "UI",
     "ui-kit",
@@ -24,15 +52,15 @@
     "components",
     "widgets"
   ],
-  "author": "@dosy",
   "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/crislin2046/brutestrap/issues"
+  "main": "index.js",
+  "name": "brutestrap",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crislin2046/brutestrap.git"
   },
-  "homepage": "https://github.com/crislin2046/brutestrap#readme",
-  "dependencies": {
-    "brutalist-web": "^1.6.4",
-    "jtype-system": "^1.0.4",
-    "maskingtape.css": "^1.1.0"
-  }
+  "scripts": {
+    "test": "serve -p 8080 -s"
+  },
+  "version": "1.4.7"
 }

@@ -36,7 +36,7 @@
     guardExists(type);
     let typeName = type.name;
 
-    const {spec,kind,verify} = typeCache.get(typeName);
+    const {spec,kind,verify,sealed} = typeCache.get(typeName);
 
     const bigErrors = [];
 
@@ -63,7 +63,13 @@
             verified = false;
           }
         }
-        return {valid: allValid && verified, errors: bigErrors}
+        let sealValid = true;
+        if ( !!sealed ) {
+          const all_key_paths = allKeyPaths(instance).sort().join(',');
+          const type_key_paths = Object.keys(spec).sort().join(',');
+          sealValid  = all_key_paths == type_key_paths;
+        }
+        return {valid: allValid && verified && sealValid, errors: bigErrors}
       } case "defCollection": {
         const {valid:containerValid, errors:containerErrors} = validate(spec.container, instance);
         bigErrors.push(...containerErrors);
@@ -141,6 +147,38 @@
     if ( exists(name) ) throw {error: `Type ${name} cannot be redefined.`};
   }
 
+  function allKeyPaths(o) {
+    const keyPaths = new Set();
+    return recurseObject(o, keyPaths);
+
+    // how to do this?
+    // notes:
+      // i think we ignore any array properties for now, since unless we had some
+      // notion of 'fixed size' (which we could do via a collection type verify function)
+      // arrays can be dynamicly sized, so taking the indices as keys is not
+      // easily expressible in a representation of a type definition that we can check against
+      // so we only care about key names and object properties. 
+      // we need a stack. Or a recursive function, that takes a set as an argument
+      // also we ignore keys inherited from prototypes so this is also another limitation
+      // but probably also a desirable feature of this implementation // notion of sealed
+      // since that means that instead of having to worry about a possibly unbounded definition
+      // of other key paths inherited through prototypes of other types
+      // sealed only applies to checking the properties on this object that are set on itself. 
+
+    function recurseObject(o, keyPathSet, lastLevel = '') {
+      const levelKeys = Object.getOwnPropertyNames(o); 
+      const levelKeyPaths = levelKeys.map( k => lastLevel + k );
+      levelKeyPaths.forEach(kp => keyPathSet.add(kp));
+      for ( const k of levelKeys ) {
+        const v = o[k];
+        if ( typeof v == "object" && ! Array.isArray(v) ) {
+          recurseObject(v, lastLevel+k, keyPathSet);
+        }
+      }
+      return [...keyPathSet];
+    }
+  }
+
   function defOption(type) {
     guardType(type);
     const typeName = type.name;
@@ -149,13 +187,13 @@
 
   function verify(...args) { return check(...args); }
 
-  function defCollection(name, {container, member}, {verify} = {}) {
+  function defCollection(name, {container, member}, {sealed,verify} = {}) {
     if ( !name ) throw {error:`Type must be named.`}; 
     if ( !container || !member ) throw {error:`Type must be specified.`};
     guardRedefinition(name);
 
     const kind = 'defCollection';
-    const spec = {kind, spec: { container, member}, verify};
+    const spec = {kind, spec: { container, member}, verify, sealed};
     typeCache.set(name, spec);
     return new Type(name);
   }
@@ -181,12 +219,12 @@
     return `${this.name} Type`;
   };
 
-  function def(name, spec, {verify} = {}) {
+  function def(name, spec, {verify, sealed} = {}) {
     if ( !name ) throw {error:`Type must be named.`}; 
     guardRedefinition(name);
 
     const kind = 'def';
-    typeCache.set(name, {spec,kind,verify});
+    typeCache.set(name, {spec,kind,verify, sealed});
     return new Type(name);
   }
 
@@ -202,7 +240,8 @@
   function guard(type, instance) {
     guardType(type);
     guardExists(type);
-    if ( ! verify(type, instance) ) throw {error: `Type ${typeName} requested, but item is not of that type.`};
+    const {valid, errors} = validate(type, instance);
+    if ( ! valid ) throw {error: `Type ${type} requested, but item is not of that type: ${errors.join(', ')}`};
   }
 
   function guardType(t) {
