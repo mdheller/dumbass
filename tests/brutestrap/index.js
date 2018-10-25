@@ -7,8 +7,13 @@ import select from './component/select.js';
 import datalist from './component/datalist.js';
 import table from './component/table.js';
 
+import holygrail from './component/holygrail.js';
+
 const component = {
-  textInput, tagInput, fileInput, spinner, button, select, datalist, table
+  /* input components */
+  textInput, tagInput, fileInput, spinner, button, select, datalist, table,
+  /* layout components */
+  holygrail,
 };
 
 export default component;

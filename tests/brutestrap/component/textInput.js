@@ -1,5 +1,7 @@
 import {R,X,inputClassName} from '../externals.js';
 
+let nextId = 1;
+
 export default textInput;
 
 function textInput({
@@ -10,6 +12,8 @@ function textInput({
     required: required = false,
     handlers: handlers = {},
     inline: inline = false,
+    minlength: minlength = 0,
+    maxlength: maxlength = 2046,
     value: value = '', 
     label: label = '', 
     multiline: multiline = false,
@@ -17,11 +21,12 @@ function textInput({
     classNames: classNames = [],
     spaced: spaced = false,
     type: type = 'text',
-    rightElement: rightElement = undefined,
+    rightEl: rightEl = undefined,
   } = {}) {
 
   if ( ! name ) throw {error: `All inputs must specify name`};
   if ( ! classNames.includes(inputClassName) ) classNames.push(inputClassName);
+  if ( ! id ) id = `bsid-${nextId++}`
 
   let input;
 
@@ -40,14 +45,14 @@ function textInput({
   } else {
     input = X`
       <input
-        ${id?`id=${id}`:''}
+        id=${id}
         ${required?'required':''}
         handlers=${handlers}
-        mousedown=${[e => console.log(e), ({clientX,clientY}) => console.log({clientX,clientY})]}
-        mouseup=${R.guardEmptyHandlers([])}
         name=${name}
         type=${type}
         size=${size} 
+        minlength=${minlength}
+        maxlength=${maxlength}
         style="${style}"
         placeholder="${placeholder}"
         value="${value}"
@@ -63,7 +68,7 @@ function textInput({
         <span class="label-text">${label}</span>
         ${input}
       </label>
-      ${rightElement ? rightElement : ''}
+      ${rightEl ? rightEl : ''}
     </div>
   `;
 }
