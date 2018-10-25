@@ -9,7 +9,7 @@ import {
 const classNames = [resetClassName, styleClassName, layoutClassName];
 
 const inputSpot = ['#input-tests', 'beforeEnd'];
-const layoutSpot = ['#layout-tests', 'beforeEnd'];
+const layoutSpot = ['#latout-tests', 'beforeEnd'];
 
 onload = testAll;
 

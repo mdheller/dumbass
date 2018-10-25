@@ -13,6 +13,9 @@
                             `Object code could not be verified.`;
   const OBJ               = () => `Object values not allowed here.`;
   const UNSET             = () => `Unset values not allowed here.`;
+  const INSERT            = () => `Error inserting template into DOM. ` +
+    `Position must be one of: ` +
+    `replace, beforeBegin, afterBegin, beforeEnd, innerHTML, afterEnd`;
   const MOVE              = new class {
     beforeEnd   (frag,elem) { elem.appendChild(frag) }
     beforeBegin (frag,elem) { elem.parentNode.insertBefore(frag,elem) }
@@ -21,9 +24,6 @@
     afterBegin  (frag,elem) { elem.insertBefore(frag,elem.firstChild) }
     innerHTML   (frag,elem) { elem.innerHTML = ''; elem.appendChild(frag) }
   };
-  const INSERT            = () => `Error inserting template into DOM. ` +
-    `Position must be one of: ` +
-    `replace, beforeBegin, afterBegin, beforeEnd, innerHTML, afterEnd`;
   const isKey             = v => T.check(T`Key`, v);
   const isHandlers        = v => T.check(T`Handlers`, v);
   const cache = {};
@@ -103,7 +103,14 @@
     try {
       MOVE[position](frag,elem);
     } catch(e) {
-      die({error: INSERT()},e);
+      switch(e.constructor && e.constructor.name) {
+        case "DOMException":
+          die({error: INSERT()},e);
+        case "ReferenceError":
+        case "TypeError":
+        default:
+          die({error: e.toString()}, e); 
+      }
     }
     while(this.externals.length) {
       this.externals.shift()();
