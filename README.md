@@ -2,6 +2,8 @@
 
 Minimalist framework for building JS apps.
 
+[Tests](https://thiscris.com/brutal.js/tests/)
+
 ## Features
 
 - Uses native JS features and requires no transpilation or build step.
