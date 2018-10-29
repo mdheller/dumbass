@@ -51,7 +51,7 @@
       return brutal(p,v,{useCache:false});
     }
 
-  // main function
+  // main function (TODO: should we refactor?)
     function brutal(p,v,{useCache:useCache=true}={}) {
       if ( ! BROWSER_SIDE ) return S(p,...v);
 
@@ -122,14 +122,10 @@
       const node = walker.currentNode;
       switch( node.nodeType ) {
         case Node.ELEMENT_NODE:
-          handleElement({node,vmap,externals});
-        break;
+          handleElement({node,vmap,externals}); break;
         case Node.COMMENT_NODE:
         case Node.TEXT_NODE:
-          handleNode({node,vmap,externals});
-        break;
-        default:
-        break;
+          handleNode({node,vmap,externals}); break;
       }
     }
 
@@ -244,6 +240,7 @@
         scope.val.replacers.push( replacer );
       }
 
+      // FIXME: function needs refactor
       function makeAttributeNameUpdater(scope) {
         let {oldVal,oldName,updateName,node,input,index,name,val,externals,lengths,oldLengths} = scope;
         return (newVal) => {
@@ -395,6 +392,7 @@
     }
 
     // cache helpers
+      // FIXME: function needs refactor
       function isCached(cacheKey,v,instanceKey) {
         let firstCall;
         let cached = cache[cacheKey];
