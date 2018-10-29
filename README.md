@@ -116,8 +116,8 @@ It does minimal DOM updates without the use of a virtual DOM. It uses template l
 
 It came out of two projects I did to attempt to build a React-like API without using React's source code or JSX at all. I followed the React Tutorial and built the minimal amount of code to copy the demos given in the tutorial. The projects (with live demos as GitHub pages) are:
 
-- [https://github.com/crislin2046/racked-js-react-without-babel-in-500-lines](Racked.js - React without Babel in 500 lines)
-- [https://github.com/crislin2046/explore-react-without-react](Explore React without React)
+- [Racked.js - React without Babel in 500 lines](https://github.com/crislin2046/racked-js-react-without-babel-in-500-lines)
+- [Explore React without React](https://github.com/crislin2046/explore-react-without-react)
 
 
 
