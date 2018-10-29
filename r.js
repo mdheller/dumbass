@@ -18,6 +18,8 @@
     const INSERT            = () => `Error inserting template into DOM. ` +
       `Position must be one of: ` +
       `replace, beforeBegin, afterBegin, beforeEnd, innerHTML, afterEnd`;
+    const NOTFOUND          = loc => `Error inserting template into DOM. ` +
+      `Location ${loc} was not found in the document.`;
     const MOVE              = new class {
       beforeEnd   (frag,elem) { elem.appendChild(frag) }
       beforeBegin (frag,elem) { elem.parentNode.insertBefore(frag,elem) }
@@ -105,12 +107,9 @@
         MOVE[position](frag,elem);
       } catch(e) {
         switch(e.constructor && e.constructor.name) {
-          case "DOMException":
-            die({error: INSERT()},e);
-          case "ReferenceError":
-          case "TypeError":
-          default:
-            die({error: e.toString()}, e); 
+          case "DOMException":      die({error: INSERT()},e);
+          case "TypeError":         die({error: NOTFOUND(location)},e); 
+          default: throw e;
         }
       }
       while(this.externals.length) {
@@ -163,11 +162,9 @@
           switch(type) {
             case "safeobject": 
             case "brutalobject":
-              handleMarkupInNode(newVal, scope);
-              break;
+              handleMarkupInNode(newVal, scope); break;
             default:
-              handleTextInNode(newVal, scope);
-              break;
+              handleTextInNode(newVal, scope); break;
           }
         };
       }
@@ -253,34 +250,31 @@
         return (newVal) => {
           if ( oldVal == newVal ) return;
           val.val = newVal;
-          switch(typeof newVal) {
-            default:
-              const attr = node.hasAttribute(oldName) ? oldName : ''
-              if ( attr !== newVal ) {
-                if ( !! attr ) {
-                  node.removeAttribute(oldName);
-                  node[oldName] = undefined;
-                }
-                if ( !! newVal ) {
-                  newVal = newVal.trim();
-                  let result;
+          const attr = node.hasAttribute(oldName) ? oldName : ''
+          if ( attr !== newVal ) {
+            if ( !! attr ) {
+              node.removeAttribute(oldName);
+              node[oldName] = undefined;
+            }
+            if ( !! newVal ) {
+              newVal = newVal.trim();
+              let result;
 
-                  if( ATTRMATCH.test(newVal) ) {
-                    const assignmentIndex = newVal.indexOf('='); 
-                    const [name,value] = [newVal.slice(0,assignmentIndex), newVal.slice(assignmentIndex+1)];
-                    node.setAttribute(name,value);
-                    try {
-                      node[name] = value;
-                    } catch(e) {}
-                  } else {
-                    node.setAttribute(newVal.trim(),''); 
-                    try {
-                      node[newVal] = true;
-                    } catch(e) {}
-                  }
-                }
-                oldName = newVal;
+              if( ATTRMATCH.test(newVal) ) {
+                const assignmentIndex = newVal.indexOf('='); 
+                const [name,value] = [newVal.slice(0,assignmentIndex), newVal.slice(assignmentIndex+1)];
+                node.setAttribute(name,value);
+                try {
+                  node[name] = value;
+                } catch(e) {}
+              } else {
+                node.setAttribute(newVal.trim(),''); 
+                try {
+                  node[newVal] = true;
+                } catch(e) {}
               }
+            }
+            oldName = newVal;
           }
         };
       }
@@ -350,6 +344,7 @@
               });
               oldVal = newVal;
             break;
+            /** INFO: case fall through coming **/
             case "brutalobject":
               // convert the nodes to a string, and fall through
                 // ideally, this could support:
