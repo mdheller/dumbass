@@ -306,23 +306,6 @@
             case "handlers":      updateAttrWithHandlersValue(newVal, scope); break;
             /** INFO: case fall through coming **/
             case "brutalobject":
-              // convert the nodes to a string, and fall through
-                // ideally, this could support:
-                  // could be we skipped over replacing unsafe text in an attribute value
-                  // or could be we want to add a srcdoc attribute or some other reason
-                // but actually right now there is no way to support this as:
-                  // there is no way to resolve
-                  // the issue that brutal objects are always placeheld by comment tags
-                  // which will error out if used in attribute values
-                  // so right now we just make it empty
-                  // and assume that, the only way a brutal object ended up here
-                  // was an empty array was converted to a brutal object
-                  // when really it was a func array that was empty.
-                  // we need to assume it's a brutal object, so we can do things like
-                  // replace an empty list with a filled list, and vice versa
-                  // and we need to base the type conversion off the passed in type
-                  // rather than location to keep the code simple and not checking
-                  // WHERE the replacement occurs. 
               newVal = nodesToStr(newVal.nodes);
             case "safeattrobject":
               newVal = newVal.str;
