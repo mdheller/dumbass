@@ -34,16 +34,20 @@
     Object.assign(self, {R,T}); 
   }
 
-  export function R(p,...v) {
+  function brutal(p,v,{useCache:useCache=true}={}) {
     if ( ! BROWSER_SIDE ) return S(p,...v);
+
+    let instanceKey, cacheKey;
 
     v = v.map(parseVal);
 
-    const {key:instanceKey} = (v.find(isKey) || {});
-    const cacheKey = p.join('<link rel=join>');
-    const {cached,firstCall} = isCached(cacheKey,v,instanceKey);
-   
-    if ( ! firstCall ) return cached;
+    if ( useCache ) {
+      ({key:instanceKey} = (v.find(isKey) || {}));
+      cacheKey = p.join('<link rel=join>');
+      const {cached,firstCall} = isCached(cacheKey,v,instanceKey);
+     
+      if ( ! firstCall ) return cached;
+    }
 
     p = [...p]; 
     const vmap = {};
@@ -63,36 +67,24 @@
 
     const retVal = {externals,v:Object.values(vmap),to,
       update,code:CODE,nodes:[...frag.childNodes]};
-    if ( !! instanceKey ) {
-      cache[cacheKey].instances[instanceKey] = retVal;
-    } else {
-      cache[cacheKey] = retVal;
+
+    if ( useCache ) {
+      if ( !! instanceKey ) {
+        cache[cacheKey].instances[instanceKey] = retVal;
+      } else {
+        cache[cacheKey] = retVal;
+      }
     }
+
     return retVal;
   }
 
+  export function R(p,...v) {
+    return brutal(p,v);
+  }
+
   export function X(p,...v) {
-    v = v.map(parseVal);
-
-    p = [...p]; 
-    const vmap = {};
-    const V = v.map(replaceVal(vmap));
-    const externals = [];
-    let str = '';
-
-    while( p.length > 1 ) str += p.shift() + V.shift();
-    str += p.shift();
-
-    const frag = toDOM(str);
-    const walker = document.createTreeWalker(frag, NodeFilter.SHOW_ALL);
-
-    do {
-      makeUpdaters({walker,vmap,externals});
-    } while(walker.nextNode())
-
-    const retVal = {externals,v:Object.values(vmap),to,
-      update,code:CODE,nodes:[...frag.childNodes]};
-    return retVal;
+    return brutal(p,v,{useCache:false});
   }
 
   function to(location, options) {
