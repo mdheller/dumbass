@@ -158,8 +158,7 @@
         return (newVal) => {
           if ( scope.oldVal == newVal ) return;
           scope.val.val = newVal;
-          const type = getType(newVal);
-          switch(type) {
+          switch(getType(newVal)) {
             case "safeobject": 
             case "brutalobject":
               handleMarkupInNode(newVal, scope); break;
@@ -278,38 +277,15 @@
         return (newVal) => {
           if ( scope.oldVal == newVal ) return;
           scope.val.val = newVal;
-          const type = getType(newVal);
-          switch(type) {
-            case "funcarray":
-              if ( !! oldVal && ! Array.isArray(oldVal) ) {
-                oldVal = [oldVal]; 
-              }
-              if ( name !== 'bond' ) {
-                if ( !! oldVal ) {
-                  oldVal.forEach(of => node.removeEventListener(name, of));
-                }
-                newVal.forEach(f => node.addEventListener(name, f));
-              } else {
-                if ( !! oldVal ) {
-                  oldVal.forEach(of => {
-                    const index = externals.indexOf(of);
-                    if ( index >= 0 ) {
-                      externals.splice(index,1);
-                    }
-                  });
-                }
-                newVal.forEach(f => externals.push(() => newVal(node)));
-              }
-              oldVal = newVal;
-            break;
-            case "function":      updateAttrWithFunctionValue(newVal, scope); break;
-            case "handlers":      updateAttrWithHandlersValue(newVal, scope); break;
-            /** INFO: case fall through coming **/
-            case "brutalobject":
+          switch(getType(newVal)) {
+            case "funcarray":       updateAttrWithFuncarrayValue(newVal, scope); break;
+            case "function":        updateAttrWithFunctionValue(newVal, scope); break;
+            case "handlers":        updateAttrWithHandlersValue(newVal, scope); break;
+            case "brutalobject":    // deliberate fall through
               newVal = nodesToStr(newVal.nodes);
-            case "safeattrobject":
+            case "safeattrobject":  // deliberate fall through
               newVal = newVal.str;
-            default:              updateAttrWithTextValue(newVal, scope); break;
+            default:                updateAttrWithTextValue(newVal, scope); break;
           }
         };
       }
@@ -330,6 +306,30 @@
           }
         }
         externals.push(() => newVal(node)); 
+      }
+      scope.oldVal = newVal;
+    }
+
+    function updateAttrWithFuncarrayValue(newVal, scope) {
+      let {oldVal,updateName,node,input,index,name,val,externals,lengths,oldLengths} = scope;
+      if ( !! oldVal && ! Array.isArray(oldVal) ) {
+        oldVal = [oldVal]; 
+      }
+      if ( name !== 'bond' ) {
+        if ( !! oldVal ) {
+          oldVal.forEach(of => node.removeEventListener(name, of));
+        }
+        newVal.forEach(f => node.addEventListener(name, f));
+      } else {
+        if ( !! oldVal ) {
+          oldVal.forEach(of => {
+            const index = externals.indexOf(of);
+            if ( index >= 0 ) {
+              externals.splice(index,1);
+            }
+          });
+        }
+        newVal.forEach(f => externals.push(() => newVal(node)));
       }
       scope.oldVal = newVal;
     }
