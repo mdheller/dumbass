@@ -142,32 +142,31 @@
         const {index} = result;
         const key = result[1];
         const val = vmap[key];
-        const replacer = makeNodeUpdater({node,index,lengths,val,valIndex:val.vi});
+        const replacer = makeNodeUpdater({node,index,lengths,val});
         externals.push(() => replacer(val.val));
         val.replacers.push( replacer );
       }
     }
 
     // node functions
-      function makeNodeUpdater({node,index,lengths,valIndex,val}) {
-        const state = {
-          node, lengths, valIndex, val, index,
+      function makeNodeUpdater(nodeState) {
+        const {node} = nodeState;
+        const scope = Object.assign({}, nodeState, {
           oldVal: {length: KEYLEN},
           oldNodes: [node],
           lastAnchor: node,
-        };
+        });
         return (newVal) => {
-          if ( state.oldVal == newVal ) return;
-          state.originalLengthBefore = Object.keys(lengths.slice(0,valIndex)).length*KEYLEN;
-          val.val = newVal;
+          if ( scope.oldVal == newVal ) return;
+          scope.val.val = newVal;
           const type = getType(newVal);
           switch(type) {
             case "safeobject": 
             case "brutalobject":
-              handleMarkupInNode(newVal, state);
+              handleMarkupInNode(newVal, scope);
               break;
             default:
-              handleTextInNode(newVal, state);
+              handleTextInNode(newVal, scope);
               break;
           }
         };
@@ -199,8 +198,10 @@
       }
 
       function handleTextInNode(newVal, state) {
-        let {oldVal, index, valIndex, lengths, node, originalLengthBefore} = state;
+        let {oldVal, index, val, lengths, node} = state;
 
+        const valIndex = val.vi;
+        const originalLengthBefore = Object.keys(lengths.slice(0,valIndex)).length*KEYLEN;
         const lengthBefore = lengths.slice(0,valIndex).reduce((sum,x) => sum + x, 0);
         const value = node.nodeValue;
 
@@ -217,194 +218,191 @@
         state.oldVal = newVal;
       }
 
-    function handleElement({node,vmap,externals}) {
-      // Implementation note:
-        // const attrs = [...node.attributes]; 
-        // The above line breaks Edge (Microsoft Edge 42.17134.1.0/Microsoft EdgeHTML 17.17134) with 
-        // SCRIPT5002: Function expected
-        // So I replaced it with Array.from
-      Array.from(node.attributes).forEach(({name,value}) => {
-        const attrState = {node, vmap, externals, name};
-        let result;
-        while( result = KEYMATCH.exec(name) ) prepareAttributeUpdater(result, attrState, {updateName:true});
-        while( result = KEYMATCH.exec(value) ) prepareAttributeUpdater(result, attrState, {updateName:false});
-      });
-    }
-
-    function prepareAttributeUpdater(result, attrState, {updateName}) {
-      const {index, input} = result;
-      const scope = Object.assign({}, attrState, {
-        index, input, updateName, 
-        val: attrState.vmap[result[1]],
-        oldVal: {length: KEYLEN},
-        oldName: name,
-        lengths: []
-      });
-
-      let replacer;
-      if ( updateName ) {
-        replacer = makeAttributeNameUpdater(scope);
-      } else {
-        replacer = makeAttributeValueUpdater(scope);
+    // element attribute functions
+      function handleElement({node,vmap,externals}) {
+        Array.from(node.attributes).forEach(({name,value}) => {
+          const attrState = {node, vmap, externals, name, lengths: []};
+          let result;
+          while( result = KEYMATCH.exec(name) ) prepareAttributeUpdater(result, attrState, {updateName:true});
+          while( result = KEYMATCH.exec(value) ) prepareAttributeUpdater(result, attrState, {updateName:false});
+        });
       }
 
-      scope.externals.push(() => replacer(scope.val.val));
-      scope.val.replacers.push( replacer );
-    }
+      function prepareAttributeUpdater(result, attrState, {updateName}) {
+        const {index, input} = result;
+        const scope = Object.assign({}, attrState, {
+          index, input, updateName, 
+          val: attrState.vmap[result[1]],
+          oldVal: {length: KEYLEN},
+          oldName: name,
+        });
 
-    function makeAttributeNameUpdater(scope) {
-      let {oldVal,oldName,updateName,node,input,index,name,val,externals,lengths,oldLengths,valIndex} = scope;
-      return (newVal) => {
-        if ( oldVal == newVal ) return;
-        val.val = newVal;
-        switch(typeof newVal) {
-          default:
-            const attr = node.hasAttribute(oldName) ? oldName : ''
-            if ( attr !== newVal ) {
-              if ( !! attr ) {
-                node.removeAttribute(oldName);
-                node[oldName] = undefined;
-              }
-              if ( !! newVal ) {
-                newVal = newVal.trim();
-                let result;
-
-                if( ATTRMATCH.test(newVal) ) {
-                  const assignmentIndex = newVal.indexOf('='); 
-                  const [name,value] = [newVal.slice(0,assignmentIndex), newVal.slice(assignmentIndex+1)];
-                  node.setAttribute(name,value);
-                  try {
-                    node[name] = value;
-                  } catch(e) {}
-                } else {
-                  node.setAttribute(newVal.trim(),''); 
-                  try {
-                    node[newVal] = true;
-                  } catch(e) {}
-                }
-              }
-              oldName = newVal;
-            }
+        let replacer;
+        if ( updateName ) {
+          replacer = makeAttributeNameUpdater(scope);
+        } else {
+          replacer = makeAttributeValueUpdater(scope);
         }
-      };
-    }
 
-    function makeAttributeValueUpdater(scope) {
-      let {oldVal,updateName,node,input,index,name,val,externals,lengths,oldLengths,valIndex} = scope;
-      return (newVal) => {
-        if ( oldVal == newVal ) return;
-        const originalLengthBefore = Object.keys(lengths.slice(0,valIndex)).length*KEYLEN;
-        val.val = newVal;
-        const type = T.check(T`Function`, newVal) ? 'function' :
-          T.check(T`Handlers`, newVal) ? 'handlers' : 
-          T.check(T`BrutalObject`, newVal) ? 'brutalobject' : 
-          T.check(T`SafeObject`, newVal) ? 'safeobject' :
-          T.check(T`SafeAttrObject`, newVal) ? 'safeattrobject' :
-          T.check(T`FuncArray`, newVal) ? 'funcarray' : 'default';
-        switch(type) {
-          case "funcarray":
-            if ( !! oldVal && ! Array.isArray(oldVal) ) {
-              oldVal = [oldVal]; 
-            }
-            if ( name !== 'bond' ) {
-              if ( !! oldVal ) {
-                oldVal.forEach(of => node.removeEventListener(name, of));
+        scope.externals.push(() => replacer(scope.val.val));
+        scope.val.replacers.push( replacer );
+      }
+
+      function makeAttributeNameUpdater(scope) {
+        let {oldVal,oldName,updateName,node,input,index,name,val,externals,lengths,oldLengths} = scope;
+        return (newVal) => {
+          if ( oldVal == newVal ) return;
+          val.val = newVal;
+          switch(typeof newVal) {
+            default:
+              const attr = node.hasAttribute(oldName) ? oldName : ''
+              if ( attr !== newVal ) {
+                if ( !! attr ) {
+                  node.removeAttribute(oldName);
+                  node[oldName] = undefined;
+                }
+                if ( !! newVal ) {
+                  newVal = newVal.trim();
+                  let result;
+
+                  if( ATTRMATCH.test(newVal) ) {
+                    const assignmentIndex = newVal.indexOf('='); 
+                    const [name,value] = [newVal.slice(0,assignmentIndex), newVal.slice(assignmentIndex+1)];
+                    node.setAttribute(name,value);
+                    try {
+                      node[name] = value;
+                    } catch(e) {}
+                  } else {
+                    node.setAttribute(newVal.trim(),''); 
+                    try {
+                      node[newVal] = true;
+                    } catch(e) {}
+                  }
+                }
+                oldName = newVal;
               }
-              newVal.forEach(f => node.addEventListener(name, f));
-            } else {
-              if ( !! oldVal ) {
-                oldVal.forEach(of => {
-                  const index = externals.indexOf(of);
+          }
+        };
+      }
+
+      function makeAttributeValueUpdater(scope) {
+        let {oldVal,updateName,node,input,index,name,val,externals,lengths,oldLengths} = scope;
+        const valIndex = val.vi;
+        
+        return (newVal) => {
+          if ( oldVal == newVal ) return;
+          const originalLengthBefore = Object.keys(lengths.slice(0,valIndex)).length*KEYLEN;
+          val.val = newVal;
+          const type = T.check(T`Function`, newVal) ? 'function' :
+            T.check(T`Handlers`, newVal) ? 'handlers' : 
+            T.check(T`BrutalObject`, newVal) ? 'brutalobject' : 
+            T.check(T`SafeObject`, newVal) ? 'safeobject' :
+            T.check(T`SafeAttrObject`, newVal) ? 'safeattrobject' :
+            T.check(T`FuncArray`, newVal) ? 'funcarray' : 'default';
+          switch(type) {
+            case "funcarray":
+              if ( !! oldVal && ! Array.isArray(oldVal) ) {
+                oldVal = [oldVal]; 
+              }
+              if ( name !== 'bond' ) {
+                if ( !! oldVal ) {
+                  oldVal.forEach(of => node.removeEventListener(name, of));
+                }
+                newVal.forEach(f => node.addEventListener(name, f));
+              } else {
+                if ( !! oldVal ) {
+                  oldVal.forEach(of => {
+                    const index = externals.indexOf(of);
+                    if ( index >= 0 ) {
+                      externals.splice(index,1);
+                    }
+                  });
+                }
+                newVal.forEach(f => externals.push(() => newVal(node)));
+              }
+              oldVal = newVal;
+            break;
+            case "function":
+              if ( name !== 'bond' ) {
+                if ( !! oldVal ) {
+                  node.removeEventListener(name, oldVal);
+                }
+                node.addEventListener(name, newVal); 
+              } else {
+                if ( !! oldVal ) {
+                  const index = externals.indexOf(oldVal);
                   if ( index >= 0 ) {
                     externals.splice(index,1);
                   }
-                });
-              }
-              newVal.forEach(f => externals.push(() => newVal(node)));
-            }
-            oldVal = newVal;
-          break;
-          case "function":
-            if ( name !== 'bond' ) {
-              if ( !! oldVal ) {
-                node.removeEventListener(name, oldVal);
-              }
-              node.addEventListener(name, newVal); 
-            } else {
-              if ( !! oldVal ) {
-                const index = externals.indexOf(oldVal);
-                if ( index >= 0 ) {
-                  externals.splice(index,1);
                 }
+                externals.push(() => newVal(node)); 
               }
-              externals.push(() => newVal(node)); 
-            }
-            oldVal = newVal;
-          break;
-          case "handlers":
-            // Add a remove for oldVal handlers object, to remove the handlers in oldVal
-            Object.entries(newVal).forEach(([eventName,funcVal]) => {
-              if ( eventName !== 'bond' ) {
-                node.addEventListener(eventName, funcVal); 
-              } else {
-                externals.push(() => funcVal(node)); 
+              oldVal = newVal;
+            break;
+            case "handlers":
+              // Add a remove for oldVal handlers object, to remove the handlers in oldVal
+              Object.entries(newVal).forEach(([eventName,funcVal]) => {
+                if ( eventName !== 'bond' ) {
+                  node.addEventListener(eventName, funcVal); 
+                } else {
+                  externals.push(() => funcVal(node)); 
+                }
+              });
+              oldVal = newVal;
+            break;
+            case "brutalobject":
+              // convert the nodes to a string, and fall through
+                // ideally, this could support:
+                  // could be we skipped over replacing unsafe text in an attribute value
+                  // or could be we want to add a srcdoc attribute or some other reason
+                // but actually right now there is no way to support this as:
+                  // there is no way to resolve
+                  // the issue that brutal objects are always placeheld by comment tags
+                  // which will error out if used in attribute values
+                  // so right now we just make it empty
+                  // and assume that, the only way a brutal object ended up here
+                  // was an empty array was converted to a brutal object
+                  // when really it was a func array that was empty.
+                  // we need to assume it's a brutal object, so we can do things like
+                  // replace an empty list with a filled list, and vice versa
+                  // and we need to base the type conversion off the passed in type
+                  // rather than location to keep the code simple and not checking
+                  // WHERE the replacement occurs. 
+              newVal = nodesToStr(newVal.nodes);
+            case "safeattrobject":
+              newVal = newVal.str;
+            default:
+              lengths[valIndex] = newVal.length;
+              const attr = node.getAttribute(name);
+              const lengthBefore = lengths.slice(0,valIndex).reduce((sum,x) => sum + x, 0);
+
+              const correction = lengthBefore-originalLengthBefore;
+              const before = attr.slice(0,index+correction);
+              const after = attr.slice(index+correction+oldVal.length);
+
+              const newAttrValue = before + newVal + after;
+
+              node.setAttribute(name, newAttrValue);
+
+              // we have a try block here because some 
+                // IDL attributes are readonly
+                // https://www.w3.org/TR/html50/forms.html
+                // and rather than trying to keep a white or black list 
+                // for which to try or not try setting the value
+                // we just capture the intent of the standard by trying which
+                // work 
+
+              try {
+                node[name] = newAttrValue;
+              } catch(e) {
+                const idlType = node ? node.constructor ? node.constructor.name : 'unknown' : 'unknown';
+                console.warn(`Attempt to set readonly attribute ${name} on ${node.constructor.name}`);
               }
-            });
-            oldVal = newVal;
-          break;
-          case "brutalobject":
-            // convert the nodes to a string, and fall through
-              // ideally, this could support:
-                // could be we skipped over replacing unsafe text in an attribute value
-                // or could be we want to add a srcdoc attribute or some other reason
-              // but actually right now there is no way to support this as:
-                // there is no way to resolve
-                // the issue that brutal objects are always placeheld by comment tags
-                // which will error out if used in attribute values
-                // so right now we just make it empty
-                // and assume that, the only way a brutal object ended up here
-                // was an empty array was converted to a brutal object
-                // when really it was a func array that was empty.
-                // we need to assume it's a brutal object, so we can do things like
-                // replace an empty list with a filled list, and vice versa
-                // and we need to base the type conversion off the passed in type
-                // rather than location to keep the code simple and not checking
-                // WHERE the replacement occurs. 
-            newVal = nodesToStr(newVal.nodes);
-          case "safeattrobject":
-            newVal = newVal.str;
-          default:
-            lengths[valIndex] = newVal.length;
-            const attr = node.getAttribute(name);
-            const lengthBefore = lengths.slice(0,valIndex).reduce((sum,x) => sum + x, 0);
 
-            const correction = lengthBefore-originalLengthBefore;
-            const before = attr.slice(0,index+correction);
-            const after = attr.slice(index+correction+oldVal.length);
-
-            const newAttrValue = before + newVal + after;
-
-            node.setAttribute(name, newAttrValue);
-
-            // we have a try block here because some 
-              // IDL attributes are readonly
-              // https://www.w3.org/TR/html50/forms.html
-              // and rather than trying to keep a white or black list 
-              // for which to try or not try setting the value
-              // we just capture the intent of the standard by trying which
-              // work 
-
-            try {
-              node[name] = newAttrValue;
-            } catch(e) {
-              const idlType = node ? node.constructor ? node.constructor.name : 'unknown' : 'unknown';
-              console.warn(`Attempt to set readonly attribute ${name} on ${node.constructor.name}`);
-            }
-
-            oldVal = newVal;
-        }
-      };
-    }
+              oldVal = newVal;
+          }
+        };
+      }
 
   // helpers
     function getType(val) {
