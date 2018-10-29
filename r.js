@@ -260,19 +260,14 @@
               newVal = newVal.trim();
               let result;
 
+              let name = newVal, value = '';
+
               if( ATTRMATCH.test(newVal) ) {
                 const assignmentIndex = newVal.indexOf('='); 
-                const [name,value] = [newVal.slice(0,assignmentIndex), newVal.slice(assignmentIndex+1)];
-                node.setAttribute(name,value);
-                try {
-                  node[name] = value;
-                } catch(e) {}
-              } else {
-                node.setAttribute(newVal.trim(),''); 
-                try {
-                  node[newVal] = true;
-                } catch(e) {}
+                ([name,value] = [newVal.slice(0,assignmentIndex), newVal.slice(assignmentIndex+1)]);
               }
+
+              reliablySetAttribute(node, name, value);
             }
             oldName = newVal;
           }
@@ -400,6 +395,13 @@
       }
 
   // helpers
+    function reliablySetAttribute(node, name, value ) {
+      node.setAttribute(name,value);
+      try {
+        node[name] = value;
+      } catch(e) {}
+    }
+
     function getType(val) {
       const type = T.check(T`Function`, val) ? 'function' :
         T.check(T`Handlers`, val) ? 'handlers' : 
