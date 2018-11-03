@@ -1,4 +1,4 @@
-# brutestrap (v1.4.6)
+# brutestrap (v1.5.0)
 
 A port of Blueprint/React-Bootstrap (also with Inspiration from Ignite and Evergreen) UI kit components to Brutal.js and CSS Grid, energized by the pursuit of minimalist code and minimalist design in all things.
 

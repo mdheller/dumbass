@@ -1,6 +1,7 @@
 /** styles for inputs **/ 
   /** normalizing input styles **/
-    input:not([type="file"]), input[type="text"], textarea, [contenteditable] {
+    input:not([type="file"]), input[type="text"], input[type="radio"], input[type="checkbox"], 
+    textarea, [contenteditable] {
       border: thin solid silver;
       box-sizing: border-box;
       margin: 0;
@@ -10,6 +11,10 @@
       touch-action: none;
       font-family: inherit;
       padding: 0 0.35em;
+    }
+
+    input[type="radio"], input[type="checkbox"] {
+      margin: auto 0.35em;
     }
 
     button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"] {
@@ -68,9 +73,13 @@
     .input.inline { display: inline-flex; }
 
     .input.multiline,     
-    .input.multiline label { 
+    .input.multiline label:not(.row) { 
       align-items: start; 
       flex-direction: column;
+    }
+
+    label.row {
+      line-height: 1.625em;
     }
 
     .input.flex-col { flex-direction: column; }

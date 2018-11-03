@@ -56,6 +56,6 @@
   },
   "version": "1.9.0",
   "devDependencies": {
-    "brutestrap": "^1.4.7"
+    "brutestrap": "^1.5.1"
   }
 }

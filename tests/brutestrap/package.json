@@ -1,27 +1,27 @@
 {
-  "_from": "brutestrap@^1.1.0",
-  "_id": "brutestrap@1.4.7",
+  "_from": "brutestrap@1.5.1",
+  "_id": "brutestrap@1.5.1",
   "_inBundle": false,
-  "_integrity": "sha512-fvj78G5472ege1eoifQKz9MxY+JCwgwQUf9mFomUmC9xQJgMQFXdqPsLrKoECdRd/Hor4vDat8u7HuTNFpvLTw==",
+  "_integrity": "sha512-Qchaczs758yAsavL0AtZTQubPnLrkogltRQtf50PTioYpHpI2z+bwhNcs/dEXB2OuzWgbp4Oey1turxIhG/Ziw==",
   "_location": "/brutestrap",
   "_phantomChildren": {},
   "_requested": {
-    "type": "range",
+    "type": "version",
     "registry": true,
-    "raw": "brutestrap@^1.1.0",
+    "raw": "brutestrap@1.5.1",
     "name": "brutestrap",
     "escapedName": "brutestrap",
-    "rawSpec": "^1.1.0",
+    "rawSpec": "1.5.1",
     "saveSpec": null,
-    "fetchSpec": "^1.1.0"
+    "fetchSpec": "1.5.1"
   },
   "_requiredBy": [
     "#DEV:/",
     "#USER"
   ],
-  "_resolved": "https://registry.npmjs.org/brutestrap/-/brutestrap-1.4.7.tgz",
-  "_shasum": "59ada46349e8eca6f0c60b9922084a56fbb24ba1",
-  "_spec": "brutestrap@^1.1.0",
+  "_resolved": "https://registry.npmjs.org/brutestrap/-/brutestrap-1.5.1.tgz",
+  "_shasum": "94c89ed35967ef17aae46d67fc578d108beeca62",
+  "_spec": "brutestrap@1.5.1",
   "_where": "/home/cris7fe/brutal.js",
   "author": {
     "name": "@dosy"
@@ -62,5 +62,5 @@
   "scripts": {
     "test": "serve -p 8080 -s"
   },
-  "version": "1.4.7"
+  "version": "1.5.1"
 }
