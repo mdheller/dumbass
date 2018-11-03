@@ -25,6 +25,8 @@ onload = testAll;
     testTextareaInput();
     testDatalist();
     testTable();
+    testCheckbox();
+    testRadio();
 
     testHolyGrail();
   }
@@ -68,6 +70,28 @@ onload = testAll;
         text: 'Button Text',
         type: 'submit',
         intent: undefined
+      }).to(...inputSpot);
+    }
+
+    function testCheckbox() {
+      const b = component.checkbox;
+
+      b({
+        name: 'checkbox',
+        label: 'Checkbox',
+        options: ['Value 1', 'Value 2'],
+        classNames,
+      }).to(...inputSpot);
+    }
+
+    function testRadio() {
+      const b = component.radio;
+
+      b({
+        name: 'radio',
+        label: 'Radio',
+        options: ['Value 1', 'Value 2'],
+        classNames,
       }).to(...inputSpot);
     }
 

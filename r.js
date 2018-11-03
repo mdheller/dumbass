@@ -167,7 +167,7 @@
       function handleMarkupInNode(newVal, state) {
         let {oldNodes,lastAnchor} = state;
         if ( !! newVal.nodes.length ) {
-          newVal.nodes.forEach(n => {
+          newVal.nodes.reverse().forEach(n => {
             lastAnchor.parentNode.insertBefore(n,lastAnchor.nextSibling);
             state.lastAnchor = lastAnchor.nextSibling;
           });
@@ -518,13 +518,15 @@
         const externals = [];
         const bigNodes = [];
         os.forEach(o => (externals.push(...o.externals),bigNodes.push(...o.nodes)));
+        //Refers #45. Debug to try to see when node reverse order is introduced.
+        //setTimeout( () => console.log(nodesToStr(bigNodes)), 1000 );
         const retVal = {v:[],code:CODE,nodes:bigNodes,to,update,externals};
         return retVal;
       }
 
       function nodesToStr(nodes) {
         const frag = document.createDocumentFragment();
-        nodes.forEach(n => frag.appendChild(n));
+        nodes.forEach(n => frag.appendChild(n.cloneNode(true)));
         const container = document.createElement('body');
         container.appendChild(frag);
         return container.innerHTML;
@@ -559,7 +561,7 @@
       if ( T.check(T`>Node`, v) ) {
         out = `<${v.nodeName.toLowerCase()} ${
           !v.attributes ? '' : [...v.attributes].map(({name,value}) => `${name}='${value}'`).join(' ')}>${
-          v.nodeValue || ''}`;
+          v.nodeValue || (v.children && v.children.length <= 1 ? v.innerText : '')}`;
       } else if ( typeof v === "function" ) {
         return `${v.name || 'anon'}() { ... }`
       }

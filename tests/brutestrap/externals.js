@@ -1,7 +1,8 @@
 // For development
-const DEV = true;
+const DEV = false;
 
-import {R,X} from '../../r.js';
+import {R,X} from '../../../r.js';
+//import {R,X} from 'https://unpkg.com/brutalist-web/r.js';
 import {T} from 'https://unpkg.com/jtype-system/t.js';
 import {scope} from 'https://unpkg.com/maskingtape.css/c3s.js';
 
@@ -26,16 +27,17 @@ const {prefix:resetClassName} = scope(uri('reset.css'));
 const {prefix:styleClassName} = scope(uri('style.css'));
 const {prefix:layoutClassName} = scope(uri('layout.css'));
 const {prefix:inputClassName} = scope(uri('input.css'));
+const {prefix:switchClassName} = scope(uri('switch.css'));
 const {prefix:spinnerClassName} = scope(uri('spinner.css'));
 const {prefix:fileInputClassName} = scope(uri('fileinput.css'));
 const {prefix:tableClassName} = scope(uri('table.css'));
 
 export default {
-  R, X, T, inputClassName, spinnerClassName, resetClassName, styleClassName, layoutClassName, tableClassName, fileInputClassName
+  R, X, T, inputClassName, switchClassName, spinnerClassName, resetClassName, styleClassName, layoutClassName, tableClassName, fileInputClassName
 };
 
 export {
-  R, X, T, inputClassName, spinnerClassName, resetClassName, styleClassName, layoutClassName, tableClassName, fileInputClassName
+  R, X, T, inputClassName, switchClassName, spinnerClassName, resetClassName, styleClassName, layoutClassName, tableClassName, fileInputClassName
 };
 
 
