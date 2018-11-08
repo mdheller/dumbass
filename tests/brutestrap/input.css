@@ -152,6 +152,7 @@
 
   /** special button styles **/
     button, input[type="submit"], input[type="image"], input[type="reset"], input[type="button"] {
+      border-style: solid;
       color: darkslategray;
       text-shadow: 0.25px 0.25px 0 #ececfd;
     } 
