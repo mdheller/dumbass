@@ -1,7 +1,7 @@
 // For development
 const DEV = false;
 
-import {R,X} from '../../../r.js';
+import {R,X} from './../../r.js';
 //import {R,X} from 'https://unpkg.com/brutalist-web/r.js';
 import {T} from 'https://unpkg.com/jtype-system/t.js';
 import {scope} from 'https://unpkg.com/maskingtape.css/c3s.js';
