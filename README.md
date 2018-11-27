@@ -1,6 +1,6 @@
 # brutal.js (1.9.1)
 
-Minimalist framework for building JS apps.
+Minimalist framework for building JS apps. Aims to be more efficient than React, Vue or Angular, both for rendering and development.
 
 [Tests](https://thiscris.com/brutal.js/tests/)
 
