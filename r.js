@@ -167,7 +167,7 @@
       function handleMarkupInNode(newVal, state) {
         let {oldNodes,lastAnchor} = state;
         if ( !! newVal.nodes.length ) {
-          newVal.nodes.reverse().forEach(n => {
+          Array.from(newVal.nodes).reverse().forEach(n => {
             lastAnchor.parentNode.insertBefore(n,lastAnchor.nextSibling);
             state.lastAnchor = lastAnchor.nextSibling;
           });
