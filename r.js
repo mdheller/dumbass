@@ -5,6 +5,7 @@
     import T from './types.js';
 
   // constants
+    self.onerror = (...v) => (console.log(v[4].message, v[4].stack), true);
     const DEBUG             = false;
     const NULLFUNC          = () => void 0;
     const KEYMATCH          = /(?:<!\-\-)?(key\d+)(?:\-\->)?/gm;
@@ -211,8 +212,8 @@
       }
 
     // element attribute functions
-      function handleElement({node,vmap,externals}) {
-        Array.from(node.attributes).forEach(({name,value}) => {
+      function handleElement({node,vmap,externals} = {}) {
+        getAttributes(node).forEach(({name,value} = {}) => {
           const attrState = {node, vmap, externals, name, lengths: []};
           let result;
           while( result = KEYMATCH.exec(name) ) prepareAttributeUpdater(result, attrState, {updateName:true});
@@ -288,6 +289,19 @@
       }
 
   // helpers
+    // EDGE does not have .attributes IDL property 
+    function getAttributes(node) {
+      if ( ! node.hasAttribute ) return [];
+      if ( !! node.attributes && Number.isInteger(node.attributes.length) ) return Array.from(node.attributes);
+      const attrs = [];
+      for ( const name of node ) {
+        if ( node.hasAttribute(name) ) {
+          attrs.push({name, value:node.getAttribute(name)});
+        }
+      }
+      return attrs;
+    }
+
     function updateAttrWithFunctionValue(newVal, scope) {
       let {oldVal,updateName,node,input,index,name,val,externals,lengths,oldLengths} = scope;
       if ( name !== 'bond' ) {
