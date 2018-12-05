@@ -340,7 +340,7 @@
             }
           });
         }
-        newVal.forEach(f => externals.push(() => newVal(node)));
+        newVal.forEach(f => externals.push(() => f(node)));
       }
       scope.oldVal = newVal;
     }
