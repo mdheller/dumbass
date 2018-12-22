@@ -38,7 +38,11 @@
     const cache = {};
 
   // main exports 
-    Object.assign(R,{s,safe,attrskip,skip,guardEmptyHandlers,die,BROWSER_SIDE});
+    if ( BROWSER_SIDE ) {
+      Object.assign(R,{s,safe,attrskip,skip,guardEmptyHandlers,die,BROWSER_SIDE});
+    } else {
+      Object.assign(R,{skip:S.skip});
+    }
 
     if ( DEBUG && BROWSER_SIDE ) {
       Object.assign(self, {R,T}); 
