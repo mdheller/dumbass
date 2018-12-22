@@ -5,7 +5,7 @@
     import T from './types.js';
 
   // constants
-    self.onerror = (...v) => (console.log(v[4].message, v[4].stack), true);
+    BROWSER_SIDE && (self.onerror = (...v) => (console.log(v[4].message, v[4].stack), true));
     const DEBUG             = false;
     const NULLFUNC          = () => void 0;
     const KEYMATCH          = /(?:<!\-\-)?(key\d+)(?:\-\->)?/gm;
