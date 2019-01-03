@@ -263,7 +263,7 @@
               newVal = newVal.trim();
               let result;
 
-              let name = newVal, value = '';
+              let name = newVal, value = undefined;
 
               if( ATTRMATCH.test(newVal) ) {
                 const assignmentIndex = newVal.indexOf('='); 
@@ -388,7 +388,7 @@
     function reliablySetAttribute(node, name, value ) {
       node.setAttribute(name,value);
       try {
-        node[name] = value || true;
+        node[name] = value == undefined ? true : value;
       } catch(e) {}
     }
 
