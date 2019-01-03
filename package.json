@@ -54,7 +54,7 @@
   "scripts": {
     "test": "serve -p 8080"
   },
-  "version": "1.10.0",
+  "version": "1.10.1",
   "devDependencies": {
     "brutestrap": "^1.5.4"
   }
