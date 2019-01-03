@@ -230,8 +230,7 @@
         const scope = Object.assign({}, attrState, {
           index, input, updateName, 
           val: attrState.vmap[result[1]],
-          oldVal: {length: KEYLEN},
-          oldName: attrState.name,
+          oldVal: attrState.name
         });
 
         let replacer;
@@ -245,19 +244,18 @@
         scope.val.replacers.push( replacer );
       }
 
-      // FIXME: needs to support multiple replacements just like value
-      // QUESTION: why is the variable oldName so required here, why can't we call it oldVal?
-      // if we do it breaks, WHY?
+      // FIXME: function needs to support multiple replacements in an attr name (just like value)
       function makeAttributeNameUpdater(scope) {
-        let {oldName,updateName,node,input,index,name,val,externals,lengths,oldLengths} = scope;
+        let {oldVal,updateName,node,input,index,name,val,externals,lengths,oldLengths} = scope;
         return (newVal) => {
-          if ( oldName == newVal ) return;
+          console.log(scope,newVal,oldVal);
+          if ( oldVal == newVal ) return;
           val.val = newVal;
-          const attr = node.hasAttribute(oldName) ? oldName : ''
+          const attr = node.hasAttribute(oldVal) ? oldVal : ''
           if ( attr !== newVal ) {
             if ( !! attr ) {
-              node.removeAttribute(oldName);
-              node[oldName] = undefined;
+              node.removeAttribute(oldVal);
+              node[oldVal] = undefined;
             }
             if ( !! newVal ) {
               newVal = newVal.trim();
@@ -272,7 +270,7 @@
 
               reliablySetAttribute(node, name, value);
             }
-            oldName = newVal;
+            oldVal = newVal;
           }
         };
       }
