@@ -119,5 +119,7 @@ It came out of two projects I did to attempt to build a React-like API without u
 - [Racked.js - React without Babel in 500 lines](https://github.com/crislin2046/racked-js-react-without-babel-in-500-lines)
 - [Explore React without React](https://github.com/crislin2046/explore-react-without-react)
 
+### Other similar/related projects
 
+- [lit-html] https://github.com/Polymer/lit-html
 
