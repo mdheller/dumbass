@@ -7,20 +7,21 @@ Minimalist framework for building JS apps. Aims to be more efficient than React,
 ## Features
 
 - Minimal DOM updates without "Virtual DOM" overhead
-- Keyed and singleton templates, only specify a components position 1 time, every subsequent 
+- Keyed and singleton components
+- Only specify a component's position 1 time, every subsequent 
 render invocation automagically updates the right nodes. 
 - Uses native JS features and requires no transpilation or build step.
 - Fully isomorphic, running browser-side or server-side (with builtin hydration).
 - Use normal HTML conventions (omit some end tags, omit quotes, lowercase attr names ~ unlike JSX).
 - Add event listeners inline using the lowercased event name, like `click`, `keydown`, etc.
 - Small, fast and XSS safe. 
-- Can be used in place of Deku, lit-html or React.
+- Can be used in place of Deku, lit-html, AppRun or React.
 
 ## Examples
 
 You can see the below test working [here](https://thiscris.com/brutal.js/tests/example_test.html).
 
-This demonstrates minimal DOM updating, and keyed and singleton 'DOM pinning'.
+This demonstrates minimal DOM updating, and keyed and singleton 'DOM pinning' of components/templates.
 
 ```jsx
 
