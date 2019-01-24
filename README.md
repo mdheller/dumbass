@@ -114,7 +114,7 @@ R`<button click=${[
 
 Brutal.js:
 
-```
+```javascript
 function view(state) {
   return $`
     <article class="media ${state.profile?"profile":""}">
@@ -124,7 +124,9 @@ function view(state) {
             $`<p class=byline>${state.byline}</p>` :
             $`<p class=tags>${state.tags}</p>`
         }
-        ${state.paragraphs.map(p => $`<p>${p}</p>`)}
+        ${
+          state.paragraphs.map(p => $`<p>${p}</p>`)
+        }
     </article>
   `;
 }
@@ -140,7 +142,7 @@ function view(state) {
       {
         state.byline?
           <p classNames="byline">{state.byline}</p> :
-          <p classNames="tags">${state.tags}</p>
+          <p classNames="tags">{state.tags}</p>
       }
       {
         state.paragraphs.map(p => <p>{p}</p>)
@@ -150,6 +152,9 @@ function view(state) {
 ```
 
 You can decide which syntax noise you prefer. For my part, I prefer the Brutal.JS one, and especially prefer how no transpiler / toolchain is required to use it.
+
+I also particularly like how the `$` alias designates the "boundary" between markup and code. It indicates when we "go in" to markup, 
+via `$\`` and indicates when we "go out" of markup, via `${`.
 
 ## Other information
 
