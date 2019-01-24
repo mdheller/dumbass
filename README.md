@@ -159,7 +159,7 @@ R`<button click=${[
 
 Brutal.js:
 
-```javascript
+```jsx
 function view(state) {
   return $`
     <article class="media ${state.profile?"profile":""}">
