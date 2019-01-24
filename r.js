@@ -183,6 +183,7 @@
           lastAnchor.parentNode.insertBefore(placeholderNode,lastAnchor.nextSibling);
           state.lastAnchor = placeholderNode;
         }
+        // MARK: Unbond event might be relevant here.
         const dn = diffNodes(oldNodes,newVal.nodes);
         if ( dn.size ) {
           const f = document.createDocumentFragment();
