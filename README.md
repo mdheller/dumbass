@@ -1,4 +1,4 @@
-# brutal.js (2.0.0)
+# brutal.js (2.0.2)
 
 Minimalist framework for building JS apps. Aims to be more efficient than React, Vue or Angular, both for rendering and development.
 
@@ -154,7 +154,7 @@ function view(state) {
 You can decide which syntax noise you prefer. For my part, I prefer the Brutal.JS one, and especially prefer how no transpiler / toolchain is required to use it.
 
 I also particularly like how the `$` alias designates the "boundary" between markup and code. It indicates when we "go in" to markup, 
-via `$\`` and indicates when we "go out" of markup, via `${`.
+via `` $` `` and indicates when we "go out" of markup, via `${`.
 
 ## Other information
 
