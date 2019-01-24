@@ -22,7 +22,7 @@ You can see the below test working [here](https://thiscris.com/brutal.js/tests/e
 
 This demonstrates minimal DOM updating, and keyed and singleton 'DOM pinning'.
 
-```
+```jsx
 
   import {R,$} from '../r.js';
 
