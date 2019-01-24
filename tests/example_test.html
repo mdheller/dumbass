@@ -1,3 +1,19 @@
+<script>
+  const mo = new MutationObserver((mutations)=> {
+    const AddedElements = [];
+    const RemovedElements = [];
+    for ( const mutation of mutations ) {
+      const addedElements = Array.from(mutation.addedNodes).filter(x => x.nodeType == Node.ELEMENT_NODE ); 
+      const removedElements = Array.from(mutation.removedNodes).filter(x => x.nodeType == Node.ELEMENT_NODE ); 
+      AddedElements.push(...addedElements);
+      RemovedElements.push(...removedElements);
+    }
+    if ( AddedElements.length || RemovedElements.length ) {
+      console.log({AddedElements,RemovedElements});
+    }
+  });
+  mo.observe(document.documentElement, {childList:true, subtree:true});
+</script>
 <script type=module defer>
   import {R,$} from '../r.js';
 
