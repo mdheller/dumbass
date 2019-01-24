@@ -36,6 +36,7 @@
 
   // cache 
     const cache = {};
+    export const $ = R;
 
   // main exports 
     if ( BROWSER_SIDE ) {
@@ -45,7 +46,7 @@
     }
 
     if ( DEBUG && BROWSER_SIDE ) {
-      Object.assign(self, {R,T}); 
+      Object.assign(self, {R,T,X,$}); 
     }
 
     export function R(p,...v) {
