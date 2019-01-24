@@ -114,7 +114,7 @@ R`<button click=${[
 
 Brutal.js:
 
-```javascript
+```jsx
 function view(state) {
   return $`
     <article class="media ${state.profile?"profile":""}">
@@ -171,5 +171,5 @@ It came out of two projects I did to attempt to build a React-like API without u
 
 ### Other similar/related projects
 
-- [lit-html] https://github.com/Polymer/lit-html
+- [lit-html](https://github.com/Polymer/lit-html)
 
