@@ -107,7 +107,52 @@ R`<button click=${[
     f => { if ( f.target.matches('[value="clear"]') ) f.target.closest('form').reset() }
   ]}>Clear Form</button>`;
   ```
-  
+
+## Issues
+
+### Syntax noise
+
+Brutal.js:
+
+```
+function view(state) {
+  return $`
+    <article class="media ${state.profile?"profile":""}">
+        ${ArticleHeader(state)}
+        ${
+          state.byline?
+            $`<p class=byline>${state.byline}</p>` :
+            $`<p class=tags>${state.tags}</p>`
+        }
+        ${state.paragraphs.map(p => $`<p>${p}</p>`)}
+    </article>
+  `;
+}
+```
+
+React.JS:
+
+```jsx
+function view(state) {
+  return (
+    <article classNames="media {state.profile?"profile":""}">
+      <ArticleHeader props={state}></ArticleHeader>
+      {
+        state.byline?
+          <p classNames="byline">{state.byline}</p> :
+          <p classNames="tags">${state.tags}</p>
+      }
+      {
+        state.paragraphs.map(p => <p>{p}</p>)
+      }
+  );
+}
+```
+
+You can decide which syntax noise you prefer. For my part, I prefer the Brutal.JS one, and especially prefer how no transpiler / toolchain is required to use it.
+
+## Other information
+
 ### Where does Brutal come from?
 
 Brutal is a project to build a minimal framework for JS apps in non-transpiled pure ECMAScript. 
