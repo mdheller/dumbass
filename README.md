@@ -6,12 +6,57 @@ Minimalist framework for building JS apps. Aims to be more efficient than React,
 
 ## Features
 
+- Minimal DOM updates without "Virtual DOM" overhead
+- Keyed and singleton templates, only specify a components position 1 time, every subsequent 
+render invocation automagically updates the right nodes. 
 - Uses native JS features and requires no transpilation or build step.
 - Fully isomorphic, running browser-side or server-side (with builtin hydration).
 - Use normal HTML conventions (omit some end tags, omit quotes, lowercase attr names ~ unlike JSX).
-- Add event listeners inline using either the lowercased event name, with or without the standard `on` prefix.
+- Add event listeners inline using the lowercased event name, like `click`, `keydown`, etc.
 - Small, fast and XSS safe. 
 - Can be used in place of Deku, lit-html or React.
+
+## Examples
+
+You can see the below test working [here](https://thiscris.com/brutal.js/tests/example_test.html).
+
+This demonstrates minimal DOM updating, and keyed and singleton 'DOM pinning'.
+
+```
+
+  import {R,$} from '../r.js';
+
+  self.firsth1 = null;
+  self.secondh1 = null;
+
+
+  // A brutal template uses the `R` template tag:
+  let sayHello = (name) => R`<h1 bond=${el => firsth1 = el}>Hello ${name}</h1>`;
+
+  // It's rendered with the `to()` function:
+  sayHello('World').to(document.body, 'afterBegin');
+
+  // And re-renders only update the data that changed, without
+  // VDOM diffing!
+  // And it automagically knows WHERE to update those nodes. 
+  setTimeout(() => sayHello('Everyone'), 1000);
+
+  setTimeout(() => { 
+    secondh1 = document.querySelector('h1'); 
+    alert(firsth1 === secondh1) 
+  }, 3000);
+
+
+  // the automagical updating even works with keys, 
+  // just include a template value that's an object with a 'key' property
+
+  let keyedSayHello = (name, key) => $`${{key}} <p>I am ${name}</p>`;
+
+  keyedSayHello('Peter', 1).to(document.body, 'beforeEnd');
+  keyedSayHello('Adam', 2).to(document.body, 'beforeEnd');
+  setTimeout(() => keyedSayHello('Michael-Peter', 1), 4000);
+  setTimeout(() => keyedSayHello('Cain & Abel', 2), 3000);
+```
 
 ## Installing
 
