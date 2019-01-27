@@ -70,8 +70,13 @@
         cacheKey = p.join('<link rel=join>');
         const {cached,firstCall} = isCached(cacheKey,v,instanceKey);
        
-        if ( ! firstCall ) return cached;
+        if ( ! firstCall ) {
+          cached.update(v);
+          return cached;
+        }
       }
+      
+      // compile the template into an updater
 
       p = [...p]; 
       const vmap = {};
@@ -441,9 +446,6 @@
           } else {
             firstCall = false;
           }
-        }
-        if ( ! firstCall ) {
-          cached.update(v);
         }
         return {cached,firstCall};
       }
