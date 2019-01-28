@@ -63,7 +63,7 @@
 
       let instanceKey, cacheKey;
 
-      v = v.map(parseVal);
+      v = v.map(guardAndTransformVal);
 
       if ( useCache ) {
         ({key:instanceKey} = (v.find(isKey) || {}));
@@ -512,7 +512,7 @@
         return f;
       }
 
-      function parseVal(v) {
+      function guardAndTransformVal(v) {
         const isFunc          = T.check(T`Function`, v);
         const isUnset         = T.check(T`None`, v);
         const isObject        = T.check(T`Object`, v);
