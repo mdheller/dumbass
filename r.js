@@ -80,7 +80,7 @@
 
       p = [...p]; 
       const vmap = {};
-      const V = v.map(replaceVal(vmap));
+      const V = v.map(replaceValWithKeyAndOmitInstanceKey(vmap));
       const externals = [];
       let str = '';
 
@@ -489,8 +489,9 @@
       }
 
     // other helpers
-      function replaceVal(vmap) {
+      function replaceValWithKeyAndOmitInstanceKey(vmap) {
         return (val,vi) => {
+          // omit instance key
           if ( T.check(T`Key`, val) ) {
             return '';
           }
