@@ -302,7 +302,6 @@
       }
 
   // helpers
-    // EDGE does not have .attributes IDL property 
     function getAttributes(node) {
       if ( ! node.hasAttribute ) return [];
       if ( !! node.attributes && Number.isInteger(node.attributes.length) ) return Array.from(node.attributes);
