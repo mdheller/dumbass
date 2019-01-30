@@ -293,6 +293,7 @@
             case "function":        updateAttrWithFunctionValue(newVal, scope); break;
             case "handlers":        updateAttrWithHandlersValue(newVal, scope); break;
             case "brutalobject":    // deliberate fall through
+              console.log("Brutal Object in attr", newVal);
               newVal = nodesToStr(newVal.nodes);
             case "safeattrobject":  // deliberate fall through
               newVal = newVal.str;
