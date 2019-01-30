@@ -1,0 +1,56 @@
+<script type=module defer>
+  import {R,$} from '../r.js';
+  
+  const {skip,safe} = R;
+
+  const S = {
+    attr: "abc",
+    title: "def",
+    content: "ghi"
+  };
+
+  safeTests(S).to('body','afterBegin');
+  skipTests(S).to('body','afterBegin');
+  safeSkipTests(S).to('body','afterBegin');
+
+  function safeTests(s) {
+    return $`
+      <article class="${safe(s.attr)} ${s.attr}">
+        <h1>${safe(s.title)} ${s.title}</h1>
+        <p>
+          ${safe(s.content)} ${s.content}
+        </p>
+      </article>
+    `;
+  }
+
+
+  function skipTests(s) {
+    return $`
+      <article class="${skip(s.attr)} ${s.attr}">
+        <h1>${skip(s.title)} ${s.title}</h1>
+        <p>
+          ${skip(s.content)} ${s.content}
+        </p>
+      </article>
+    `;
+  }
+
+  function safeSkipTests(s) {
+    return $`
+      <article class="${skip(safe(s.attr))} ${s.attr}">
+        <h1>${skip(safe(s.title))} ${s.title}</h1>
+        <p>
+          ${skip(safe(s.content))} ${s.content}
+        </p>
+      </article>
+      <article class="${safe(skip(s.attr))} ${s.attr}">
+        <h1>${safe(skip(s.title))} ${s.title}</h1>
+        <p>
+          ${safe(skip(s.content))} ${s.content}
+        </p>
+      </article>
+    `;
+  }
+  
+</script>
