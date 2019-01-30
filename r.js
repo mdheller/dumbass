@@ -63,19 +63,24 @@
 
       let instanceKey, cacheKey;
 
-      v = v.map(parseVal);
+      v = v.map(guardAndTransformVal);
 
       if ( useCache ) {
         ({key:instanceKey} = (v.find(isKey) || {}));
         cacheKey = p.join('<link rel=join>');
         const {cached,firstCall} = isCached(cacheKey,v,instanceKey);
        
-        if ( ! firstCall ) return cached;
+        if ( ! firstCall ) {
+          cached.update(v);
+          return cached;
+        }
       }
+      
+      // compile the template into an updater
 
       p = [...p]; 
       const vmap = {};
-      const V = v.map(replaceVal(vmap));
+      const V = v.map(replaceValWithKeyAndOmitInstanceKey(vmap));
       const externals = [];
       let str = '';
 
@@ -297,7 +302,6 @@
       }
 
   // helpers
-    // EDGE does not have .attributes IDL property 
     function getAttributes(node) {
       if ( ! node.hasAttribute ) return [];
       if ( !! node.attributes && Number.isInteger(node.attributes.length) ) return Array.from(node.attributes);
@@ -442,9 +446,6 @@
             firstCall = false;
           }
         }
-        if ( ! firstCall ) {
-          cached.update(v);
-        }
         return {cached,firstCall};
       }
 
@@ -488,8 +489,9 @@
       }
 
     // other helpers
-      function replaceVal(vmap) {
+      function replaceValWithKeyAndOmitInstanceKey(vmap) {
         return (val,vi) => {
+          // omit instance key
           if ( T.check(T`Key`, val) ) {
             return '';
           }
@@ -510,7 +512,7 @@
         return f;
       }
 
-      function parseVal(v) {
+      function guardAndTransformVal(v) {
         const isFunc          = T.check(T`Function`, v);
         const isUnset         = T.check(T`None`, v);
         const isObject        = T.check(T`Object`, v);
