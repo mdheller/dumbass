@@ -292,12 +292,14 @@
             case "funcarray":       updateAttrWithFuncarrayValue(newVal, scope); break;
             case "function":        updateAttrWithFunctionValue(newVal, scope); break;
             case "handlers":        updateAttrWithHandlersValue(newVal, scope); break;
-            case "brutalobject":    // deliberate fall through
-              console.log("Brutal Object in attr", newVal);
-              newVal = nodesToStr(newVal.nodes);
+            case "safeobject":     
+            case "brutalobject": 
+              newVal = nodesToStr(newVal.nodes); 
+              updateAttrWithTextValue(newVal, scope); break;
             case "safeattrobject":  // deliberate fall through
               newVal = newVal.str;
-            default:                updateAttrWithTextValue(newVal, scope); break;
+            default:                
+              updateAttrWithTextValue(newVal, scope); break;
           }
         };
       }

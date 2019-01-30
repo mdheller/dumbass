@@ -8,12 +8,12 @@
 <script type=module defer>
   import {R,$} from '../r.js';
   
-  const {skip,safe} = R;
+  const {attrskip,skip,safe} = R;
 
   const S = {
-    attr: "abc",
-    title: "def",
-    content: "ghi"
+    attr: `<` + `script>alert('abc');<` + `/script>`,
+    title: `<` + `script>alert('def');<` + `/script>`,
+    content: `<` + `script>alert('ghi');<` + `/script>`
   };
 
   safeTests(S).to('body','beforeEnd');
@@ -36,7 +36,7 @@
   function skipTests(s) {
     return $`${{key:'test2'}}
       Skip tests
-      <article class="${skip(s.attr)} ${s.attr}">
+      <article class="${attrskip(s.attr)} ${s.attr}">
         <h1>${skip(s.title)} ${s.title}</h1>
         <p>
           ${skip(s.content)} ${s.content}
@@ -48,17 +48,17 @@
   function safeSkipTests(s) {
     return $`${{key:'test3'}}
       Skip safe tests
-      <article class="${skip(safe(s.attr))} ${s.attr}">
+      <article class="${attrskip(safe(s.attr))} ${s.attr}">
         <h1>${skip(safe(s.title))} ${s.title}</h1>
         <p>
           ${skip(safe(s.content))} ${s.content}
         </p>
       </article>
-      Safe skip tests
-      <article class="${safe(skip(s.attr))} ${s.attr}">
-        <h1>${safe(skip(s.title))} ${s.title}</h1>
+      <s>Safe skip tests</s> (safe cannot wrap anything that's not a primitive)
+      <article class="${(attrskip(s.attr))} ${s.attr}">
+        <h1>${(skip(s.title))} ${s.title}</h1>
         <p>
-          ${safe(skip(s.content))} ${s.content}
+          ${(skip(s.content))} ${s.content}
         </p>
       </article>
     `;
