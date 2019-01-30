@@ -1,3 +1,10 @@
+<style>
+  article::before {
+    display: block;
+    content: "Class=" attr(class);
+    background: grey;
+  }
+</style>
 <script type=module defer>
   import {R,$} from '../r.js';
   
@@ -9,12 +16,13 @@
     content: "ghi"
   };
 
-  safeTests(S).to('body','afterBegin');
-  skipTests(S).to('body','afterBegin');
-  safeSkipTests(S).to('body','afterBegin');
+  safeTests(S).to('body','beforeEnd');
+  skipTests(S).to('body','beforeEnd');
+  safeSkipTests(S).to('body','beforeEnd');
 
   function safeTests(s) {
-    return $`
+    return $`${{key:'test1'}}
+      Safe tests
       <article class="${safe(s.attr)} ${s.attr}">
         <h1>${safe(s.title)} ${s.title}</h1>
         <p>
@@ -26,7 +34,8 @@
 
 
   function skipTests(s) {
-    return $`
+    return $`${{key:'test2'}}
+      Skip tests
       <article class="${skip(s.attr)} ${s.attr}">
         <h1>${skip(s.title)} ${s.title}</h1>
         <p>
@@ -37,13 +46,15 @@
   }
 
   function safeSkipTests(s) {
-    return $`
+    return $`${{key:'test3'}}
+      Skip safe tests
       <article class="${skip(safe(s.attr))} ${s.attr}">
         <h1>${skip(safe(s.title))} ${s.title}</h1>
         <p>
           ${skip(safe(s.content))} ${s.content}
         </p>
       </article>
+      Safe skip tests
       <article class="${safe(skip(s.attr))} ${s.attr}">
         <h1>${safe(skip(s.title))} ${s.title}</h1>
         <p>
@@ -52,5 +63,4 @@
       </article>
     `;
   }
-  
 </script>
