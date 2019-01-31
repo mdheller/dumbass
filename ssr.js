@@ -1,5 +1,5 @@
 // server side rendering 
-  import {safe,CODE} from './common.js';
+  import {CODE} from './common.js';
   import T from './types.js';
 
   const LAST_ATTR_NAME    = /\s+([\w-]+)\s*=\s*"?\s*$/;
@@ -48,7 +48,8 @@
         handlers[hid].push(...Object.entries(val).map(([eventName,handler]) => {eventName,handler}));
       } else {
         str += part;
-        str += attrNameMatches ? `${safe(val)}` : safe(val);
+        //str += (attrNameMatches ? `${safe(val)}` : safe(val));
+        str += val;
       }
     }
     if ( handlers[hid] ) str = markInsertionPoint({str,lastNewTagIndex,lastTagName,hid});

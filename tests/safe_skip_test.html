@@ -23,7 +23,7 @@
   function safeTests(s) {
     return $`${{key:'test1'}}
       Safe tests
-      <article class="${safe(s.attr)} ${s.attr}">
+      <article class="${(s.attr)} ${s.attr}">
         <h1>${(s.title)} ${s.title}</h1>
         <p>
           ${(s.content)} ${s.content}
