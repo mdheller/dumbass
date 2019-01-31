@@ -5,7 +5,7 @@
   const LAST_ATTR_NAME    = /\s+([\w-]+)\s*=\s*"?\s*$/;
   const NEW_TAG           = /<\w+/g;
 
-  Object.assign(S,{skip:Sskip});
+  Object.assign(S,{markup:Smarkup});
 
   export function S(parts, ...vals) {
     const handlers = {};
@@ -100,7 +100,7 @@
     return before + `<!--${hid}-->` + after;
   }
 
-  function Sskip(str) {
+  function Smarkup(str) {
     str = (str || '')+'';
     return { str, handlers: {}, code: CODE };
   }

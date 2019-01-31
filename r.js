@@ -4,6 +4,10 @@
     import {S} from './ssr.js';
     import T from './types.js';
 
+  // backwards compatible alias
+    const skip = markup;
+    const attrskip = attrmarkup;
+
   // constants
     BROWSER_SIDE && (self.onerror = (...v) => (console.log(v[4].message, v[4].stack), true));
     const DEBUG             = false;
@@ -40,9 +44,9 @@
 
   // main exports 
     if ( BROWSER_SIDE ) {
-      Object.assign(R,{s,attrskip,skip,guardEmptyHandlers,die,BROWSER_SIDE});
+      Object.assign(R,{s,attrskip,skip,attrmarkup,markup,guardEmptyHandlers,die,BROWSER_SIDE});
     } else {
-      Object.assign(R,{skip:S.skip});
+      Object.assign(R,{markup:S.markup, skip:S.markup});
     }
 
     if ( DEBUG && BROWSER_SIDE ) {
@@ -166,7 +170,7 @@
           if ( scope.oldVal == newVal ) return;
           scope.val.val = newVal;
           switch(getType(newVal)) {
-            case "skippedobject": 
+            case "markupobject": 
             case "brutalobject":
               handleMarkupInNode(newVal, scope); break;
             default:
@@ -292,11 +296,11 @@
             case "funcarray":       updateAttrWithFuncarrayValue(newVal, scope); break;
             case "function":        updateAttrWithFunctionValue(newVal, scope); break;
             case "handlers":        updateAttrWithHandlersValue(newVal, scope); break;
-            case "skippedobject":     
+            case "markupobject":     
             case "brutalobject": 
               newVal = nodesToStr(newVal.nodes); 
               updateAttrWithTextValue(newVal, scope); break;
-            case "skippedattrobject":  // deliberate fall through
+            case "markupattrobject":  // deliberate fall through
               newVal = newVal.str;
             default:                
               updateAttrWithTextValue(newVal, scope); break;
@@ -405,8 +409,8 @@
       const type = T.check(T`Function`, val) ? 'function' :
         T.check(T`Handlers`, val) ? 'handlers' : 
         T.check(T`BrutalObject`, val) ? 'brutalobject' : 
-        T.check(T`SafeObject`, val) ? 'skippedobject' :
-        T.check(T`SafeAttrObject`, val) ? 'skippedattrobject' :
+        T.check(T`MarkupObject`, val) ? 'markupobject' :
+        T.check(T`MarkupAttrObject`, val) ? 'markupattrobject' :
         T.check(T`FuncArray`, val) ? 'funcarray' : 'default';
       return type;
     }
@@ -452,13 +456,16 @@
         return {cached,firstCall};
       }
 
-    // Safe helpers
-      // Returns a "skipped object"
-      function skip(str) {
+    // Markup helpers
+      // Returns an object that Brutal treats as markup,
+      // even tho it is NOT a Brutal Object (defined with R/X/$)
+      // And even tho it is in the location of a template value replacement
+      // Which would normally be the treated as String
+      function markup(str) {
         str = T.check(T`None`, str) ? '' : str; 
         const frag = toDOM(str);
         const retVal = {
-          type: 'SafeObject',
+          type: 'MarkupObject',
           code:CODE,
           nodes:[...frag.childNodes],
           externals: []
@@ -466,12 +473,13 @@
         return retVal;
       }
 
-      // Returns a "skipped attr object"
-      function attrskip(str) {
+      // Returns an object that Brutal treats, again, as markup
+      // But this time markup that is OKAY to have within a quoted attribute
+      function attrmarkup(str) {
         str = T.check(T`None`, str) ? '' : str; 
         str = str.replace(/"/g,'&quot;');
         const retVal = {
-          type: 'SafeAttrObject',
+          type: 'MarkupAttrObject',
           code: CODE,
           str
         };
@@ -500,7 +508,7 @@
           }
           const key = ('key'+Math.random()).replace('.','').padEnd(KEYLEN,'0').slice(0,KEYLEN);
           let k = key;
-          if ( T.check(T`BrutalObject`, val) || T.check(T`SafeObject`, val) ) {
+          if ( T.check(T`BrutalObject`, val) || T.check(T`MarkupObject`, val) ) {
             k = `<!--${k}-->`;
           }
           vmap[key.trim()] = {vi,val,replacers:[]};
@@ -521,8 +529,8 @@
         const isObject        = T.check(T`Object`, v);
         const isBrutalArray   = T.check(T`BrutalArray`, v);
         const isFuncArray     = T.check(T`FuncArray`, v);
-        const isSafeObject    = T.check(T`SafeObject`, v);
-        const isSafeAttrObject= T.check(T`SafeAttrObject`, v);
+        const isMarkupObject    = T.check(T`MarkupObject`, v);
+        const isMarkupAttrObject= T.check(T`MarkupAttrObject`, v);
         const isBrutal        = T.check(T`BrutalObject`, v);
         const isForgery       = T.check(T`BrutalLikeObject`, v)  && !isBrutal; 
 
@@ -532,8 +540,8 @@
         if ( isHandlers(v) )  return v;
         if ( isBrutalArray )  return join(v); 
         if ( isFuncArray )    return v;
-        if ( isSafeObject )   return v;
-        if ( isSafeAttrObject)return v;
+        if ( isMarkupObject )   return v;
+        if ( isMarkupAttrObject)return v;
         if ( isUnset )        die({error: UNSET()});
         if ( isForgery )      die({error: XSS()});
         if ( isObject )       die({error: OBJ()});

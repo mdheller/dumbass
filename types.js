@@ -33,18 +33,18 @@
 
     export const TEmptyArray = T.def('EmptyArray', null, {verify: i => Array.isArray(i) && i.length == 0});
 
-    export const TSafeObject = T.def('SafeObject', {
+    export const TMarkupObject = T.def('MarkupObject', {
       type: T`String`,
       code: T`String`,
       nodes: T`Array`,
       externals: T`Array`,
-    }, {verify: v => v.type == 'SafeObject' && v.code == CODE});
+    }, {verify: v => v.type == 'MarkupObject' && v.code == CODE});
 
-    export const TSafeAttrObject = T.def('SafeAttrObject', {
+    export const TMarkupAttrObject = T.def('MarkupAttrObject', {
       type: T`String`,
       code: T`String`,
       str: T`String`
-    }, {verify: v => v.type == 'SafeAttrObject' && v.code == CODE});
+    }, {verify: v => v.type == 'MarkupAttrObject' && v.code == CODE});
 
   // Browser side
 
