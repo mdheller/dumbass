@@ -37,9 +37,9 @@
     return $`${{key:'test2'}}
       Skip tests
       <article class="${attrskip(s.attr)} ${s.attr}">
-        <h1>${skip(s.title)} ${s.title}</h1>
+        <h1>Skipped: ${skip(s.title)} Normal: ${s.title}</h1>
         <p>
-          ${skip(s.content)} ${s.content}
+          Skipped: ${skip(s.content)} Normal: ${s.content}
         </p>
       </article>
     `;
@@ -49,16 +49,16 @@
     return $`${{key:'test3'}}
       Skip safe tests
       <article class="${attrskip(safe(s.attr))} ${s.attr}">
-        <h1>${skip(safe(s.title))} ${s.title}</h1>
+        <h1>Skipped: ${skip(safe(s.title))} Normal: ${s.title}</h1>
         <p>
-          ${skip(safe(s.content))} ${s.content}
+          Skipped: ${skip(safe(s.content))} Normal: ${s.content}
         </p>
       </article>
       <s>Safe skip tests</s> (safe cannot wrap anything that's not a primitive)
       <article class="${(attrskip(s.attr))} ${s.attr}">
-        <h1>${(skip(s.title))} ${s.title}</h1>
+        <h1>Skipped: ${(skip(s.title))} Normal: ${s.title}</h1>
         <p>
-          ${(skip(s.content))} ${s.content}
+          Skipped: ${(skip(s.content))} Normal: ${s.content}
         </p>
       </article>
     `;
