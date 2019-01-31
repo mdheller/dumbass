@@ -1,6 +1,6 @@
 // r.js
   // imports
-    import {safe,CODE,BROWSER_SIDE} from './common.js';
+    import {CODE,BROWSER_SIDE} from './common.js';
     import {S} from './ssr.js';
     import T from './types.js';
 
@@ -40,7 +40,7 @@
 
   // main exports 
     if ( BROWSER_SIDE ) {
-      Object.assign(R,{s,safe,attrskip,skip,guardEmptyHandlers,die,BROWSER_SIDE});
+      Object.assign(R,{s,attrskip,skip,guardEmptyHandlers,die,BROWSER_SIDE});
     } else {
       Object.assign(R,{skip:S.skip});
     }
@@ -166,7 +166,7 @@
           if ( scope.oldVal == newVal ) return;
           scope.val.val = newVal;
           switch(getType(newVal)) {
-            case "safeobject": 
+            case "skippedobject": 
             case "brutalobject":
               handleMarkupInNode(newVal, scope); break;
             default:
@@ -292,11 +292,11 @@
             case "funcarray":       updateAttrWithFuncarrayValue(newVal, scope); break;
             case "function":        updateAttrWithFunctionValue(newVal, scope); break;
             case "handlers":        updateAttrWithHandlersValue(newVal, scope); break;
-            case "safeobject":     
+            case "skippedobject":     
             case "brutalobject": 
               newVal = nodesToStr(newVal.nodes); 
               updateAttrWithTextValue(newVal, scope); break;
-            case "safeattrobject":  // deliberate fall through
+            case "skippedattrobject":  // deliberate fall through
               newVal = newVal.str;
             default:                
               updateAttrWithTextValue(newVal, scope); break;
@@ -405,8 +405,8 @@
       const type = T.check(T`Function`, val) ? 'function' :
         T.check(T`Handlers`, val) ? 'handlers' : 
         T.check(T`BrutalObject`, val) ? 'brutalobject' : 
-        T.check(T`SafeObject`, val) ? 'safeobject' :
-        T.check(T`SafeAttrObject`, val) ? 'safeattrobject' :
+        T.check(T`SafeObject`, val) ? 'skippedobject' :
+        T.check(T`SafeAttrObject`, val) ? 'skippedattrobject' :
         T.check(T`FuncArray`, val) ? 'funcarray' : 'default';
       return type;
     }
@@ -453,7 +453,7 @@
       }
 
     // Safe helpers
-      // Returns a "safe object"
+      // Returns a "skipped object"
       function skip(str) {
         str = T.check(T`None`, str) ? '' : str; 
         const frag = toDOM(str);
@@ -462,6 +462,18 @@
           code:CODE,
           nodes:[...frag.childNodes],
           externals: []
+        };
+        return retVal;
+      }
+
+      // Returns a "skipped attr object"
+      function attrskip(str) {
+        str = T.check(T`None`, str) ? '' : str; 
+        str = str.replace(/"/g,'&quot;');
+        const retVal = {
+          type: 'SafeAttrObject',
+          code: CODE,
+          str
         };
         return retVal;
       }
@@ -477,18 +489,6 @@
             return NULLFUNC;
           }
         }
-      }
-
-      // Returns a "safe attr object"
-      function attrskip(str) {
-        str = T.check(T`None`, str) ? '' : str; 
-        str = str.replace(/"/g,'&quot;');
-        const retVal = {
-          type: 'SafeAttrObject',
-          code: CODE,
-          str
-        };
-        return retVal;
       }
 
     // other helpers
@@ -538,7 +538,7 @@
         if ( isForgery )      die({error: XSS()});
         if ( isObject )       die({error: OBJ()});
 
-        return safe(v+'');
+        return v+'';
       }
 
       function join(os) {

@@ -8,7 +8,7 @@
 <script type=module defer>
   import {R,$} from '../r.js';
   
-  const {attrskip,skip,safe} = R;
+  const {attrskip,skip} = R;
 
   const S = {
     attr: `<` + `script>alert('abc');<` + `/script>`,
@@ -24,9 +24,9 @@
     return $`${{key:'test1'}}
       Safe tests
       <article class="${safe(s.attr)} ${s.attr}">
-        <h1>${safe(s.title)} ${s.title}</h1>
+        <h1>${(s.title)} ${s.title}</h1>
         <p>
-          ${safe(s.content)} ${s.content}
+          ${(s.content)} ${s.content}
         </p>
       </article>
     `;
@@ -48,10 +48,10 @@
   function safeSkipTests(s) {
     return $`${{key:'test3'}}
       Skip safe tests
-      <article class="${attrskip(safe(s.attr))} ${s.attr}">
-        <h1>Skipped: ${skip(safe(s.title))} Normal: ${s.title}</h1>
+      <article class="${attrskip((s.attr))} ${s.attr}">
+        <h1>Skipped: ${skip((s.title))} Normal: ${s.title}</h1>
         <p>
-          Skipped: ${skip(safe(s.content))} Normal: ${s.content}
+          Skipped: ${skip((s.content))} Normal: ${s.content}
         </p>
       </article>
       <s>Safe skip tests</s> (safe cannot wrap anything that's not a primitive)
