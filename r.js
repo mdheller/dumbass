@@ -311,6 +311,13 @@
   // helpers
     function getAttributes(node) {
       if ( ! node.hasAttribute ) return [];
+
+      // for parity with classList.add (which trims whitespace)
+        // otherwise once the classList manipulation happens
+        // our indexes for replacement will be off
+      if ( node.hasAttribute('class') ) {
+        node.setAttribute('class', formatClassListValue(node.getAttribute('class')));
+      }
       if ( !! node.attributes && Number.isInteger(node.attributes.length) ) return Array.from(node.attributes);
       const attrs = [];
       for ( const name of node ) {
@@ -379,12 +386,30 @@
 
     function updateAttrWithTextValue(newVal, scope) {
       let {oldVal,updateName,node,input,index,name,val,externals,lengths,oldLengths} = scope;
+      let zeroWidthCorrection = 0;
       const valIndex = val.vi;
       const originalLengthBefore = Object.keys(lengths.slice(0,valIndex)).length*KEYLEN;
         
+      // we need to trim newVal to have parity with classlist add
+        // the reason we have zeroWidthCorrection = -1
+        // is because the classList is a set of non-zero width tokens
+        // separated by spaces
+        // when we have a zero width token, we have two adjacent spaces
+        // which, by virtue of our other requirement, gets replaced by a single space
+        // effectively elliding out our replacement location
+        // in order to keep our replacement location in tact
+        // we need to compensate for the loss of a token slot (effectively a token + a space)
+        // and having a -1 correction effectively does this.
+      if ( name == "class" ) {
+        newVal = newVal.trim();
+        if ( newVal.length == 0 ) {
+          zeroWidthCorrection = -1;
+        }
+        scope.val.val = newVal;
+      }
+      lengths[valIndex] = newVal.length + zeroWidthCorrection;
+      let attr = node.getAttribute(name);
 
-      lengths[valIndex] = newVal.length;
-      const attr = node.getAttribute(name);
       const lengthBefore = lengths.slice(0,valIndex).reduce((sum,x) => sum + x, 0);
 
       const correction = lengthBefore-originalLengthBefore;
@@ -393,12 +418,28 @@
 
       const newAttrValue = before + newVal + after;
 
+      DEBUG && console.log(JSON.stringify({
+        newVal,
+        valIndex,
+        lengths,
+        attr,
+        lengthBefore,
+        originalLengthBefore,
+        correction,
+        before,
+        after,
+        newAttrValue
+      }, null, 2));
+
       reliablySetAttribute(node, name, newAttrValue);
 
       scope.oldVal = newVal;
     }
 
     function reliablySetAttribute(node, name, value ) {
+      if (  name == "class" ) {
+        value = formatClassListValue(value);
+      }
       node.setAttribute(name,value);
       try {
         node[name] = value == undefined ? true : value;
@@ -500,6 +541,12 @@
       }
 
     // other helpers
+      function formatClassListValue(value) {
+        value = value.trim();
+        value = value.replace(/\s+/g, ' ');
+        return value;
+      }
+
       function replaceValWithKeyAndOmitInstanceKey(vmap) {
         return (val,vi) => {
           // omit instance key
