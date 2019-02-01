@@ -416,9 +416,16 @@
       const before = attr.slice(0,index+correction);
       const after = attr.slice(index+correction+oldVal.length);
 
-      const newAttrValue = before + newVal + after;
+      let newAttrValue;
+      
+      if ( name == "class" ) {
+        const spacer = oldVal.length == 0 ? ' ' : '';
+        newAttrValue = before + spacer + newVal + spacer + after;
+      } else {
+        newAttrValue = before + newVal + after;
+      }
 
-      DEBUG && console.log(JSON.stringify({
+      console.log(JSON.stringify({
         newVal,
         valIndex,
         lengths,
