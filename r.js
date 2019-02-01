@@ -425,7 +425,7 @@
         newAttrValue = before + newVal + after;
       }
 
-      console.log(JSON.stringify({
+      DEBUG && console.log(JSON.stringify({
         newVal,
         valIndex,
         lengths,
