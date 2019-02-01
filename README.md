@@ -1,4 +1,12 @@
-# brutal.js (2.0.2)
+# brutal.js (2.1.0)
+
+**Brutal.JS has gone PRIVATE**
+
+FUCK YEAH.
+
+FUCK EVERYONE who gives a shit about OSS. Brutal is NOW private.
+
+OORAH.
 
 Minimalist framework for building JS apps. Aims to be more efficient than React, Vue or Angular, both for rendering and development.
 

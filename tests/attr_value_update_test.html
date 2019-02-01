@@ -31,7 +31,7 @@
     let i = 0;
     while(i++ < 5) {
       attrValueTests(S2);
-      console.assert(article.getAttribute('class') == "something happening the femsplaining attr is evolving truly okay wow", `Class attribute is corrupt`);
+      console.assert(article.getAttribute('class') == "something happening the femsplaining attr maverick is evolving truly okay wow maverick", `Class attribute is corrupt`);
       await sleep(1000);
       attrValueTests(S1);
       console.assert(article.getAttribute('class') == "something happening the amazing attr is really perfecting okay wow", `Class attribute is corrupt`);
@@ -49,6 +49,8 @@
           <dt>Attr 1
           <dd>${S.adjective}
           <dt>Attr 2
+          <dd>${S.pad}
+          <dt>Attr 3
           <dd>${S.verb}
         </dl>
       </article>
