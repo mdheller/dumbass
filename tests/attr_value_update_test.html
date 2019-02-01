@@ -25,14 +25,18 @@
   start();
 
   async function start() {
+    const article = document.querySelector('article');
     while(true) {
       attrValueTests(S2);
+      console.assert(article.getAttribute('class') == " something happening the femsplaining attr is evolving truly okay wow ", `Class attribute is corrupt`);
       await sleep(1000);
       attrValueTests(S1);
+      console.assert(article.getAttribute('class') == " something happening the amazing attr is really perfecting okay wow ", `Class attribute is corrupt`);
       await sleep(1000);
+      article.classList.add('hot');
+      article.classList.remove('hot');
     }
   }
-
 
   function attrValueTests(S) {
     return $`
