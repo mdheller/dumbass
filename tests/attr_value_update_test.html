@@ -1,0 +1,50 @@
+<style>
+  article::before {
+    display: block;
+    content: "Class=" attr(class);
+    background: #eee;
+  }
+</style>
+<script type=module defer>
+  import {R,$} from '../r.js';
+  
+  const sleep = ms => new Promise(res => setTimeout(res, ms));
+
+  const S1 = {
+    adjective: 'amazing',
+    verb: 'really perfecting',
+  };
+
+  const S2 = {
+    adjective: 'femsplaining',
+    verb: 'evolving truly',
+  };
+
+  attrValueTests(S1).to('body','beforeEnd');
+
+  start();
+
+  async function start() {
+    while(true) {
+      attrValueTests(S2);
+      await sleep(1000);
+      attrValueTests(S1);
+      await sleep(1000);
+    }
+  }
+
+
+  function attrValueTests(S) {
+    return $`
+      Attr value tests
+      <article class=" something happening the ${S.adjective} attr is ${S.verb} okay wow ">
+        <dl>
+          <dt>Attr 1
+          <dd>${S.adjective}
+          <dt>Attr 2
+          <dd>${S.verb}
+        </dl>
+      </article>
+    `;
+  }
+</script>
