@@ -311,6 +311,13 @@
   // helpers
     function getAttributes(node) {
       if ( ! node.hasAttribute ) return [];
+
+      // for parity with classList.add (which trims whitespace)
+        // otherwise once the classList manipulation happens
+        // our indexes for replacement will be off
+      if ( node.hasAttribute('class') ) {
+        node.setAttribute('class', node.getAttribute('class').trim());
+      }
       if ( !! node.attributes && Number.isInteger(node.attributes.length) ) return Array.from(node.attributes);
       const attrs = [];
       for ( const name of node ) {
@@ -384,7 +391,9 @@
         
 
       lengths[valIndex] = newVal.length;
-      const attr = node.getAttribute(name);
+      let attr = node.getAttribute(name);
+
+
       const lengthBefore = lengths.slice(0,valIndex).reduce((sum,x) => sum + x, 0);
 
       const correction = lengthBefore-originalLengthBefore;
