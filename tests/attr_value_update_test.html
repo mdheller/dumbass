@@ -13,11 +13,13 @@
   const S1 = {
     adjective: 'amazing',
     verb: 'really perfecting',
+    pad: "    "
   };
 
   const S2 = {
     adjective: 'femsplaining',
     verb: 'evolving truly',
+    pad: "           "
   };
 
   attrValueTests(S1).to('body','beforeEnd');
@@ -42,7 +44,7 @@
   function attrValueTests(S) {
     return $`
       Attr value tests
-      <article class=" something happening the ${S.adjective} attr is ${S.verb} okay wow ">
+      <article class="${S.pad} something happening the ${S.adjective} attr is ${S.verb} okay wow ">
         <dl>
           <dt>Attr 1
           <dd>${S.adjective}

@@ -316,7 +316,7 @@
         // otherwise once the classList manipulation happens
         // our indexes for replacement will be off
       if ( node.hasAttribute('class') ) {
-        node.setAttribute('class', node.getAttribute('class').trim());
+        node.setAttribute('class', formatClassListValue(node.getAttribute('class')));
       }
       if ( !! node.attributes && Number.isInteger(node.attributes.length) ) return Array.from(node.attributes);
       const attrs = [];
@@ -408,6 +408,9 @@
     }
 
     function reliablySetAttribute(node, name, value ) {
+      if (  name == "class" ) {
+        value = formatClassListValue(value);
+      }
       node.setAttribute(name,value);
       try {
         node[name] = value == undefined ? true : value;
@@ -509,6 +512,12 @@
       }
 
     // other helpers
+      function formatClassListValue(value) {
+        value = value.trim();
+        value = value.replace(/\s+/g, ' ');
+        return value;
+      }
+
       function replaceValWithKeyAndOmitInstanceKey(vmap) {
         return (val,vi) => {
           // omit instance key
