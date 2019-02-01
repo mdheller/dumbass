@@ -386,13 +386,29 @@
 
     function updateAttrWithTextValue(newVal, scope) {
       let {oldVal,updateName,node,input,index,name,val,externals,lengths,oldLengths} = scope;
+      let zeroWidthCorrection = 0;
       const valIndex = val.vi;
       const originalLengthBefore = Object.keys(lengths.slice(0,valIndex)).length*KEYLEN;
         
-
-      lengths[valIndex] = newVal.length;
+      // we need to trim newVal to have parity with classlist add
+        // the reason we have zeroWidthCorrection = -1
+        // is because the classList is a set of non-zero width tokens
+        // separated by spaces
+        // when we have a zero width token, we have two adjacent spaces
+        // which, by virtue of our other requirement, gets replaced by a single space
+        // effectively elliding out our replacement location
+        // in order to keep our replacement location in tact
+        // we need to compensate for the loss of a token slot (effectively a token + a space)
+        // and having a -1 correction effectively does this.
+      if ( name == "class" ) {
+        newVal = newVal.trim();
+        if ( newVal.length == 0 ) {
+          zeroWidthCorrection = -1;
+        }
+        scope.val.val = newVal;
+      }
+      lengths[valIndex] = newVal.length + zeroWidthCorrection;
       let attr = node.getAttribute(name);
-
 
       const lengthBefore = lengths.slice(0,valIndex).reduce((sum,x) => sum + x, 0);
 
@@ -401,6 +417,19 @@
       const after = attr.slice(index+correction+oldVal.length);
 
       const newAttrValue = before + newVal + after;
+
+      DEBUG && console.log(JSON.stringify({
+        newVal,
+        valIndex,
+        lengths,
+        attr,
+        lengthBefore,
+        originalLengthBefore,
+        correction,
+        before,
+        after,
+        newAttrValue
+      }, null, 2));
 
       reliablySetAttribute(node, name, newAttrValue);
 
