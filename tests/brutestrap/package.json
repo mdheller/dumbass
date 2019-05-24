@@ -1,27 +1,26 @@
 {
-  "_from": "brutestrap@1.5.4",
+  "_from": "brutestrap@^1.5.4",
   "_id": "brutestrap@1.5.4",
   "_inBundle": false,
   "_integrity": "sha512-aC1C5biy91/cKSS8Vz6tm9zuY0Fw2bl+/DE2WWlrNTiTOLdCaAfEeU4swi9iTow/1Olls38zTYc8B4gMdVEBjQ==",
   "_location": "/brutestrap",
   "_phantomChildren": {},
   "_requested": {
-    "type": "version",
+    "type": "range",
     "registry": true,
-    "raw": "brutestrap@1.5.4",
+    "raw": "brutestrap@^1.5.4",
     "name": "brutestrap",
     "escapedName": "brutestrap",
-    "rawSpec": "1.5.4",
+    "rawSpec": "^1.5.4",
     "saveSpec": null,
-    "fetchSpec": "1.5.4"
+    "fetchSpec": "^1.5.4"
   },
   "_requiredBy": [
-    "#DEV:/",
-    "#USER"
+    "#DEV:/"
   ],
   "_resolved": "https://registry.npmjs.org/brutestrap/-/brutestrap-1.5.4.tgz",
   "_shasum": "fd36458ef3c9c07ef174281447002c515dfab9ac",
-  "_spec": "brutestrap@1.5.4",
+  "_spec": "brutestrap@^1.5.4",
   "_where": "/home/cris7fe/brutal.js",
   "author": {
     "name": "@dosy"
