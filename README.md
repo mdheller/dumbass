@@ -1,4 +1,4 @@
-# brutal.js (2.2.0)
+# brutal.js (2.2.2)
 
 **Brutal.JS has gone PRIVATE**
 
