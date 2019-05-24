@@ -9,7 +9,7 @@
     const attrskip = attrmarkup;
 
   // constants
-    BROWSER_SIDE && (self.onerror = (...v) => (console.log(v[4].message, v[4].stack), true));
+    BROWSER_SIDE && (self.onerror = (...v) => (console.log(v, v[0]+'', v[4] && v[4].message, v[4] && v[4].stack), true));
     const DEBUG             = false;
     const NULLFUNC          = () => void 0;
     const KEYMATCH          = /(?:<!\-\-)?(key\d+)(?:\-\->)?/gm;
