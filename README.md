@@ -19,6 +19,10 @@ render invocation automagically updates the right nodes.
 - Small, fast and XSS safe. 
 - Can be used in place of Deku, lit-html, AppRun or React.
 
+## PProjects Using Brutal
+
+- [BrowserGap CE](https://github.com/dosycorp/browsergap.ce) - Open Source Cloud based browser isolation for self-hosting
+
 ## Examples
 
 You can see the below test working [here](https://thiscris.com/brutal.js/tests/example_test.html).
