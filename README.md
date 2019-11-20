@@ -1,8 +1,6 @@
 # brutal.js (2.3.4)
 
-**Brutal.JS has gone PRIVATE**
-
-Minimalist framework for building JS apps. Aims to be more efficient than React, Vue or Angular, both for rendering and development.
+Minimalist view framework for building JS apps. Aims to be more efficient than React, Vue or Angular, both for rendering and development.
 
 [Tests](https://thiscris.com/brutal.js/tests/)
 
