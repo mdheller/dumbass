@@ -19,13 +19,44 @@ render invocation automagically updates the right nodes.
 - Small, fast and XSS safe. 
 - Can be used in place of Deku, lit-html, AppRun or React.
 
-## PProjects Using Brutal
+## Projects Using Brutal
 
 - [BrowserGap CE](https://github.com/dosycorp/browsergap.ce) - Open Source Cloud based browser isolation for self-hosting
 
 ## Examples
 
-You can see the below test working [here](https://thiscris.com/brutal.js/tests/example_test.html).
+### Real world example
+
+This is the core interactive image canvas in [BrowserGap](https://github.com/dosycorp/browsergap.ce). You can find the code in [/public/voodoo/src/view.js](https://github.com/dosycorp/browsergap.ce/blob/master/public/voodoo/src/view.js):
+
+```javascript
+R`
+              <canvas
+                click=${e => {
+                  if ( viewState.shouldHaveFocus && document.activeElement != viewState.shouldHaveFocus ) {
+                    viewState.shouldHaveFocus.focus(); 
+                  }
+                }}
+                bond=${[saveCanvas, asyncSizeBrowserToBounds, emulateNavigator, ...canvasBondTasks]}
+                touchstart=${retargetTouchScroll}
+                touchmove=${[
+                  e => e.preventDefault(), 
+                  throttle(retargetTouchScroll, state.EVENT_THROTTLE_MS)
+                ]}
+                wheel=${throttle(H, state.EVENT_THROTTLE_MS)}
+                mousemove=${throttle(H, state.EVENT_THROTTLE_MS)}         
+                mousedown=${H}         
+                mouseup=${H}         
+                pointermove=${throttle(H, state.EVENT_THROTTLE_MS)}         
+                pointerdown=${H}         
+                pointerup=${H}         
+                contextmenu=${subviews.makeContextMenuHandler(state)}
+              ></canvas>
+            `
+ ```
+
+
+### Other examples
 
 This demonstrates minimal DOM updating, and keyed and singleton 'DOM pinning' of components/templates.
 
