@@ -1,6 +1,14 @@
-# craydom (2.3.4)
+# :crayon:dom
 
-Minimalist view framework for building JS apps. Aims to be more efficient than React, Vue or Angular, both for rendering and development.
+Get the craydom.
+
+Do the calculation.
+
+The craydom is best.
+
+```math
+craydom = pure view + (minimal diffing) - (virtual DOM)
+```
 
 ## Features
 
@@ -15,6 +23,11 @@ Minimalist view framework for building JS apps. Aims to be more efficient than R
 - Small, fast and XSS safe. 
 - Can be used in place of Deku, lit-html, AppRun or React.
 - Namespaced event attributes add flags to addEventListener like `capture`, `passive` and `once`.
+
+## 2 line tutorial
+
+1. Install :crayon:dom
+2. Write views with template tag functions: R`...html...` for pinned/keyed components, X`...html...` for clone/duplicate components.
 
 ## Examples
 
@@ -82,7 +95,14 @@ function ButtonWidget({name}) {
 }
 ```
 
-### Other similar/related projects
+### Other similar/inferior/related projects
 
 - [lit-html](https://github.com/Polymer/lit-html)
 
+### Current version
+
+v2.3.6
+
+### Roadmap
+
+It's pretty much mature. Could add a state managment abstractionm like single source of truth store, actions that drive a state machine. But who cares about that? Plenty of that around if that's what you need. This is just teh pure viewwww.
