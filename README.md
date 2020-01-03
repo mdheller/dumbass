@@ -108,4 +108,4 @@ v2.3.6
 - Finish some issues
 - Watch the sunrise over a grateful universe
 
-It's pretty much mature. Could add a state managment abstractionm like single source of truth store, actions that drive a state machine. But who cares about that? Plenty of that around if that's what you need. This is just teh pure viewwww.
+It's pretty much mature. Could add a state managment abstraction like single source of truth store, actions that drive a state machine. But who cares about that? Plenty of that around if that's what you need. This is just teh pure viewwww.
