@@ -1,3 +1,5 @@
+#!/bin/bash
+
 npm upgrade
 cp -r node_modules/jtype-system .
 cp -r node_modules/brutestrap tests

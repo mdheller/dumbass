@@ -331,10 +331,18 @@
     function updateAttrWithFunctionValue(newVal, scope) {
       let {oldVal,updateName,node,input,index,name,val,externals,lengths,oldLengths} = scope;
       if ( name !== 'bond' ) {
-        if ( !! oldVal ) {
-          node.removeEventListener(name, oldVal);
+        let flags = {};
+        if ( name.includes(':') ) {
+          ([name, ...flags] = name.split(':'));
+          flags = flags.reduce((O,f) => {
+            O[f] = true;
+            return O;
+          }, {});
         }
-        node.addEventListener(name, newVal); 
+        if ( !! oldVal ) {
+          node.removeEventListener(name, oldVal, flags);
+        }
+        node.addEventListener(name, newVal, flags); 
       } else {
         if ( !! oldVal ) {
           const index = externals.indexOf(oldVal);
@@ -353,10 +361,18 @@
         oldVal = [oldVal]; 
       }
       if ( name !== 'bond' ) {
-        if ( !! oldVal ) {
-          oldVal.forEach(of => node.removeEventListener(name, of));
+        let flags = {};
+        if ( name.includes(':') ) {
+          ([name, ...flags] = name.split(':'));
+          flags = flags.reduce((O,f) => {
+            O[f] = true;
+            return O;
+          }, {});
         }
-        newVal.forEach(f => node.addEventListener(name, f));
+        if ( !! oldVal ) {
+          oldVal.forEach(of => node.removeEventListener(name, of, flags));
+        }
+        newVal.forEach(f => node.addEventListener(name, f, flags));
       } else {
         if ( !! oldVal ) {
           oldVal.forEach(of => {
@@ -373,10 +389,38 @@
 
     function updateAttrWithHandlersValue(newVal, scope) {
       let {oldVal,updateName,node,input,index,name,val,externals,lengths,oldLengths} = scope;
-      // Add a remove for oldVal handlers object, to remove the handlers in oldVal
+      if ( !!oldVal && T.check(T`Handlers`, oldVal) ) {
+        Object.entries(oldVal).forEach(([eventName,funcVal]) => {
+          if ( eventName !== 'bond' ) {
+            let flags = {};
+            if ( eventName.includes(':') ) {
+              ([eventName, ...flags] = eventName.split(':'));
+              flags = flags.reduce((O,f) => {
+                O[f] = true;
+                return O;
+              }, {});
+            }
+            console.log(eventName, funcVal, flags);
+            node.removeEventListener(eventName, funcVal, flags); 
+          } else {
+            const index = externals.indexOf(funcVal);
+            if ( index >= 0 ) {
+              externals.splice(index,1);
+            }
+          }
+        });
+      }
       Object.entries(newVal).forEach(([eventName,funcVal]) => {
         if ( eventName !== 'bond' ) {
-          node.addEventListener(eventName, funcVal); 
+          let flags = {};
+          if ( eventName.includes(':') ) {
+            ([eventName, ...flags] = eventName.split(':'));
+            flags = flags.reduce((O,f) => {
+              O[f] = true;
+              return O;
+            }, {});
+          }
+          node.addEventListener(eventName, funcVal, flags); 
         } else {
           externals.push(() => funcVal(node)); 
         }

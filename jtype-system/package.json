@@ -1,28 +1,4 @@
 {
-  "_from": "jtype-system@1.1.1",
-  "_id": "jtype-system@1.1.1",
-  "_inBundle": false,
-  "_integrity": "sha512-r1J+8KRc9mIze/KJJm37FeSD06PyftS8Y+fYqe0sle56A3hVPCNWRIklc99807Ao1h7dGnbajQpq7OshNE+L6w==",
-  "_location": "/jtype-system",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "version",
-    "registry": true,
-    "raw": "jtype-system@1.1.1",
-    "name": "jtype-system",
-    "escapedName": "jtype-system",
-    "rawSpec": "1.1.1",
-    "saveSpec": null,
-    "fetchSpec": "1.1.1"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/jtype-system/-/jtype-system-1.1.1.tgz",
-  "_shasum": "8122021b1c762d4cb86707b1eb753de2d11f3e6e",
-  "_spec": "jtype-system@1.1.1",
-  "_where": "/home/cris7fe/brutal.js",
   "author": {
     "name": "@dosy"
   },
@@ -43,7 +19,7 @@
   "name": "jtype-system",
   "repository": {
     "type": "git",
-    "url": "https://github.com//crislin2046/jtype"
+    "url": "https://github.com/crislin2046/jtype"
   },
   "scripts": {
     "test": "serve -p 8080"
