@@ -54,15 +54,15 @@
     }
 
     export function R(p,...v) {
-      return brutal(p,v);
+      return craydom(p,v);
     }
 
     export function X(p,...v) {
-      return brutal(p,v,{useCache:false});
+      return craydom(p,v,{useCache:false});
     }
 
   // main function (TODO: should we refactor?)
-    function brutal(p,v,{useCache:useCache=true}={}) {
+    function craydom(p,v,{useCache:useCache=true}={}) {
       if ( ! BROWSER_SIDE ) return S(p,...v);
 
       let instanceKey, cacheKey;
