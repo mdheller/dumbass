@@ -33,7 +33,7 @@ craydom = pure view + (minimal diffing) - (virtual DOM)
 
 ### Counter
 
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
   <head>
