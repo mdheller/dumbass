@@ -24,17 +24,11 @@ craydom = pure view + (minimal diffing) - (virtual DOM)
 - Can be used in place of Deku, lit-html, AppRun or React.
 - Namespaced event attributes add flags to addEventListener like `capture`, `passive` and `once`.
 
-## 2 line tutorial
-
-1. Install :crayon:dom
-2. Write views with template tag functions: R`...html...` for pinned/keyed components, X`...html...` for clone/duplicate components.
-
 ## Examples
 
 ### Counter
 
 Here's the first example to get you started: a counter that can go up or down. You can try it online [here](https://jsfiddle.net/10sjw4Lx/1/).
-
 
 ```html
 <!DOCTYPE html>
