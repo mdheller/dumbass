@@ -31,35 +31,39 @@ craydom = pure view + (minimal diffing) - (virtual DOM)
 
 ## Examples
 
-### Real world example
+### Counter
 
-This is [the core interactive image canvas from this project](https://github.com/dosyago/supreme-architect). 
+```
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="module">
+      import { R } from "https://unpkg.com/craydom/r.js";
+      
+      let state = 0;
+      const inc = () => state = state + 1;
+      const dec = () => state = state - 1;
+      
+      Counter(state).to('#app');
 
-```javascript
-R`
-  <canvas
-    click=${e => {
-      if ( viewState.shouldHaveFocus && document.activeElement != viewState.shouldHaveFocus ) {
-        viewState.shouldHaveFocus.focus(); 
+      function Counter(state) {
+        return R`
+          <h1>${state}</h1>
+          <button click=${() => {dec(); Counter(state)}}>-</button>
+          <button click=${() => {inc(); Counter(state)}}>+</button>
+        `;
       }
-    }}
-    bond=${[saveCanvas, asyncSizeBrowserToBounds, emulateNavigator, ...canvasBondTasks]}
-    touchstart=${retargetTouchScroll}
-    touchmove=${[
-      e => e.preventDefault(), 
-      throttle(retargetTouchScroll, state.EVENT_THROTTLE_MS)
-    ]}
-    wheel:passive=${throttle(H, state.EVENT_THROTTLE_MS)}
-    mousemove=${throttle(H, state.EVENT_THROTTLE_MS)}         
-    mousedown=${H}         
-    mouseup=${H}         
-    pointermove=${throttle(H, state.EVENT_THROTTLE_MS)}         
-    pointerdown=${H}         
-    pointerup=${H}         
-    contextmenu=${subviews.makeContextMenuHandler(state)}
-  ></canvas>
-`
- ```
+    </script>
+  </head>
+  <body>
+    <main id="app"></main>
+  </body>
+</html>
+```
+
+### Projects Using Craydom
+
+It's used for the view UI for [this project](https://github.com/dosyago/supreme-architect). 
 
 ## Installing
 
