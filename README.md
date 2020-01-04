@@ -33,6 +33,9 @@ craydom = pure view + (minimal diffing) - (virtual DOM)
 
 ### Counter
 
+Here's the first example to get you started: a counter that can go up or down. You can try it online [here](https://jsfiddle.net/10sjw4Lx/1/).
+
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -46,9 +49,9 @@ craydom = pure view + (minimal diffing) - (virtual DOM)
       
       Counter(state).to('#app');
 
-      function Counter(state) {
+      function Counter(n) {
         return R`
-          <h1>${state}</h1>
+          <h1>${n}</h1>
           <button click=${() => {dec(); Counter(state)}}>-</button>
           <button click=${() => {inc(); Counter(state)}}>+</button>
         `;
