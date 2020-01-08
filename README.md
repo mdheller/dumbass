@@ -1,13 +1,39 @@
-# :crayon:dom
+# :crayon:crayonz
 
-Get the craydom.
+Crayonz. Code components with cross-browser web standards. No JSX, no Shadow DOM, no fancy framworks, no opinions. 
 
-Do the calculation.
+## Examples
 
-The craydom is best.
+### Counter
 
-```math
-craydom = pure view + (minimal diffing) - (virtual DOM)
+Here's the first example to get you started: a counter that can go up or down. You can try it online [here](https://jsfiddle.net/10sjw4Lx/1/).
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head> 
+    <script type="module">
+      import { R } from "https://unpkg.com/craydom/r.js";
+      
+      let state = 0;
+      const inc = () => state = state + 1;
+      const dec = () => state = state - 1;
+      const render = () => Counter(state);
+      
+      render().to('body', 'beforeEnd');
+
+      function Counter(n) {
+        return R`  
+          <div wheel=${e => (e.deltaY > 0 ? inc() : dec(), render())}>
+            <h1>${n}</h1>
+          </div>
+        `;
+      }
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
 ```
 
 ## Features
@@ -24,67 +50,29 @@ craydom = pure view + (minimal diffing) - (virtual DOM)
 - Can be used in place of Deku, lit-html, AppRun or React.
 - Namespaced event attributes add flags to addEventListener like `capture`, `passive` and `once`.
 
-## Examples
-
-### Counter
-
-Here's the first example to get you started: a counter that can go up or down. You can try it online [here](https://jsfiddle.net/10sjw4Lx/1/).
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <script type="module">
-      import { R } from "https://unpkg.com/craydom/r.js";
-      
-      let state = 0;
-      const inc = () => state = state + 1;
-      const dec = () => state = state - 1;
-      
-      Counter(state).to('#app');
-
-      function Counter(n) {
-        return R`
-          <h1>${n}</h1>
-          <button click=${() => {dec(); Counter(state)}}>-</button>
-          <button click=${() => {inc(); Counter(state)}}>+</button>
-        `;
-      }
-    </script>
-  </head>
-  <body>
-    <main id="app"></main>
-  </body>
-</html>
-```
-
-### Projects Using Craydom
-
-It's used for the view UI for [this project](https://github.com/dosyago/supreme-architect). 
-
 ## Installing
 
 From NPM:
 
 ```shell
-$ npm i --save craydom
+$ npm i --save crayonz
 ```
 
 Then using on server with CJS:
 
 ```JavaScript
-  import {R,X} from 'craydom';
+  import {R,X} from 'crayonz';
 ```
 
 Using on client with the Unpkg CDN:
 
 ```HTML
-  <script type=module src=https://unpkg.com/craydom/r.js></script>
+  <script type=module src=https://unpkg.com/crayonz/r.js></script>
 ```
 
 ## Simple Example
 
-This is craydom:
+This is crayonz:
 
 ```JavaScript
 function ButtonWidget({name}) {
