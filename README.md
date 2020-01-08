@@ -37,7 +37,7 @@ Or import in a module:
 Here's the last example you'll ever need:
 [Try online here](https://codepen.io/dosycorp/pen/OJPQQzB?editors=1000).
 
-```jsx
+```html
 <!DOCTYPE html>
 <html lang="en">
   <head> 
