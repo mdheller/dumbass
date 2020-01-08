@@ -26,5 +26,5 @@
   },
   "scripts": {
     "test": "serve -p 8080"
-  },
+  }
 }
