@@ -67,7 +67,3 @@ Or import in a module:
 ```
 
 [See a CodePen how-to of above](https://codepen.io/dosycorp/pen/OJPQQzB?editors=1000)
-
-## Philosophy
-
-Make code you can fix at 2 AM with a hangover. Use tools that let you do that.
