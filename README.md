@@ -1,6 +1,8 @@
 # :bug: [dumbass](https://github.com/dosyago/dumbass) [![npm](https://img.shields.io/npm/v/dumbass.svg?label=&color=0080FF)](https://github.com/dosyago/dumbass/releases/latest)
 
-> Chosen by toddlers, insects, imbeciles and stupid, lazy coders.
+> Chosen by toddlers, insects, imbeciles, stupid, lazy coders and boring people.
+
+**Be boring, be dumb.**
 
 Make components from cross-browser web standards without thinking too hard. No JSX, no Shadow DOM, no fancy framworks, no opinions.
 
@@ -34,7 +36,11 @@ function Spin(n) {
 }
 ```
 
-See [more code](https://github.com/dosyago/dumbass/blob/master/tests/rvanillatodo/src/app.js) in a 250 line [TodoMVC test](https://dosyago.github.io/dumbass/tests/rvanillatodo/)
+## Still not bored?
+
+You soon will be. Nothing amazing here: [Play with the full example on CodePen](https://codepen.io/dosycorp/pen/OJPQQzB?editors=1000)
+
+See [even more boring code](https://github.com/dosyago/dumbass/blob/master/tests/rvanillatodo/src/app.js) in a 250 line [TodoMVC test](https://dosyago.github.io/dumbass/tests/rvanillatodo/)
 
 ## Install mantras
 
@@ -61,3 +67,7 @@ Or import in a module:
 ```
 
 [See a CodePen how-to of above](https://codepen.io/dosycorp/pen/OJPQQzB?editors=1000)
+
+## Philosophy
+
+Make code you can fix at 2 AM with a hangover. Use tools that let you do that.
