@@ -15,7 +15,8 @@
     "framework"
   ],
   "license": "Unlicense",
-  "main": "dist/r.js",
+  "main": "r.js",
+  "browser": "dist/r.js",
   "name": "dumbass",
   "repository": {
     "type": "git",
