@@ -80,3 +80,4 @@ Here's the last example you'll ever need:
 </html>
 ```
 
+[See more code in a 250 line TodoMVC example](https://dosyago.github.io/dumbass/tests/rvanillatodo/src/app.js)
