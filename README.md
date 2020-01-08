@@ -2,7 +2,7 @@
 
 > Chosen by toddlers, insects, imbeciles and stupid coders.
 
-Code components with cross-browser web standards. No JSX, no Shadow DOM, no fancy framworks, no opinions. 
+Code components with cross-browser web standards. No JSX, no Shadow DOM, no fancy framworks, no opinions. No tricks.
 
 - **Just HTML, CSS and JavaScript**—No JSX, no Shadow DOM, no fancy frameworks, no opinions. 
 - **Stop learning, stagnate!**—Use the syntax you already know. Stop learning new things. Do more with what's already here.
