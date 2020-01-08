@@ -1,8 +1,8 @@
 # :bug: [dumbass](https://github.com/dosyago/dumbass) [![npm](https://img.shields.io/npm/v/dumbass.svg?label=&color=0080FF)](https://github.com/dosyago/dumbass/releases/latest)
 
-> Chosen by toddlers, insects, imbeciles and stupid coders.
+> Chosen by toddlers, insects, imbeciles and stupid, lazy coders.
 
-Make components from cross-browser web standards. No JSX, no Shadow DOM, no fancy framworks, no opinions.
+Make components from cross-browser web standards without thinking too hard. No JSX, no Shadow DOM, no fancy framworks, no opinions.
 
 - **Just HTML, CSS and JavaScript**—No JSX, no Shadow DOM, no fancy frameworks, no opinions. 
 - **Stop learning, stagnate!**—Use the syntax you already know. Stop learning new things. Do more with what's already here.
