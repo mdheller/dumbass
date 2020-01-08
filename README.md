@@ -8,7 +8,7 @@ Code components with cross-browser web standards. No JSX, no Shadow DOM, no fanc
 - **Stop learning, stagnate!**—Use the syntax you already know. Stop learning new things. Do more with what's already here.
 - **Crazy and fun, but in a serious way**—Crayonz lifts HTML+CSS+JS to make it productive for building web app UIs. 
 
-To learn more...oh wait, you already know enough. Just read on to see 1 example and install mantras.
+*To learn more*...oh wait, you already know enough. Read on to see 1 example and install mantras.
 
 ## Quickstart
 
@@ -31,7 +31,6 @@ Or import in a module:
   import { R, X } from "https://unpkg.com/crayonz"
 </script>
 ```
-
 
 ### Spinner Example
 
