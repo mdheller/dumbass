@@ -4,9 +4,9 @@ Crayonz. Code components with cross-browser web standards. No JSX, no Shadow DOM
 
 ## Examples
 
-### Counter
+### Spinner
 
-Here's the first example to get you started: a counter that can go up or down. You can try it online [here](https://jsfiddle.net/10sjw4Lx/1/).
+Here's the first example to get you started: a spinner that can go up or down. You can try it online [here](https://codepen.io/dosycorp/pen/OJPQQzB?editors=1000).
 
 ```html
 <!DOCTYPE html>
@@ -15,17 +15,27 @@ Here's the first example to get you started: a counter that can go up or down. Y
     <script type="module">
       import { R } from "https://unpkg.com/craydom/r.js";
       
-      let state = 0;
-      const inc = () => state = state + 1;
-      const dec = () => state = state - 1;
-      const render = () => Counter(state);
+      let state = 500;
+      const inc = () => state++;
+      const dec = () => state--;
+      const spin = e => (e.deltaY > 0 ? inc() : dec(), Spin(state));
+      const step = e => (state = e.target.value, Spin(state));
       
-      render().to('body', 'beforeEnd');
+      Spin(state).to('body', 'beforeEnd');
 
-      function Counter(n) {
+      function Spin(n) {
         return R`  
-          <div wheel=${e => (e.deltaY > 0 ? inc() : dec(), render())}>
-            <h1>${n}</h1>
+          <div wheel=${spin}>
+            <h1>
+              <progress 
+                max=1000
+                value=${n}
+              ></progress>
+              <hr>
+              <input 
+                input=${step}
+                type=number 
+                value=${n}>
           </div>
         `;
       }
@@ -67,30 +77,9 @@ Then using on server with CJS:
 Using on client with the Unpkg CDN:
 
 ```HTML
-  <script type=module src=https://unpkg.com/crayonz/r.js></script>
+  <script type=module src=https://unpkg.com/crayonz></script>
 ```
 
-## Simple Example
-
-This is crayonz:
-
-```JavaScript
-function ButtonWidget({name}) {
-  return R`
-    <button click=${() => showModal(name)}>
-      Show ${name} Modal
-    </button>
-  `;
-}
-```
-
-### Other similar/inferior/related projects
-
-- [lit-html](https://github.com/Polymer/lit-html)
-
-### Current version
-
-v2.3.6
 
 ### Roadmap
 
