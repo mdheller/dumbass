@@ -1,12 +1,16 @@
-# :crayon:crayonz
+# :crayon: crayonz
 
 Crayonz. Code components with cross-browser web standards. No JSX, no Shadow DOM, no fancy framworks, no opinions. 
+:crayzon:
+:crayzon:
+:crayzon:
 
-## Examples
+## Examplez
 
 ### Spinner
 
-Here's the first example to get you started: a spinner that can go up or down. You can try it online [here](https://codepen.io/dosycorp/pen/OJPQQzB?editors=1000).
+Here's the first example to get you started: a spinner. 
+[Try online here](https://codepen.io/dosycorp/pen/OJPQQzB?editors=1000).
 
 ```html
 <!DOCTYPE html>
@@ -35,7 +39,8 @@ Here's the first example to get you started: a spinner that can go up or down. Y
               <input 
                 input=${step}
                 type=number 
-                value=${n}>
+                value=${n}
+              >
           </div>
         `;
       }
@@ -46,21 +51,7 @@ Here's the first example to get you started: a spinner that can go up or down. Y
 </html>
 ```
 
-## Features
-
-- Minimal DOM updates without "Virtual DOM" overhead
-- Keyed, singleton (from `R` tag), and clone (from `X` tag) components
-- Pinned DOM locations
-- Uses native JS features and requires no transpilation or build step.
-- Fully isomorphic, running browser-side or server-side (with builtin hydration).
-- Use normal HTML conventions (omit some end tags, omit quotes, lowercase attr names ~ unlike JSX).
-- Concise, declarative, literate syntax using tagged template literals.
-- Add event listeners inline using the lowercased event name, like `click`, `keydown`, etc.
-- Small, fast and XSS safe. 
-- Can be used in place of Deku, lit-html, AppRun or React.
-- Namespaced event attributes add flags to addEventListener like `capture`, `passive` and `once`.
-
-## Installing
+## Installz
 
 From NPM:
 
@@ -79,6 +70,21 @@ Using on client with the Unpkg CDN:
 ```HTML
   <script type=module src=https://unpkg.com/crayonz></script>
 ```
+
+
+## Good weird
+
+- Minimal DOM updates without "Virtual DOM" overhead
+- Keyed, singleton (from `R` tag), and clone (from `X` tag) components
+- Pinned DOM locations
+- Uses native JS features and requires no transpilation or build step.
+- Fully isomorphic, running browser-side or server-side (with builtin hydration).
+- Use normal HTML conventions (omit some end tags, omit quotes, lowercase attr names ~ unlike JSX).
+- Concise, declarative, literate syntax using tagged template literals.
+- Add event listeners inline using the lowercased event name, like `click`, `keydown`, etc.
+- Small, fast and XSS safe. 
+- Can be used in place of Deku, lit-html, AppRun or React.
+- Namespaced event attributes add flags to addEventListener like `capture`, `passive` and `once`.
 
 
 ### Roadmap
