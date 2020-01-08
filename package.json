@@ -16,6 +16,8 @@
   ],
   "license": "Unlicense",
   "main": "r.js",
+  "unpkg": "r.js",
+  "module": "r.js",
   "browser": "dist/r.js",
   "name": "dumbass",
   "repository": {
