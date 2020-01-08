@@ -1,6 +1,6 @@
 // types
+  import {T} from './t.js';
   import {CODE} from './common.js';
-  import {T} from '../jtype-system/t.js';
 
   // T
 

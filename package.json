@@ -7,8 +7,6 @@
   },
   "bundleDependencies": false,
   "dependencies": {
-    "esm": "^3.0.74",
-    "jtype-system": "^1.1.1"
   },
   "description": "dumbass. Code components without opinions.",
   "homepage": "https://github.com/dosyago/dumbass#readme",
