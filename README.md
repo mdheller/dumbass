@@ -6,7 +6,7 @@ Make components from cross-browser web standards. No JSX, no Shadow DOM, no fanc
 
 - **Just HTML, CSS and JavaScript**—No JSX, no Shadow DOM, no fancy frameworks, no opinions. 
 - **Stop learning, stagnate!**—Use the syntax you already know. Stop learning new things. Do more with what's already here.
-- **Crazy and fun, but in a serious way**—Crayonz lifts HTML+CSS+JS to make it productive for building web app UIs. 
+- **Crazy and fun, but in a serious way**—Dumbass is the tool for people who don't want to think too hard to make UI. 
 
 *To learn more*...oh wait, you already know enough. Read on to see 1 example and install mantras.
 
