@@ -1,15 +1,41 @@
-# :crayon: crayonz
+# :crayon: [crayonz](https://github.com/dosyago/crayonz) [![npm](https://img.shields.io/npm/v/crayonz.svg?label=&color=0080FF)](https://github.com/dosyago/crayonz/releases/latest)
 
-Crayonz. Code components with cross-browser web standards. No JSX, no Shadow DOM, no fancy framworks, no opinions. 
-:crayon:
-:crayon:
-:crayon:
+> Preferred by toddlers, imbeciles, and careless lazy coders.
 
-## Examplez
+Code components with cross-browser web standards. No JSX, no Shadow DOM, no fancy framworks, no opinions. 
 
-### Spinner
+- **Just HTML, CSS and JavaScript**—No JSX, no Shadow DOM, no fancy frameworks, no opinions. 
+- **Stop learning, stagnate!**—Use the syntax you already know. Stop learning new things. Do more with what's already here.
+- **Crazy and fun, but in a serious way**—Crayonz lifts HTML+CSS+JS to make it productive for building web app UIs. 
 
-Here's the first example to get you started: a spinner. 
+To learn more...oh wait, you already know enough. Just read on to see 1 example and install mantras.
+
+## Quickstart
+
+Install crayonz with npm:
+
+```console
+npm i --save crayonz
+```
+
+Use [Parcel](https://parceljs.org) or [Webpack](https://webpack.js.org) and import:
+
+```js
+import { R, X } from "crayonz"
+```
+
+Or import in a module:
+
+```html
+<script type="module">
+  import { R, X } from "https://unpkg.com/crayonz"
+</script>
+```
+
+
+### Spinner Example
+
+Here's the last example you'll ever need:
 [Try online here](https://codepen.io/dosycorp/pen/OJPQQzB?editors=1000).
 
 ```jsx
@@ -29,7 +55,7 @@ Here's the first example to get you started: a spinner.
 
       function Spin(n) {
         return R`  
-          <div wheel=${spin}>
+          <div wheel:passive=${spin}>
             <h1>
               <progress 
                 max=1000
@@ -50,46 +76,3 @@ Here's the first example to get you started: a spinner.
   </body>
 </html>
 ```
-
-## Installz
-
-From NPM:
-
-```shell
-$ npm i --save crayonz
-```
-
-Then using on server with CJS:
-
-```JavaScript
-  import {R,X} from 'crayonz';
-```
-
-Using on client with the Unpkg CDN:
-
-```HTML
-  <script type=module src=https://unpkg.com/crayonz></script>
-```
-
-
-## Good weird
-
-- Minimal DOM updates without "Virtual DOM" overhead
-- Keyed, singleton (from `R` tag), and clone (from `X` tag) components
-- Pinned DOM locations
-- Uses native JS features and requires no transpilation or build step.
-- Fully isomorphic, running browser-side or server-side (with builtin hydration).
-- Use normal HTML conventions (omit some end tags, omit quotes, lowercase attr names ~ unlike JSX).
-- Concise, declarative, literate syntax using tagged template literals.
-- Add event listeners inline using the lowercased event name, like `click`, `keydown`, etc.
-- Small, fast and XSS safe. 
-- Can be used in place of Deku, lit-html, AppRun or React.
-- Namespaced event attributes add flags to addEventListener like `capture`, `passive` and `once`.
-
-
-### Roadmap
-
-- Finish some issues
-- Watch the sunrise over a grateful universe
-
-It's pretty much mature. Could add a state managment abstraction like single source of truth store, actions that drive a state machine. But who cares about that? Plenty of that around if that's what you need. This is just teh pure viewwww.
