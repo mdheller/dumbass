@@ -1,9 +1,9 @@
 # :crayon: crayonz
 
 Crayonz. Code components with cross-browser web standards. No JSX, no Shadow DOM, no fancy framworks, no opinions. 
-:crayzon:
-:crayzon:
-:crayzon:
+:crayon:
+:crayon:
+:crayon:
 
 ## Examplez
 
@@ -12,7 +12,7 @@ Crayonz. Code components with cross-browser web standards. No JSX, no Shadow DOM
 Here's the first example to get you started: a spinner. 
 [Try online here](https://codepen.io/dosycorp/pen/OJPQQzB?editors=1000).
 
-```html
+```jsx
 <!DOCTYPE html>
 <html lang="en">
   <head> 
