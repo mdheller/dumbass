@@ -59,7 +59,7 @@ Here's the last example you'll ever need:
         Spin(state);
       };
       const step = e => {
-        state = e.target.value;
+        state = e.target.value || 0;
         Spin(state);
       };
       const move = e => {
