@@ -24,6 +24,8 @@ Use [Parcel](https://parceljs.org) or [Webpack](https://webpack.js.org) and impo
 import { R, X } from "dumbass"
 ```
 
+[See a CodeSandbox demonstration of above](https://codesandbox.io/s/dumbass-playground-jxbx4)
+
 Or import in a module:
 
 ```html
@@ -31,6 +33,8 @@ Or import in a module:
   import { R, X } from "https://unpkg.com/dumbass"
 </script>
 ```
+
+[See a CodePen demo of above](https://codepen.io/dosycorp/pen/OJPQQzB?editors=1000)
 
 ### Spinner Example
 
