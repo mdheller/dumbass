@@ -80,4 +80,4 @@ Here's the last example you'll ever need:
 </html>
 ```
 
-See [more code](https://dosyago.github.io/dumbass/tests/rvanillatodo/src/app.js) in a 250 line [TodoMVC demo](https://dosyago.github.io/dumbass/tests/rvanillatodo/)
+See [more code](https://github.com/dosyago/dumbass/blob/master/tests/rvanillatodo/src/app.js) in a 250 line [TodoMVC test](https://dosyago.github.io/dumbass/tests/rvanillatodo/)
