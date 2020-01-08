@@ -1,7 +1,6 @@
 // r.js
   // imports
-    import {CODE,BROWSER_SIDE} from './common.js';
-    import {S} from './ssr.js';
+    import {CODE} from './common.js';
     import T from './types.js';
 
   // backwards compatible alias
@@ -9,7 +8,6 @@
     const attrskip = attrmarkup;
 
   // constants
-    BROWSER_SIDE && (self.onerror = (...v) => (console.log(v, v[0]+'', v[4] && v[4].message, v[4] && v[4].stack), true));
     const DEBUG             = false;
     const NULLFUNC          = () => void 0;
     const KEYMATCH          = /(?:<!\-\-)?(key\d+)(?:\-\->)?/gm;
@@ -34,6 +32,9 @@
       innerHTML   (frag,elem) { elem.innerHTML = ''; elem.appendChild(frag) }
     };
 
+  // logging
+    self.onerror = (...v) => (console.log(v, v[0]+'', v[4] && v[4].message, v[4] && v[4].stack), true);
+
   // type functions
     const isKey             = v => T.check(T`Key`, v);
     const isHandlers        = v => T.check(T`Handlers`, v);
@@ -43,28 +44,22 @@
     export const $ = R;
 
   // main exports 
-    if ( BROWSER_SIDE ) {
-      Object.assign(R,{s,attrskip,skip,attrmarkup,markup,guardEmptyHandlers,die,BROWSER_SIDE});
-    } else {
-      Object.assign(R,{markup:S.markup, skip:S.markup});
-    }
+    Object.assign(R,{s,attrskip,skip,attrmarkup,markup,guardEmptyHandlers,die});
 
-    if ( DEBUG && BROWSER_SIDE ) {
+    if ( DEBUG ) {
       Object.assign(self, {R,T,X,$}); 
     }
 
     export function R(p,...v) {
-      return craydom(p,v);
+      return dumbass(p,v);
     }
 
     export function X(p,...v) {
-      return craydom(p,v,{useCache:false});
+      return dumbass(p,v,{useCache:false});
     }
 
   // main function (TODO: should we refactor?)
-    function craydom(p,v,{useCache:useCache=true}={}) {
-      if ( ! BROWSER_SIDE ) return S(p,...v);
-
+    function dumbass(p,v,{useCache:useCache=true}={}) {
       let instanceKey, cacheKey;
 
       v = v.map(guardAndTransformVal);
