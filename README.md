@@ -1,10 +1,12 @@
 # :bug: [dumbass](https://github.com/dosyago/dumbass) [![npm](https://img.shields.io/npm/v/dumbass.svg?label=&color=0080FF)](https://github.com/dosyago/dumbass/releases/latest)
 
-> Chosen by toddlers, insects, imbeciles, and stupid, lazy and boring coders.
+> Chosen by toddlers, insects, and imbeciles.
 
-**Be too stupid to use complex tools.**
+**Be too stupid for complex tools.**
 
-Make components from cross-browser web standards without thinking too hard. No JSX, no Shadow DOM, no fancy framworks, no opinions.
+Make components from cross-browser web standards without thinking too hard. 
+
+No JSX, no Shadow DOM, no fancy framworks, no opinions.
 
 - **Just HTML, CSS and JavaScript**—No JSX, no Shadow DOM, no fancy frameworks, no opinions. 
 - **Stop learning, stagnate!**—Use the syntax you already know. Stop learning new things. Do more with what's already here.
@@ -67,3 +69,7 @@ Or import in a module:
 ```
 
 [See a CodePen how-to of above](https://codepen.io/dosycorp/pen/OJPQQzB?editors=1000)
+
+## Complaints?
+
+You could be too smart, or too interesting. Sorry we don't serve your kind here. 
