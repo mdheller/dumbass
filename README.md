@@ -21,7 +21,7 @@ npm i --save dumbass
 Use [Parcel](https://parceljs.org) or [Webpack](https://webpack.js.org) and import:
 
 ```js
-import { R, X } from "dumbass"
+import { R } from "dumbass"
 ```
 
 [See a CodeSandbox demonstration of above](https://codesandbox.io/s/dumbass-playground-7drzg)
@@ -30,7 +30,7 @@ Or import in a module:
 
 ```html
 <script type="module">
-  import { R, X } from "https://unpkg.com/dumbass"
+  import { R } from "https://unpkg.com/dumbass"
 </script>
 ```
 
