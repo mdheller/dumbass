@@ -3,15 +3,15 @@
     "name": "@dosy"
   },
   "bugs": {
-    "url": "https://github.com/dosyago/crayonz/issues"
+    "url": "https://github.com/dosyago/dumbass/issues"
   },
   "bundleDependencies": false,
   "dependencies": {
     "esm": "^3.0.74",
     "jtype-system": "^1.1.1"
   },
-  "description": "crayonz. Code components without opinions.",
-  "homepage": "https://github.com/dosyago/crayonz#readme",
+  "description": "dumbass. Code components without opinions.",
+  "homepage": "https://github.com/dosyago/dumbass#readme",
   "keywords": [
     "javascript",
     "view",
@@ -19,10 +19,10 @@
   ],
   "license": "MIT",
   "main": "r.js",
-  "name": "crayonz",
+  "name": "dumbass",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dosyago/crayonz.git"
+    "url": "git+https://github.com/dosyago/dumbass.git"
   },
   "scripts": {
     "test": "serve -p 8080"

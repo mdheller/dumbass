@@ -1,6 +1,6 @@
-# :crayon: [crayonz](https://github.com/dosyago/crayonz) [![npm](https://img.shields.io/npm/v/crayonz.svg?label=&color=0080FF)](https://github.com/dosyago/crayonz/releases/latest)
+# :bug: [dumbass](https://github.com/dosyago/dumbass) [![npm](https://img.shields.io/npm/v/dumbass.svg?label=&color=0080FF)](https://github.com/dosyago/dumbass/releases/latest)
 
-> Preferred by toddlers, imbeciles, and careless lazy coders.
+> Chosen by toddlers, insects, imbeciles and stupid coders.
 
 Code components with cross-browser web standards. No JSX, no Shadow DOM, no fancy framworks, no opinions. 
 
@@ -12,23 +12,23 @@ Code components with cross-browser web standards. No JSX, no Shadow DOM, no fanc
 
 ## Quickstart
 
-Install crayonz with npm:
+Install dumbass with npm:
 
 ```console
-npm i --save crayonz
+npm i --save dumbass
 ```
 
 Use [Parcel](https://parceljs.org) or [Webpack](https://webpack.js.org) and import:
 
 ```js
-import { R, X } from "crayonz"
+import { R, X } from "dumbass"
 ```
 
 Or import in a module:
 
 ```html
 <script type="module">
-  import { R, X } from "https://unpkg.com/crayonz"
+  import { R, X } from "https://unpkg.com/dumbass"
 </script>
 ```
 
