@@ -17,7 +17,7 @@
     "view",
     "framework"
   ],
-  "license": "MIT",
+  "license": "Unlicense",
   "main": "r.js",
   "name": "dumbass",
   "repository": {
