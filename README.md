@@ -2,9 +2,11 @@
 
 > Chosen by toddlers, insects, and imbeciles.
 
-**Be too stupid for complex tools.**
+**Be bording, be dumb.**
 
 Make components from cross-browser web standards without thinking too hard. 
+
+Code like you'll fix it at 4AM with a hanover becuase you might.
 
 No JSX, no Shadow DOM, no fancy framworks, no opinions.
 
@@ -69,7 +71,3 @@ Or import in a module:
 ```
 
 [See a CodePen how-to of above](https://codepen.io/dosycorp/pen/OJPQQzB?editors=1000)
-
-## Complaints?
-
-You could be too smart, or too interesting. Sorry we don't serve your kind here. 
