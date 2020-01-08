@@ -10,32 +10,6 @@ Make components from cross-browser web standards. No JSX, no Shadow DOM, no fanc
 
 *To learn more*...oh wait, you already know enough. 
 
-## Install mantras
-
-Install dumbass with npm:
-
-```console
-npm i --save dumbass
-```
-
-[Parcel](https://parceljs.org) or [Webpack](https://webpack.js.org) dumbass and import:
-
-```js
-import { R } from "dumbass"
-```
-
-[See a CodeSandbox how-to of above](https://codesandbox.io/s/dumbass-playground-7drzg)
-
-Or import in a module:
-
-```html
-<script type="module">
-  import { R } from "https://unpkg.com/dumbass"
-</script>
-```
-
-[See a CodePen how-to of above](https://codepen.io/dosycorp/pen/OJPQQzB?editors=1000)
-
 ### Gorgeous Dumbass
 
 ```javascript     
@@ -61,3 +35,29 @@ function Spin(n) {
 ```
 
 See [more code](https://github.com/dosyago/dumbass/blob/master/tests/rvanillatodo/src/app.js) in a 250 line [TodoMVC test](https://dosyago.github.io/dumbass/tests/rvanillatodo/)
+
+## Install mantras
+
+Install dumbass with npm:
+
+```console
+npm i --save dumbass
+```
+
+[Parcel](https://parceljs.org) or [Webpack](https://webpack.js.org) dumbass and import:
+
+```js
+import { R } from "dumbass"
+```
+
+[See a CodeSandbox how-to of above](https://codesandbox.io/s/dumbass-playground-7drzg)
+
+Or import in a module:
+
+```html
+<script type="module">
+  import { R } from "https://unpkg.com/dumbass"
+</script>
+```
+
+[See a CodePen how-to of above](https://codepen.io/dosycorp/pen/OJPQQzB?editors=1000)
