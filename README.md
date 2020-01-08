@@ -24,7 +24,7 @@ Use [Parcel](https://parceljs.org) or [Webpack](https://webpack.js.org) and impo
 import { R, X } from "dumbass"
 ```
 
-[See a CodeSandbox demonstration of above](https://codesandbox.io/s/dumbass-playground-jxbx4)
+[See a CodeSandbox demonstration of above](https://codesandbox.io/s/dumbass-playground-7drzg)
 
 Or import in a module:
 
@@ -46,19 +46,37 @@ Here's the last example you'll ever need:
 <html lang="en">
   <head> 
     <script type="module">
-      import { R } from "https://unpkg.com/craydom/r.js";
+      import { R } from "https://unpkg.com/dumbass";
       
-      let state = 500;
+      let state = 500,
+        last = 0;
+
       const inc = () => state++;
       const dec = () => state--;
-      const spin = e => (e.deltaY > 0 ? inc() : dec(), Spin(state));
-      const step = e => (state = e.target.value, Spin(state));
       
-      Spin(state).to('body', 'beforeEnd');
+      const spin = e => {
+        e.deltaY > 0 ? inc() : dec();
+        Spin(state);
+      };
+      const step = e => {
+        state = e.target.value;
+        Spin(state);
+      };
+      const move = e => {
+        const delta = last - e.touches[0].pageY;
+        last = e.touches[0].pageY;
+        delta > 0 ? inc() : dec();
+        Spin(state);
+      };
+
+      Spin(state).to("body", "beforeEnd");
 
       function Spin(n) {
         return R`  
-          <div wheel:passive=${spin}>
+          <div 
+            wheel:passive=${spin}
+            touchmove:passive=${move}
+          >
             <h1>
               <progress 
                 max=1000
@@ -68,8 +86,7 @@ Here's the last example you'll ever need:
               <input 
                 input=${step}
                 type=number 
-                value=${n}
-              >
+                value=${n}>
           </div>
         `;
       }
