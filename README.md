@@ -1,6 +1,6 @@
 # :bug: [dumbass](https://github.com/dosyago/dumbass) [![npm](https://img.shields.io/npm/v/dumbass.svg?label=&color=0080FF)](https://github.com/dosyago/dumbass/releases/latest)
 
-> Chosen by toddlers, insects, imbeciles, stupid, lazy coders and boring people.
+> Chosen by toddlers, insects, imbeciles, and stupid, lazy and boring coders.
 
 **Be boring, be dumb.**
 
