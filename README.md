@@ -2,7 +2,7 @@
 
 > Chosen by toddlers, insects, imbeciles, and stupid, lazy and boring coders.
 
-**Be boring, be dumb.**
+**Be too stupid to use complex tools.**
 
 Make components from cross-browser web standards without thinking too hard. No JSX, no Shadow DOM, no fancy framworks, no opinions.
 
