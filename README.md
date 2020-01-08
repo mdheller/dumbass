@@ -1,12 +1,10 @@
 # :bug: [dumbass](https://github.com/dosyago/dumbass) [![npm](https://img.shields.io/npm/v/dumbass.svg?label=&color=0080FF)](https://github.com/dosyago/dumbass/releases/latest)
 
-> Chosen by toddlers, insects, and imbeciles.
+> Chosen by toddlers, insects, and stupid coders.
 
-**Be bording, be dumb.**
+**Be bording, be dumb. Be too stupid for complex tools.**
 
 Make components from cross-browser web standards without thinking too hard. 
-
-Code like you'll fix it at 4AM with a hanover becuase you might.
 
 No JSX, no Shadow DOM, no fancy framworks, no opinions.
 
@@ -16,7 +14,7 @@ No JSX, no Shadow DOM, no fancy framworks, no opinions.
 
 *To learn more*...oh wait, you already know enough. 
 
-### Gorgeous Dumbass
+### Gorgeous dumbass
 
 ```javascript     
 function Spin(n) {
