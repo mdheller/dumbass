@@ -6,8 +6,7 @@
     "url": "https://github.com/dosyago/dumbass/issues"
   },
   "bundleDependencies": false,
-  "dependencies": {
-  },
+  "dependencies": {},
   "description": "dumbass. Code components without opinions.",
   "homepage": "https://github.com/dosyago/dumbass#readme",
   "keywords": [
@@ -25,5 +24,5 @@
   "scripts": {
     "test": "serve -p 8080"
   },
-  "version": "2.4.3"
+  "version": "2.4.4"
 }
