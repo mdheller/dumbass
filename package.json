@@ -3,29 +3,28 @@
     "name": "@dosy"
   },
   "bugs": {
-    "url": "https://github.com/dosyago/craydom/issues"
+    "url": "https://github.com/dosyago/crayonz/issues"
   },
   "bundleDependencies": false,
   "dependencies": {
     "esm": "^3.0.74",
     "jtype-system": "^1.1.1"
   },
-  "description": "craydom = pure views + (minimal diffs) - (virtual DOM)",
-  "homepage": "https://github.com/dosyago/craydom#readme",
+  "description": "crayonz. Code components without opinions.",
+  "homepage": "https://github.com/dosyago/crayonz#readme",
   "keywords": [
     "javascript",
     "view",
     "framework"
   ],
   "license": "MIT",
-  "main": "index.js",
-  "name": "craydom",
+  "main": "r.js",
+  "name": "crayonz",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dosyago/craydom.git"
+    "url": "git+https://github.com/dosyago/crayonz.git"
   },
   "scripts": {
     "test": "serve -p 8080"
   },
-  "version": "2.3.6"
 }
