@@ -2,7 +2,7 @@
 
 > Chosen by toddlers, insects, and stupid coders.
 
-**Be bording, be dumb. Be too stupid for complex tools.**
+**Be boring, be dumb. Be too stupid for complex tools.**
 
 Make components from cross-browser web standards without thinking too hard. 
 
