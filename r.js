@@ -41,13 +41,14 @@
 
   // cache 
     const cache = {};
-    export const $ = R;
+    export const d = R;
+    export const u = X;
 
   // main exports 
     Object.assign(R,{s,attrskip,skip,attrmarkup,markup,guardEmptyHandlers,die});
 
     if ( DEBUG ) {
-      Object.assign(self, {R,T,X,$}); 
+      Object.assign(self, {d,u,T}); 
     }
 
     export function R(p,...v) {

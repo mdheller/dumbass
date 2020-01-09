@@ -25,7 +25,8 @@
     "url": "git+https://github.com/dosyago/dumbass.git"
   },
   "scripts": {
-    "test": "serve -p 8080"
+    "test": "serve -p 8080",
+    "build": "parcel build r.js"
   },
   "version": "2.4.9"
 }

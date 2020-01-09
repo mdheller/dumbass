@@ -18,7 +18,7 @@ No JSX, no Shadow DOM, no fancy framworks, no opinions.
 
 ```javascript     
 function Spin(n) {
-  return R`  
+  return d`  
     <div 
       wheel:passive=${spin}
       touchmove:passive=${move}
@@ -55,7 +55,7 @@ npm i --save dumbass
 [Parcel](https://parceljs.org) or [Webpack](https://webpack.js.org) dumbass and import:
 
 ```js
-import { R } from "dumbass"
+import { d } from "dumbass"
 ```
 
 [See a CodeSandbox how-to of above](https://codesandbox.io/s/dumbass-playground-7drzg)
@@ -64,7 +64,7 @@ Or import in a module:
 
 ```html
 <script type="module">
-  import { R } from "https://unpkg.com/dumbass"
+  import { d } from "https://unpkg.com/dumbass"
 </script>
 ```
 
